@@ -5,6 +5,7 @@ namespace Modules\Business\App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Business\App\Models\Business;
+use Modules\Business\App\Models\BusinessCategoryModule;
 
 class BusinessCategory extends Model
 {
@@ -20,5 +21,10 @@ class BusinessCategory extends Model
     public function businesses(): HasMany
     {
         return $this->hasMany(Business::class, 'category_id');
+    }
+
+    public function categoryModules(): HasMany
+    {
+        return $this->hasMany(BusinessCategoryModule::class, 'business_category_id');
     }
 }

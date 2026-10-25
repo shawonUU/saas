@@ -1,0 +1,18 @@
+
+{
+    "name": "nwidart/onlinestore",
+    "description": "NexaBiz Online Store Module",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Modules\\OnlineStore\\App\\": "app/",
+            "Modules\\OnlineStore\\Database\\Factories\\": "database/factories/",
+            "Modules\\OnlineStore\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\OnlineStore\\Tests\\": "tests/"
+        }
+    }
+}

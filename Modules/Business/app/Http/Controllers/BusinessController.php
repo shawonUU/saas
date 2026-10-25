@@ -1,13 +1,12 @@
 <?php
 
-namespace Modules\Business\App\Http\Controllers;
+namespace Modules\Business\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Modules\Branch\App\Models\Branch;
 use Modules\Business\App\Models\Business;
 use Modules\Business\App\Models\BusinessCategory;
 
@@ -33,6 +32,11 @@ class BusinessController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'category_id' => [
+                'required',
+                'integer',
+                'exists:business_categories,id',
+            ],
             'phone' => ['nullable', 'string', 'max:30'],
             'email' => ['nullable', 'email', 'max:255'],
             'country' => ['nullable', 'string', 'max:100'],
@@ -41,22 +45,30 @@ class BusinessController extends Controller
         ]);
 
         $category = BusinessCategory::query()
-            ->where('slug', 'retail-general-store')
+            ->where('id', $validated['category_id'])
             ->where('is_active', true)
             ->first();
 
         if (!$category) {
             throw ValidationException::withMessages([
-                'category' => ['Retail / General Store category is not available.'],
+                'category_id' => [
+                    'The selected business category is inactive or unavailable.',
+                ],
             ]);
         }
 
-        $business = DB::transaction(function () use ($request, $validated, $category) {
+        $business = DB::transaction(function () use (
+            $request,
+            $validated,
+            $category
+        ) {
             $business = Business::create([
                 'owner_id' => $request->user()->id,
                 'category_id' => $category->id,
                 'name' => $validated['name'],
-                'slug' => Str::slug($validated['name']) . '-' . Str::lower(Str::random(6)),
+                'slug' => Str::slug($validated['name'])
+                    . '-'
+                    . Str::lower(Str::random(6)),
                 'country' => $validated['country'] ?? 'Bangladesh',
                 'currency' => strtoupper($validated['currency'] ?? 'BDT'),
                 'timezone' => $validated['timezone'] ?? 'Asia/Dhaka',
@@ -72,9 +84,10 @@ class BusinessController extends Controller
             ]);
 
             $business->branches()->create([
-                'name' => $validated['name'] . ' Main Branch',
+                'name' => $business->name . ' Main Branch',
                 'code' => 'MAIN',
                 'phone' => $validated['phone'] ?? null,
+                'address' => null,
                 'is_default' => true,
                 'status' => 'Active',
             ]);
@@ -84,7 +97,10 @@ class BusinessController extends Controller
 
         return response()->json([
             'message' => 'Business created successfully.',
-            'business' => $business->load(['category', 'branches']),
+            'business' => $business->load([
+                'category',
+                'branches',
+            ]),
         ], 201);
     }
 }

@@ -1,5 +1,6 @@
 {
     "Auth": true,
     "Business": true,
-    "Branch": true
+    "Branch": true,
+    "OnlineStore": true
 }

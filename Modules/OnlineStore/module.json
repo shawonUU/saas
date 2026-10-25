@@ -1,0 +1,11 @@
+{
+    "name": "OnlineStore",
+    "alias": "onlinestore",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\OnlineStore\\App\\Providers\\OnlineStoreServiceProvider"
+    ],
+    "files": []
+}
