@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('app_modules', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('name_bn');
             $table->string('slug')->unique();
             $table->string('icon')->nullable();
             $table->string('route')->nullable();

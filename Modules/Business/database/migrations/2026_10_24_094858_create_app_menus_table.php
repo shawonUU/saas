@@ -16,6 +16,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->string('name');
+            $table->string('name_bn');
             $table->string('slug');
             $table->string('icon')->nullable();
             $table->string('route')->nullable();
