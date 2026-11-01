@@ -3,7 +3,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.3",
@@ -26,24 +29,21 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-
             "Modules\\Auth\\App\\": "Modules/Auth/app/",
             "Modules\\Auth\\Database\\Factories\\": "Modules/Auth/database/factories/",
             "Modules\\Auth\\Database\\Seeders\\": "Modules/Auth/database/seeders/",
-
             "Modules\\Business\\": "Modules/Business/app/",
             "Modules\\Business\\App\\": "Modules/Business/app/",
             "Modules\\Business\\Database\\Factories\\": "Modules/Business/database/factories/",
             "Modules\\Business\\Database\\Seeders\\": "Modules/Business/database/seeders/",
-
             "Modules\\Branch\\App\\": "Modules/Branch/app/",
             "Modules\\Branch\\Database\\Factories\\": "Modules/Branch/database/factories/",
             "Modules\\Branch\\Database\\Seeders\\": "Modules/Branch/database/seeders/",
-
             "Modules\\OnlineStore\\": "Modules/Business/app/",
             "Modules\\OnlineStore\\App\\": "Modules/OnlineStore/app/",
             "Modules\\OnlineStore\\Database\\Factories\\": "Modules/OnlineStore/database/factories/",
-            "Modules\\OnlineStore\\Database\\Seeders\\": "Modules/OnlineStore/database/seeders/"
+            "Modules\\OnlineStore\\Database\\Seeders\\": "Modules/OnlineStore/database/seeders/",
+            "Modules\\Retail\\App\\": "Modules/Retail/app/"
         }
     },
     "autoload-dev": {

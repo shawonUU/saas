@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias(['auth.scope' => \Modules\Auth\App\Http\Middleware\RequireAuthScope::class, 'auth.domain' => \Modules\Auth\App\Http\Middleware\CheckAuthDomain::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

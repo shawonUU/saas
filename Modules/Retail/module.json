@@ -1,0 +1,11 @@
+{
+  "name": "Retail",
+  "alias": "retail",
+  "description": "Tenant-isolated retail catalog",
+  "keywords": [],
+  "priority": 0,
+  "providers": [
+    "Modules\\Retail\\App\\Providers\\RetailServiceProvider"
+  ],
+  "files": []
+}

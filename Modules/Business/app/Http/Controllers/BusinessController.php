@@ -5,7 +5,7 @@ namespace Modules\Business\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Modules\Business\App\Models\Business;
 use Modules\Business\App\Models\BusinessCategory;
@@ -32,6 +32,8 @@ class BusinessController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'admin_password' => ['required', 'string', 'min:8'],
+            'slug' => ['required', 'string', 'min:3', 'max:50', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', Rule::notIn(['www','admin','api','app','mail','support','localhost','saas']), 'unique:businesses,slug'],
             'category_id' => [
                 'required',
                 'integer',
@@ -66,14 +68,22 @@ class BusinessController extends Controller
                 'owner_id' => $request->user()->id,
                 'category_id' => $category->id,
                 'name' => $validated['name'],
-                'slug' => Str::slug($validated['name'])
-                    . '-'
-                    . Str::lower(Str::random(6)),
+                'slug' => $validated['slug'],
                 'country' => $validated['country'] ?? 'Bangladesh',
                 'currency' => strtoupper($validated['currency'] ?? 'BDT'),
                 'timezone' => $validated['timezone'] ?? 'Asia/Dhaka',
                 'phone' => $validated['phone'] ?? null,
                 'email' => $validated['email'] ?? null,
+                'status' => 'Active',
+            ]);
+
+            \Modules\Auth\App\Models\ShopAccount::create([
+                'business_id' => $business->id,
+                'central_user_id' => $request->user()->id,
+                'name' => $request->user()->name,
+                'email' => $request->user()->email,
+                'password' => $validated['admin_password'],
+                'role' => 'Owner',
                 'status' => 'Active',
             ]);
 
@@ -97,6 +107,7 @@ class BusinessController extends Controller
 
         return response()->json([
             'message' => 'Business created successfully.',
+            'domains' => ['storefront' => $business->slug . '.' . env('SAAS_LOCAL_DOMAIN', 'localtest.me'), 'admin' => 'admin.' . $business->slug . '.' . env('SAAS_LOCAL_DOMAIN', 'localtest.me')],
             'business' => $business->load([
                 'category',
                 'branches',

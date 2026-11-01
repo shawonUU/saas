@@ -14,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Modules\Business\App\Models\Business;
 use Modules\Business\App\Models\BusinessMember;
 
-#[Fillable(['name', 'email', 'password', 'account_type'])]
+#[Fillable(['name', 'email', 'password', 'type'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {

@@ -2,6 +2,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Business\Http\Controllers\ShopDomainController;
+use Modules\Business\Http\Controllers\ShopAdminDashboardController;
 use Modules\Business\Http\Controllers\BusinessCategoryController;
 use Modules\Business\Http\Controllers\BusinessController;
 use Modules\Business\Http\Controllers\BusinessDashboardConfigController;
@@ -11,7 +13,11 @@ use Modules\Business\Http\Controllers\BusinessTeamController;
 use Modules\Business\Http\Controllers\BusinessUserRegistrationController;
 use Modules\Business\Http\Controllers\BusinessRoleController;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'auth.domain'])->get('shop-admin/dashboard', [ShopAdminDashboardController::class, 'show']);
+Route::get('shop-domains/check', [ShopDomainController::class, 'availability']);
+Route::get('storefront/{slug}', [ShopDomainController::class, 'storefront'])->where('slug', '[a-z0-9-]+');
+
+Route::middleware(['auth:sanctum', 'auth.scope:main'])->group(function () {
 
     // Business Routes
     Route::prefix('businesses')->group(function () {

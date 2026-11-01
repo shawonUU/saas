@@ -16,6 +16,7 @@ class AppModuleSeeder extends Seeder
         $modules = [
             [
                 'name' => 'Dashboard',
+                'name_bn' => 'ড্যাশবোর্ড',
                 'slug' => 'dashboard',
                 'icon' => 'LayoutDashboard',
                 'route' => '/dashboard',
@@ -23,6 +24,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Products',
+                'name_bn' => 'পণ্যসমূহ',
                 'slug' => 'products',
                 'icon' => 'Package',
                 'route' => '/products',
@@ -30,6 +32,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Sales',
+                'name_bn' => 'বিক্রয়',
                 'slug' => 'sales',
                 'icon' => 'ShoppingCart',
                 'route' => '/sales',
@@ -37,6 +40,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Purchases',
+                'name_bn' => 'ক্রয়',
                 'slug' => 'purchases',
                 'icon' => 'ShoppingBag',
                 'route' => '/purchases',
@@ -44,6 +48,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Inventory',
+                'name_bn' => 'ইনভেন্টরি',
                 'slug' => 'inventory',
                 'icon' => 'Boxes',
                 'route' => '/inventory',
@@ -51,6 +56,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Customers',
+                'name_bn' => 'ক্রেতাগণ',
                 'slug' => 'customers',
                 'icon' => 'Users',
                 'route' => '/customers',
@@ -58,6 +64,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Suppliers',
+                'name_bn' => 'সরবরাহকারীগণ',
                 'slug' => 'suppliers',
                 'icon' => 'Truck',
                 'route' => '/suppliers',
@@ -65,6 +72,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Reports',
+                'name_bn' => 'রিপোর্টসমূহ',
                 'slug' => 'reports',
                 'icon' => 'ChartNoAxesCombined',
                 'route' => '/reports',
@@ -72,6 +80,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Settings',
+                'name_bn' => 'সেটিংস',
                 'slug' => 'settings',
                 'icon' => 'Settings',
                 'route' => '/settings',
@@ -79,6 +88,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Restaurant Menu',
+                'name_bn' => 'রেস্টুরেন্ট মেনু',
                 'slug' => 'restaurant-menu',
                 'icon' => 'BookOpen',
                 'route' => '/restaurant/menu',
@@ -86,6 +96,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Orders',
+                'name_bn' => 'অর্ডারসমূহ',
                 'slug' => 'orders',
                 'icon' => 'ClipboardList',
                 'route' => '/orders',
@@ -93,6 +104,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Kitchen',
+                'name_bn' => 'রান্নাঘর',
                 'slug' => 'kitchen',
                 'icon' => 'ChefHat',
                 'route' => '/kitchen',
@@ -100,6 +112,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Medicines',
+                'name_bn' => 'ওষুধসমূহ',
                 'slug' => 'medicines',
                 'icon' => 'Pill',
                 'route' => '/medicines',
@@ -107,6 +120,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Variants',
+                'name_bn' => 'ভ্যারিয়েন্টসমূহ',
                 'slug' => 'variants',
                 'icon' => 'Layers',
                 'route' => '/variants',
@@ -114,6 +128,7 @@ class AppModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Online Store',
+                'name_bn' => 'অনলাইন স্টোর',
                 'slug' => 'online-store',
                 'icon' => 'Store',
                 'route' => '/online-stores',
@@ -125,6 +140,7 @@ class AppModuleSeeder extends Seeder
             AppModule::updateOrCreate(
                 ['slug' => $moduleData['slug']],
                 array_merge($moduleData, [
+                    'name_bn' => $moduleData['name_bn'] ?? $moduleData['name'],
                     'is_active' => true,
                 ])
             );
@@ -134,6 +150,7 @@ class AppModuleSeeder extends Seeder
             'dashboard' => [
                 [
                     'name' => 'Overview',
+                    'name_bn' => 'সারসংক্ষেপ',
                     'slug' => 'overview',
                     'icon' => 'LayoutDashboard',
                     'route' => '/dashboard',
@@ -144,6 +161,7 @@ class AppModuleSeeder extends Seeder
             'products' => [
                 [
                     'name' => 'Product Management',
+                    'name_bn' => 'পণ্য ব্যবস্থাপনা',
                     'slug' => 'product-management',
                     'icon' => 'Package',
                     'route' => null,
@@ -151,6 +169,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'All Products',
+                            'name_bn' => 'সকল পণ্য',
                             'slug' => 'all-products',
                             'icon' => 'Package',
                             'route' => '/products',
@@ -158,6 +177,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Add Product',
+                            'name_bn' => 'পণ্য যোগ করুন',
                             'slug' => 'add-product',
                             'icon' => 'Package',
                             'route' => '/products/create',
@@ -167,6 +187,7 @@ class AppModuleSeeder extends Seeder
                 ],
                 [
                     'name' => 'Categories',
+                    'name_bn' => 'ক্যাটাগরিসমূহ',
                     'slug' => 'categories',
                     'icon' => 'Boxes',
                     'route' => null,
@@ -174,6 +195,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'All Categories',
+                            'name_bn' => 'সকল ক্যাটাগরি',
                             'slug' => 'all-categories',
                             'icon' => 'Boxes',
                             'route' => '/products/categories',
@@ -181,6 +203,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Add Category',
+                            'name_bn' => 'ক্যাটাগরি যোগ করুন',
                             'slug' => 'add-category',
                             'icon' => 'Boxes',
                             'route' => '/products/categories/create',
@@ -190,6 +213,7 @@ class AppModuleSeeder extends Seeder
                 ],
                 [
                     'name' => 'Units',
+                    'name_bn' => 'এককসমূহ',
                     'slug' => 'units',
                     'icon' => 'Layers',
                     'route' => null,
@@ -197,6 +221,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'All Units',
+                            'name_bn' => 'সকল একক',
                             'slug' => 'all-units',
                             'icon' => 'Layers',
                             'route' => '/products/units',
@@ -209,6 +234,7 @@ class AppModuleSeeder extends Seeder
             'sales' => [
                 [
                     'name' => 'Sales Management',
+                    'name_bn' => 'বিক্রয় ব্যবস্থাপনা',
                     'slug' => 'sales-management',
                     'icon' => 'ShoppingCart',
                     'route' => null,
@@ -216,6 +242,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'Sales List',
+                            'name_bn' => 'বিক্রয় তালিকা',
                             'slug' => 'sales-list',
                             'icon' => 'ClipboardList',
                             'route' => '/sales',
@@ -223,6 +250,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Create Sale',
+                            'name_bn' => 'নতুন বিক্রয়',
                             'slug' => 'create-sale',
                             'icon' => 'ShoppingCart',
                             'route' => '/sales/create',
@@ -230,6 +258,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Sales Returns',
+                            'name_bn' => 'বিক্রয় ফেরত',
                             'slug' => 'sales-returns',
                             'icon' => 'RefreshCw',
                             'route' => '/sales/returns',
@@ -242,6 +271,7 @@ class AppModuleSeeder extends Seeder
             'purchases' => [
                 [
                     'name' => 'Purchase Management',
+                    'name_bn' => 'ক্রয় ব্যবস্থাপনা',
                     'slug' => 'purchase-management',
                     'icon' => 'ShoppingBag',
                     'route' => null,
@@ -249,6 +279,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'Purchase List',
+                            'name_bn' => 'ক্রয় তালিকা',
                             'slug' => 'purchase-list',
                             'icon' => 'ClipboardList',
                             'route' => '/purchases',
@@ -256,6 +287,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Create Purchase',
+                            'name_bn' => 'নতুন ক্রয়',
                             'slug' => 'create-purchase',
                             'icon' => 'ShoppingBag',
                             'route' => '/purchases/create',
@@ -263,6 +295,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Purchase Returns',
+                            'name_bn' => 'ক্রয় ফেরত',
                             'slug' => 'purchase-returns',
                             'icon' => 'RefreshCw',
                             'route' => '/purchases/returns',
@@ -275,6 +308,7 @@ class AppModuleSeeder extends Seeder
             'inventory' => [
                 [
                     'name' => 'Stock Management',
+                    'name_bn' => 'স্টক ব্যবস্থাপনা',
                     'slug' => 'stock-management',
                     'icon' => 'Boxes',
                     'route' => null,
@@ -282,6 +316,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'Stock Overview',
+                            'name_bn' => 'স্টকের সারসংক্ষেপ',
                             'slug' => 'stock-overview',
                             'icon' => 'Boxes',
                             'route' => '/inventory',
@@ -289,6 +324,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Stock Adjustments',
+                            'name_bn' => 'স্টক সমন্বয়',
                             'slug' => 'stock-adjustments',
                             'icon' => 'RefreshCw',
                             'route' => '/inventory/adjustments',
@@ -296,6 +332,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Stock Transfers',
+                            'name_bn' => 'স্টক স্থানান্তর',
                             'slug' => 'stock-transfers',
                             'icon' => 'Truck',
                             'route' => '/inventory/transfers',
@@ -308,6 +345,7 @@ class AppModuleSeeder extends Seeder
             'customers' => [
                 [
                     'name' => 'Customer Management',
+                    'name_bn' => 'ক্রেতা ব্যবস্থাপনা',
                     'slug' => 'customer-management',
                     'icon' => 'Users',
                     'route' => null,
@@ -315,6 +353,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'All Customers',
+                            'name_bn' => 'সকল ক্রেতা',
                             'slug' => 'all-customers',
                             'icon' => 'Users',
                             'route' => '/customers',
@@ -322,6 +361,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Add Customer',
+                            'name_bn' => 'ক্রেতা যোগ করুন',
                             'slug' => 'add-customer',
                             'icon' => 'Users',
                             'route' => '/customers/create',
@@ -334,6 +374,7 @@ class AppModuleSeeder extends Seeder
             'suppliers' => [
                 [
                     'name' => 'Supplier Management',
+                    'name_bn' => 'সরবরাহকারী ব্যবস্থাপনা',
                     'slug' => 'supplier-management',
                     'icon' => 'Truck',
                     'route' => null,
@@ -341,6 +382,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'All Suppliers',
+                            'name_bn' => 'সকল সরবরাহকারী',
                             'slug' => 'all-suppliers',
                             'icon' => 'Truck',
                             'route' => '/suppliers',
@@ -348,6 +390,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Add Supplier',
+                            'name_bn' => 'সরবরাহকারী যোগ করুন',
                             'slug' => 'add-supplier',
                             'icon' => 'Truck',
                             'route' => '/suppliers/create',
@@ -360,6 +403,7 @@ class AppModuleSeeder extends Seeder
             'reports' => [
                 [
                     'name' => 'Reports Overview',
+                    'name_bn' => 'রিপোর্টের সারসংক্ষেপ',
                     'slug' => 'reports-overview',
                     'icon' => 'ChartNoAxesCombined',
                     'route' => '/reports',
@@ -367,6 +411,7 @@ class AppModuleSeeder extends Seeder
                 ],
                 [
                     'name' => 'Sales Reports',
+                    'name_bn' => 'বিক্রয় রিপোর্ট',
                     'slug' => 'sales-reports',
                     'icon' => 'BarChart3',
                     'route' => '/reports/sales',
@@ -374,6 +419,7 @@ class AppModuleSeeder extends Seeder
                 ],
                 [
                     'name' => 'Purchase Reports',
+                    'name_bn' => 'ক্রয় রিপোর্ট',
                     'slug' => 'purchase-reports',
                     'icon' => 'BarChart3',
                     'route' => '/reports/purchases',
@@ -381,6 +427,7 @@ class AppModuleSeeder extends Seeder
                 ],
                 [
                     'name' => 'Inventory Reports',
+                    'name_bn' => 'ইনভেন্টরি রিপোর্ট',
                     'slug' => 'inventory-reports',
                     'icon' => 'Boxes',
                     'route' => '/reports/inventory',
@@ -391,6 +438,7 @@ class AppModuleSeeder extends Seeder
             'settings' => [
                 [
                     'name' => 'General Settings',
+                    'name_bn' => 'সাধারণ সেটিংস',
                     'slug' => 'general-settings',
                     'icon' => 'Settings',
                     'route' => null,
@@ -398,6 +446,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'Business Profile',
+                            'name_bn' => 'ব্যবসার প্রোফাইল',
                             'slug' => 'business-profile',
                             'icon' => 'Building2',
                             'route' => '/settings/business',
@@ -405,6 +454,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Branches',
+                            'name_bn' => 'শাখাসমূহ',
                             'slug' => 'branches',
                             'icon' => 'Store',
                             'route' => '/settings/branches',
@@ -412,6 +462,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Users & Permissions',
+                            'name_bn' => 'ব্যবহারকারী ও অনুমতিসমূহ',
                             'slug' => 'users-permissions',
                             'icon' => 'Users',
                             'route' => '/settings/users',
@@ -424,6 +475,7 @@ class AppModuleSeeder extends Seeder
             'restaurant-menu' => [
                 [
                     'name' => 'Menu Management',
+                    'name_bn' => 'মেনু ব্যবস্থাপনা',
                     'slug' => 'menu-management',
                     'icon' => 'BookOpen',
                     'route' => null,
@@ -431,6 +483,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'All Menu Items',
+                            'name_bn' => 'সকল মেনু আইটেম',
                             'slug' => 'all-menu-items',
                             'icon' => 'BookOpen',
                             'route' => '/restaurant/menu',
@@ -438,6 +491,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Add Menu Item',
+                            'name_bn' => 'মেনু আইটেম যোগ করুন',
                             'slug' => 'add-menu-item',
                             'icon' => 'BookOpen',
                             'route' => '/restaurant/menu/create',
@@ -445,6 +499,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Menu Categories',
+                            'name_bn' => 'মেনু ক্যাটাগরিসমূহ',
                             'slug' => 'menu-categories',
                             'icon' => 'Boxes',
                             'route' => '/restaurant/menu/categories',
@@ -457,6 +512,7 @@ class AppModuleSeeder extends Seeder
             'orders' => [
                 [
                     'name' => 'Order Management',
+                    'name_bn' => 'অর্ডার ব্যবস্থাপনা',
                     'slug' => 'order-management',
                     'icon' => 'ClipboardList',
                     'route' => null,
@@ -464,6 +520,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'All Orders',
+                            'name_bn' => 'সকল অর্ডার',
                             'slug' => 'all-orders',
                             'icon' => 'ClipboardList',
                             'route' => '/orders',
@@ -471,6 +528,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Create Order',
+                            'name_bn' => 'নতুন অর্ডার',
                             'slug' => 'create-order',
                             'icon' => 'ShoppingCart',
                             'route' => '/orders/create',
@@ -478,6 +536,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Order History',
+                            'name_bn' => 'অর্ডারের ইতিহাস',
                             'slug' => 'order-history',
                             'icon' => 'ClipboardList',
                             'route' => '/orders/history',
@@ -490,6 +549,7 @@ class AppModuleSeeder extends Seeder
             'kitchen' => [
                 [
                     'name' => 'Kitchen Management',
+                    'name_bn' => 'রান্নাঘর ব্যবস্থাপনা',
                     'slug' => 'kitchen-management',
                     'icon' => 'ChefHat',
                     'route' => null,
@@ -497,6 +557,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'Kitchen Orders',
+                            'name_bn' => 'রান্নাঘরের অর্ডার',
                             'slug' => 'kitchen-orders',
                             'icon' => 'ClipboardList',
                             'route' => '/kitchen',
@@ -504,6 +565,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Preparation Queue',
+                            'name_bn' => 'প্রস্তুতির অপেক্ষমাণ তালিকা',
                             'slug' => 'preparation-queue',
                             'icon' => 'ChefHat',
                             'route' => '/kitchen/queue',
@@ -516,6 +578,7 @@ class AppModuleSeeder extends Seeder
             'medicines' => [
                 [
                     'name' => 'Medicine Management',
+                    'name_bn' => 'ওষুধ ব্যবস্থাপনা',
                     'slug' => 'medicine-management',
                     'icon' => 'Pill',
                     'route' => null,
@@ -523,6 +586,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'All Medicines',
+                            'name_bn' => 'সকল ওষুধ',
                             'slug' => 'all-medicines',
                             'icon' => 'Pill',
                             'route' => '/medicines',
@@ -530,6 +594,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Add Medicine',
+                            'name_bn' => 'ওষুধ যোগ করুন',
                             'slug' => 'add-medicine',
                             'icon' => 'Pill',
                             'route' => '/medicines/create',
@@ -537,6 +602,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Medicine Categories',
+                            'name_bn' => 'ওষুধের ক্যাটাগরিসমূহ',
                             'slug' => 'medicine-categories',
                             'icon' => 'Boxes',
                             'route' => '/medicines/categories',
@@ -549,6 +615,7 @@ class AppModuleSeeder extends Seeder
             'variants' => [
                 [
                     'name' => 'Product Variants',
+                    'name_bn' => 'পণ্যের ভ্যারিয়েন্টসমূহ',
                     'slug' => 'product-variants',
                     'icon' => 'Layers',
                     'route' => null,
@@ -556,6 +623,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'All Variants',
+                            'name_bn' => 'সকল ভ্যারিয়েন্ট',
                             'slug' => 'all-variants',
                             'icon' => 'Layers',
                             'route' => '/variants',
@@ -563,6 +631,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Add Variant',
+                            'name_bn' => 'ভ্যারিয়েন্ট যোগ করুন',
                             'slug' => 'add-variant',
                             'icon' => 'Layers',
                             'route' => '/variants/create',
@@ -570,6 +639,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Attributes',
+                            'name_bn' => 'বৈশিষ্ট্যসমূহ',
                             'slug' => 'attributes',
                             'icon' => 'Settings',
                             'route' => '/variants/attributes',
@@ -582,6 +652,7 @@ class AppModuleSeeder extends Seeder
             'online-store' => [
                 [
                     'name' => 'Store Management',
+                    'name_bn' => 'স্টোর ব্যবস্থাপনা',
                     'slug' => 'store-management',
                     'icon' => 'Store',
                     'route' => null,
@@ -589,6 +660,7 @@ class AppModuleSeeder extends Seeder
                     'children' => [
                         [
                             'name' => 'My Online Stores',
+                            'name_bn' => 'আমার অনলাইন স্টোরসমূহ',
                             'slug' => 'my-online-stores',
                             'icon' => 'Store',
                             'route' => '/online-stores',
@@ -596,6 +668,7 @@ class AppModuleSeeder extends Seeder
                         ],
                         [
                             'name' => 'Create Online Store',
+                            'name_bn' => 'অনলাইন স্টোর তৈরি করুন',
                             'slug' => 'create-online-store',
                             'icon' => 'Plus',
                             'route' => '/online-stores/create',
@@ -628,6 +701,7 @@ class AppModuleSeeder extends Seeder
                         'slug' => $menuData['slug'],
                     ],
                     array_merge($menuData, [
+                        'name_bn' => $menuData['name_bn'] ?? $menuData['name'],
                         'app_module_id' => $module->id,
                         'is_active' => true,
                     ])
@@ -640,6 +714,7 @@ class AppModuleSeeder extends Seeder
                             'slug' => $childData['slug'],
                         ],
                         array_merge($childData, [
+                            'name_bn' => $childData['name_bn'] ?? $childData['name'],
                             'app_menu_id' => $menu->id,
                             'is_active' => true,
                         ])
