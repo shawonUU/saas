@@ -14,9 +14,13 @@ return [
         'http://127.0.0.1:5173',
         'http://127.0.0.1:5174',
         'http://127.0.0.1:5175',
+        'http://localtest.me:5173',
+        'http://alexstore.localtest.me:5173',
     ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [
+        '#^http://([a-zA-Z0-9-]+\.)*localtest\.me(:5173)?$#',
+    ],
 
     'allowed_headers' => ['*'],
 
@@ -24,6 +28,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true,
+    'supports_credentials' => false,
 
 ];

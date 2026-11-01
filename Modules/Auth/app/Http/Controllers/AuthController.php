@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use Modules\Business\App\Models\Business;
 
 class AuthController extends Controller
 {
@@ -21,15 +21,13 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'password' => $validated['password'],
+            'account_type' => 'shop_owner',
         ]);
-
-        $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
             'message' => 'Registration successful.',
             'user' => $user,
-            'token' => $token,
         ], 201);
     }
 
@@ -43,17 +41,81 @@ class AuthController extends Controller
         $user = User::where('email', $validated['email'])->first();
 
         if (!$user || !Hash::check($validated['password'], $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            return response()->json([
+                'message' => 'Invalid email or password.',
+            ], 401);
         }
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+        $tenantSlug = $request->header('X-Tenant-Slug', 'main');
+
+        if ($tenantSlug === 'main') {
+            return $this->mainLogin($user);
+        }
+
+        return $this->businessLogin($user, $tenantSlug);
+    }
+
+    private function mainLogin(User $user)
+    {
+        $token = $user->createToken(
+            'main-account',
+            ['main']
+        )->plainTextToken;
+
+        $redirectTo = $user->account_type === 'platform_admin'
+            ? '/admin'
+            : '/dashboard';
 
         return response()->json([
             'message' => 'Login successful.',
-            'user' => $user,
             'token' => $token,
+            'user' => $user,
+            'redirect_to' => $redirectTo,
+        ]);
+    }
+
+    private function businessLogin(User $user, string $tenantSlug)
+    {
+        $business = Business::query()
+            ->where('slug', $tenantSlug)
+            ->where('status', 'Active')
+            ->first();
+
+        if (!$business) {
+            return response()->json([
+                'message' => 'Business not found or inactive.',
+            ], 404);
+        }
+
+        $membership = $business->members()
+            ->where('user_id', $user->id)
+            ->where('status', 'Active')
+            ->first();
+
+        $isOwner = (int) $business->owner_id === (int) $user->id;
+
+        if (!$isOwner && !$membership) {
+            return response()->json([
+                'message' => 'You do not have access to this business.',
+            ], 403);
+        }
+
+        $businessRole = $isOwner
+            ? 'Owner'
+            : $membership->role;
+
+        $token = $user->createToken(
+            'business-' . $business->id,
+            ['business:' . $business->id]
+        )->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful.',
+            'token' => $token,
+            'user' => $user,
+            'business' => $business,
+            'business_role' => $businessRole,
+            'redirect_to' => '/dashboard',
         ]);
     }
 
