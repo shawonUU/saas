@@ -1,0 +1,3 @@
+# One-time AcrylicHosts.txt entry for local SaaS development.
+# Maps saas.test, admin.saas.test, *.saas.test, and admin.*.saas.test to localhost.
+127.0.0.1 >saas.test
