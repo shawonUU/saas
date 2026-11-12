@@ -16,7 +16,7 @@ return new class extends Migration
             $table->bigInteger('owner_id');
             $table->bigInteger('category_id');
             $table->string('name');
-            $table->string('code');
+            $table->string('code')->unique();
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
