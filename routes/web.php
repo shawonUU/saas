@@ -1,7 +1,8 @@
 <?php
-use App\Http\Controllers\Saas\Auth\AuthorityAuthController;
-use App\Http\Controllers\Saas\Auth\OwnerAuthController;
+use App\Http\Controllers\Saas\Authority\Auth\AuthorityAuthController;
+use App\Http\Controllers\Saas\OwnerPortal\Auth\OwnerAuthController;
 use App\Http\Controllers\Saas\OwnerPortal\ShopRegistration\ShopRegistrationController;
+use App\Http\Controllers\Saas\Public\HomeController;
 use App\Http\Controllers\Store\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Store\Public\Auth\CustomerAuthController;
 use App\Models\Shop;
@@ -70,13 +71,7 @@ Route::domain('{shop}.'.$domain)->middleware('shop.resolve')->name('store.custom
     });
 });
 Route::domain($domain)->group(function () {
-    Route::get('/', function () {
-        return view('portals.landing', [
-            'title' => 'SaaS Platform', 'description' => t('Manage your shops in one place.', 'এক জায়গায় আপনার শপ পরিচালনা করুন।'),
-            'loginUrl' => route('saas.login'), 'registerUrl' => route('saas.register'),
-            'dashboardUrl' => route('saas.dashboard'), 'guard' => 'web',
-        ]);
-    })->name('saas.home');
+    Route::get('/', [HomeController::class, 'index'])->name('saas.home');
     Route::name('saas.')->group(function () {
         Route::get('/login', [OwnerAuthController::class, 'loginForm'])->name('login');
         Route::post('/login', [OwnerAuthController::class, 'login'])->middleware('throttle:5,1')->name('login.post');

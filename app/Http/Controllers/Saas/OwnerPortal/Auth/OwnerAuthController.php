@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Saas\Auth;
+namespace App\Http\Controllers\Saas\OwnerPortal\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;

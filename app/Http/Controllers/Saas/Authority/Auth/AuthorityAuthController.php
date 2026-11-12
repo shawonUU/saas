@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Saas\Auth;
+namespace App\Http\Controllers\Saas\Authority\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

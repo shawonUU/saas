@@ -248,7 +248,7 @@ class PortalAuth
 }
 ```
 
-## `app/Http/Controllers/Saas/Auth/OwnerAuthController.php`
+## `app/Http/Controllers/Saas/OwnerPortal/Auth/OwnerAuthController.php`
 
 ```php
 <?php
@@ -306,7 +306,7 @@ class OwnerAuthController extends Controller
 }
 ```
 
-## `app/Http/Controllers/Saas/Auth/AuthorityAuthController.php`
+## `app/Http/Controllers/Saas/Authority/Auth/AuthorityAuthController.php`
 
 ```php
 <?php
@@ -496,8 +496,8 @@ class CustomerAuthController extends Controller
 
 ```php
 <?php
-use App\Http\Controllers\Saas\Auth\AuthorityAuthController;
-use App\Http\Controllers\Saas\Auth\OwnerAuthController;
+use App\Http\Controllers\Saas\Authority\Auth\AuthorityAuthController;
+use App\Http\Controllers\Saas\OwnerPortal\Auth\OwnerAuthController;
 use App\Http\Controllers\Saas\OwnerPortal\ShopRegistration\ShopRegistrationController;
 use App\Http\Controllers\Store\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Store\Public\Auth\CustomerAuthController;
