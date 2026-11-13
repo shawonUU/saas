@@ -14,16 +14,11 @@ return new class extends Migration
         Schema::create('authority_users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->enum('approval_status', approvalStatus())->default('Pending');
-            $table->bigInteger('created_by')->nullable();
-            $table->bigInteger('updated_by')->nullable();
-            $table->date('business_date')->nullable();
-            $table->timestamps();
+            $table->erpCommonColumns();
         });
     }
 

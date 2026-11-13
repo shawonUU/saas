@@ -1,11 +1,11 @@
-# Automatic wildcard shop subdomains (Laravel + Windows/Laragon)
+# Automatic wildcard business subdomains (Laravel + Windows/Laragon)
 
 ## What is automatic?
-- Creating `rohimstore` in `saas.test:8000` inserts a Shop row and the owner account in one transaction.
+- Creating `rohimstore` in `saas.test:8000` inserts a Business row and the owner account in one transaction.
 - Its storefront is `http://rohimstore.saas.test:8000`.
 - Its admin login is `http://admin.rohimstore.saas.test:8000`.
 - `http://admin.saas.test:8000` is reserved for SaaS Authority.
-- Additional names are handled by the existing Laravel `Route::domain('{shop}...')` routing and shop middleware. Unknown or unapproved shop codes give 404.
+- Additional names are handled by the existing Laravel `Route::domain('{business}...')` routing and business middleware. Unknown or unapproved business codes give 404.
 - Laravel does NOT create public DNS records; a DNS wildcard must be configured once.
 
 ## Windows / Laragon: one-time DNS wildcard
@@ -61,8 +61,8 @@ https://mayakron.altervista.org/support/acrylic/Home.htm
 ## Production: one-time DNS / server wildcard
 - Point apex `saas.test` to the public server IP via an A record.
 - Set a wildcard DNS record `*.saas.test` to that same IP (or suitable reverse proxy). Ensure nested names such as `admin.rohimstore.saas.test` resolve correctly; avoid adding conflicting more-specific DNS records without checking wildcard coverage.
-- Configure Nginx/Apache/reverse proxy to accept `saas.test`, `*.saas.test`, and nested `admin.<shop>.saas.test`, all using the same Laravel `public` directory.
+- Configure Nginx/Apache/reverse proxy to accept `saas.test`, `*.saas.test`, and nested `admin.<business>.saas.test`, all using the same Laravel `public` directory.
 - Use `APP_URL=https://saas.test`, `SAAS_DOMAIN=saas.test`, and HTTPS/secure session cookies in production.
-- **TLS caveat:** a certificate for `*.saas.test` covers `rohimstore.saas.test` but NOT `admin.rohimstore.saas.test`. Set up per-shop admin hostname certificate issuance or another supported automated certificate solution before production launch. Plain `php artisan serve` on port 8000 is only for local development.
+- **TLS caveat:** a certificate for `*.saas.test` covers `rohimstore.saas.test` but NOT `admin.rohimstore.saas.test`. Set up per-business admin hostname certificate issuance or another supported automated certificate solution before production launch. Plain `php artisan serve` on port 8000 is only for local development.
 
-No new migration is needed. The existing `shops.code` unique index and reserved-subdomain validation still apply.
+No new migration is needed. The existing `businesss.code` unique index and reserved-subdomain validation still apply.

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
             $table->foreignId('module_id');
             $table->string('name');
             $table->string('slug');
@@ -21,14 +20,9 @@ return new class extends Migration
             $table->string('permission')->nullable();
             $table->string('icon')->nullable();
             $table->unsignedInteger('sort_order')->default(0);
-            $table->boolean('is_active')->default(true);
-            $table->enum('approval_status', approvalStatus())->default('Pending');
-            $table->bigInteger('created_by')->nullable();
-            $table->bigInteger('updated_by')->nullable();
-            $table->date('business_date')->nullable();
-            $table->timestamps();
             $table->unique(['module_id', 'slug']);
-            $table->index([ 'module_id', 'sort_order', ]);
+            $table->index(['module_id', 'sort_order', ]);
+            $table->erpCommonColumns();
         });
     }
 
@@ -37,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('menus');
     }
 };

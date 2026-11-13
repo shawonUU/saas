@@ -1,8 +1,9 @@
 
 <!doctype html>
-<html lang="{{ session('portal_lang', 'en') }}">
+<html lang="{{ session('portal_lang', 'en') }}" data-theme="light">
 <head>
     <meta charset="utf-8">
+    <script>try{document.documentElement.dataset.theme=localStorage.getItem('nexabiz-theme')==='dark'?'dark':'light'}catch(e){}</script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -355,6 +356,7 @@
         }
     </style>
 
+    @include('portals.partials.theme-styles')
     @stack('styles')
 </head>
 
@@ -376,6 +378,7 @@
         </nav>
 
         <div class="nav-actions">
+            <button type="button" id="theme-toggle" class="theme-btn" aria-label="{{ t('Toggle light and dark mode','লাইট ও ডার্ক মোড বদলান') }}" aria-pressed="false">◐ <span id="theme-label">{{ t('Dark','ডার্ক') }}</span></button>
 
             <form class="language-form" action="{{ url('/language') }}" method="POST">
                 @csrf
@@ -387,10 +390,15 @@
                 </button>
             </form>
 
-            @if(isset($guard) && Auth::guard($guard)->check())
-                <a href="{{ route('saas.dashboard') }}" class="btn">
-                    {{ t('Dashboard', 'ড্যাশবোর্ড') }}
-                </a>
+            @php
+                $businessCode = request()->route('business');
+                $portalDashboard = Auth::guard('authority')->check() && request()->getHost() === 'admin.'.config('saas.domain') ? route('authority.dashboard') :
+                    (Auth::guard('business_admin')->check() && $businessCode && str_starts_with(request()->getHost(),'admin.') ? route('store.admin.dashboard',['business'=>$businessCode]) :
+                    (Auth::guard('business_customer')->check() && $businessCode ? route('store.customer.dashboard',['business'=>$businessCode]) :
+                    (Auth::guard('web')->check() ? route('saas.dashboard') : null)));
+            @endphp
+            @if($portalDashboard)
+                <a href="{{ $portalDashboard }}" class="btn">{{ t('Dashboard','ড্যাশবোর্ড') }}</a>
             @else
                 <a href="{{ route('saas.login') }}" class="btn btn-outline">
                     {{ t('Log in', 'লগইন') }}
@@ -461,6 +469,9 @@
     </div>
 </footer>
 
+<script>
+(function(){const btn=document.getElementById('theme-toggle');const label=document.getElementById('theme-label');const light=@json(t('Light','লাইট'));const dark=@json(t('Dark','ডার্ক'));function refresh(){const isDark=document.documentElement.dataset.theme==='dark';btn.setAttribute('aria-pressed',isDark?'true':'false');label.textContent=isDark?light:dark;}btn.addEventListener('click',function(){const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('nexabiz-theme',next)}catch(e){}refresh()});refresh()})();
+</script>
 @stack('scripts')
 
 </body>

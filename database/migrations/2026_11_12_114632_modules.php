@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('icon')->nullable();
             $table->unsignedInteger('sort_order')->default(0);
+            $table->erpCommonColumns();
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('modules');
     }
 };

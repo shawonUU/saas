@@ -21,22 +21,22 @@ Artisan::command('authority:create', function () {
     $this->info('Authority user created.');
 })->purpose('Create an authority login account interactively');
 
-Artisan::command('shop:employee {shopCode}', function () {
-    $shop = \App\Models\Shop::where('code', $this->argument('shopCode'))->first();
-    if (!$shop) { $this->error('Shop not found.'); return; }
+Artisan::command('business:employee {businessCode}', function () {
+    $business = \App\Models\Business::where('code', $this->argument('businessCode'))->first();
+    if (!$business) { $this->error('Business not found.'); return; }
     $name = trim((string) $this->ask('Employee name'));
     $email = strtolower(trim((string) $this->ask('Employee email')));
     $password = (string) $this->secret('Employee password (min 8 characters)');
     $validation = Validator::make(compact('name', 'email', 'password'), [
         'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'email', \Illuminate\Validation\Rule::unique('business_users', 'email')->where('shop_id', $shop->id)],
+        'email' => ['required', 'email', \Illuminate\Validation\Rule::unique('business_users', 'email')->where('business_id', $business->id)],
         'password' => ['required', 'string', 'min:8'],
     ]);
     if ($validation->fails()) { $this->error($validation->errors()->first()); return; }
     \App\Models\BusinessUser::create([
-        'shop_id' => $shop->id, 'role' => 'employee', 'name' => $name, 'email' => $email,
+        'business_id' => $business->id, 'role' => 'employee', 'name' => $name, 'email' => $email,
         'code' => 'BU'.Str::upper(Str::random(12)), 'password' => $password,
         'approval_status' => 'Approved',
     ]);
-    $this->info('Employee login created for '.$shop->code.'.');
-})->purpose('Create an employee login for an existing shop interactively');
+    $this->info('Employee login created for '.$business->code.'.');
+})->purpose('Create an employee login for an existing business interactively');

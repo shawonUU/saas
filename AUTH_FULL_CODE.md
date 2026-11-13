@@ -18,20 +18,20 @@ return [
 use App\Models\User;
 use App\Models\AuthorityUser;
 use App\Models\BusinessUser;
-use App\Models\ShopCustomer;
+use App\Models\BusinessCustomer;
 return [
     'defaults' => ['guard' => 'web', 'passwords' => 'users'],
     'guards' => [
         'web' => ['driver' => 'session', 'provider' => 'users'],
         'authority' => ['driver' => 'session', 'provider' => 'authority_users'],
-        'shop_admin' => ['driver' => 'session', 'provider' => 'business_users'],
-        'shop_customer' => ['driver' => 'session', 'provider' => 'shop_customers'],
+        'business_admin' => ['driver' => 'session', 'provider' => 'business_users'],
+        'business_customer' => ['driver' => 'session', 'provider' => 'business_customers'],
     ],
     'providers' => [
         'users' => ['driver' => 'eloquent', 'model' => User::class],
         'authority_users' => ['driver' => 'eloquent', 'model' => AuthorityUser::class],
         'business_users' => ['driver' => 'eloquent', 'model' => BusinessUser::class],
-        'shop_customers' => ['driver' => 'eloquent', 'model' => ShopCustomer::class],
+        'business_customers' => ['driver' => 'eloquent', 'model' => BusinessCustomer::class],
     ],
     'passwords' => [
         'users' => ['provider' => 'users', 'table' => 'password_reset_tokens', 'expire' => 60, 'throttle' => 60],
@@ -45,7 +45,7 @@ return [
 ```php
 <?php
 use App\Http\Middleware\PortalAuth;
-use App\Http\Middleware\ResolveShop;
+use App\Http\Middleware\ResolveBusiness;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -57,7 +57,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias(['shop.resolve' => ResolveShop::class, 'portal.auth' => PortalAuth::class]);
+        $middleware->alias(['business.resolve' => ResolveBusiness::class, 'portal.auth' => PortalAuth::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(fn (Request $request) => $request->is('api/*') || $request->expectsJson());
@@ -93,7 +93,7 @@ class User extends Authenticatable
     protected $fillable = ['name', 'code', 'email', 'password', 'approval_status'];
     protected $hidden = ['password', 'remember_token'];
     protected function casts(): array { return ['password' => 'hashed', 'email_verified_at' => 'datetime']; }
-    public function shops() { return $this->hasMany(Shop::class, 'owner_id'); }
+    public function businesss() { return $this->hasMany(Business::class, 'owner_id'); }
 }
 ```
 
@@ -125,85 +125,85 @@ class BusinessUser extends Authenticatable
 {
     use Notifiable;
     protected $table = 'business_users';
-    protected $fillable = ['shop_id', 'user_id', 'name', 'code', 'email', 'password', 'approval_status', 'role'];
+    protected $fillable = ['business_id', 'user_id', 'name', 'code', 'email', 'password', 'approval_status', 'role'];
     protected $hidden = ['password', 'remember_token'];
     protected function casts(): array { return ['password' => 'hashed', 'email_verified_at' => 'datetime']; }
-    public function shop() { return $this->belongsTo(Shop::class); }
+    public function business() { return $this->belongsTo(Business::class); }
 }
 ```
 
-## `app/Models/ShopCustomer.php`
+## `app/Models/BusinessCustomer.php`
 
 ```php
 <?php
 namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-class ShopCustomer extends Authenticatable
+class BusinessCustomer extends Authenticatable
 {
     use Notifiable;
-    protected $table = 'shop_customers';
-    protected $fillable = ['shop_id', 'name', 'code', 'email', 'password', 'approval_status'];
+    protected $table = 'business_customers';
+    protected $fillable = ['business_id', 'name', 'code', 'email', 'password', 'approval_status'];
     protected $hidden = ['password', 'remember_token'];
     protected function casts(): array { return ['password' => 'hashed', 'email_verified_at' => 'datetime']; }
-    public function shop() { return $this->belongsTo(Shop::class); }
+    public function business() { return $this->belongsTo(Business::class); }
 }
 ```
 
-## `app/Models/Shop.php`
+## `app/Models/Business.php`
 
 ```php
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
-class Shop extends Model
+class Business extends Model
 {
     protected $fillable = ['owner_id', 'category_id', 'name', 'code', 'address', 'phone', 'email', 'domain', 'approval_status'];
     protected static function booted(): void
     {
-        static::saving(function (self $shop) {
-            if (in_array(strtolower((string) $shop->code), config('saas.reserved_subdomains', []), true)) {
+        static::saving(function (self $business) {
+            if (in_array(strtolower((string) $business->code), config('saas.reserved_subdomains', []), true)) {
                 throw ValidationException::withMessages(['code' => 'This subdomain is reserved. Please choose another name.']);
             }
         });
     }
     public function owner() { return $this->belongsTo(User::class, 'owner_id'); }
-    public function category() { return $this->belongsTo(ShopCategory::class, 'category_id'); }
+    public function category() { return $this->belongsTo(BusinessCategory::class, 'category_id'); }
     public function admins() { return $this->hasMany(BusinessUser::class); }
-    public function customers() { return $this->hasMany(ShopCustomer::class); }
+    public function customers() { return $this->hasMany(BusinessCustomer::class); }
 }
 ```
 
-## `app/Models/ShopCategory.php`
+## `app/Models/BusinessCategory.php`
 
 ```php
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class ShopCategory extends Model
+class BusinessCategory extends Model
 {
     protected $fillable = ['name', 'code', 'approval_status'];
 }
 ```
 
-## `app/Http/Middleware/ResolveShop.php`
+## `app/Http/Middleware/ResolveBusiness.php`
 
 ```php
 <?php
 namespace App\Http\Middleware;
-use App\Models\Shop;
+use App\Models\Business;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-class ResolveShop
+class ResolveBusiness
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $code = strtolower((string) $request->route('shop'));
+        $code = strtolower((string) $request->route('business'));
         abort_if(in_array($code, config('saas.reserved_subdomains', []), true), 404);
-        $shop = Shop::where('code', $code)->where('approval_status', 'Approved')->firstOrFail();
-        $request->attributes->set('current_shop', $shop);
+        $business = Business::where('code', $code)->where('approval_status', 'Approved')->firstOrFail();
+        $request->attributes->set('current_business', $business);
         return $next($request);
     }
 }
@@ -225,11 +225,11 @@ class PortalAuth
         $login = match ($guard) {
             'authority' => 'authority.login',
             'web' => 'saas.login',
-            'shop_admin' => 'store.admin.login',
-            'shop_customer' => 'store.customer.login',
+            'business_admin' => 'store.admin.login',
+            'business_customer' => 'store.customer.login',
             default => abort(403),
         };
-        $params = in_array($guard, ['shop_admin', 'shop_customer']) ? ['shop' => $request->route('shop')] : [];
+        $params = in_array($guard, ['business_admin', 'business_customer']) ? ['business' => $request->route('business')] : [];
         $user = Auth::guard($guard)->user();
         if (!$user) return redirect()->route($login, $params);
         if ($user->approval_status !== 'Approved') {
@@ -238,9 +238,9 @@ class PortalAuth
             $request->session()->regenerateToken();
             return redirect()->route($login, $params)->withErrors(['email' => 'Account is not active.']);
         }
-        if (in_array($guard, ['shop_admin', 'shop_customer'])) {
-            $shop = $request->attributes->get('current_shop');
-            abort_unless($shop && (int) $user->shop_id === (int) $shop->id, 403);
+        if (in_array($guard, ['business_admin', 'business_customer'])) {
+            $business = $request->attributes->get('current_business');
+            abort_unless($business && (int) $user->business_id === (int) $business->id, 403);
         }
         Auth::shouldUse($guard);
         return $next($request);
@@ -341,49 +341,49 @@ class AuthorityAuthController extends Controller
 }
 ```
 
-## `app/Http/Controllers/Saas/OwnerPortal/ShopRegistration/ShopRegistrationController.php`
+## `app/Http/Controllers/Saas/OwnerPortal/BusinessRegistration/BusinessRegistrationController.php`
 
 ```php
 <?php
-namespace App\Http\Controllers\Saas\OwnerPortal\ShopRegistration;
+namespace App\Http\Controllers\Saas\OwnerPortal\BusinessRegistration;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessUser;
-use App\Models\Shop;
-use App\Models\ShopCategory;
+use App\Models\Business;
+use App\Models\BusinessCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-class ShopRegistrationController extends Controller
+class BusinessRegistrationController extends Controller
 {
     public function create()
     {
-        return view('portals.create-shop', ['categories' => ShopCategory::where('approval_status', 'Approved')->orderBy('name')->get()]);
+        return view('portals.create-business', ['categories' => BusinessCategory::where('approval_status', 'Approved')->orderBy('name')->get()]);
     }
     public function store(Request $request)
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'min:3', 'max:40', 'regex:/^[a-z][a-z0-9-]*$/', Rule::notIn(config('saas.reserved_subdomains', [])), 'unique:shops,code'],
-            'category_id' => ['required', Rule::exists('shop_categories', 'id')->where('approval_status', 'Approved')],
+            'code' => ['required', 'string', 'min:3', 'max:40', 'regex:/^[a-z][a-z0-9-]*$/', Rule::notIn(config('saas.reserved_subdomains', [])), 'unique:businesss,code'],
+            'category_id' => ['required', Rule::exists('business_categories', 'id')->where('approval_status', 'Approved')],
             'admin_password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
         $owner = Auth::guard('web')->user();
         DB::transaction(function () use ($data, $owner) {
-            $shop = Shop::create([
+            $business = Business::create([
                 'owner_id' => $owner->id, 'category_id' => $data['category_id'],
                 'name' => trim($data['name']), 'code' => $data['code'], 'approval_status' => 'Approved',
             ]);
             BusinessUser::create([
-                'shop_id' => $shop->id, 'user_id' => $owner->id, 'role' => 'owner',
+                'business_id' => $business->id, 'user_id' => $owner->id, 'role' => 'owner',
                 'name' => $owner->name, 'email' => $owner->email,
                 'code' => 'BU'.Str::upper(Str::random(12)),
                 'password' => filled($data['admin_password'] ?? null) ? $data['admin_password'] : $owner->password,
                 'approval_status' => 'Approved',
             ]);
         });
-        return redirect()->route('saas.dashboard')->with('success', 'Shop created. You can now log in to its admin subdomain.');
+        return redirect()->route('saas.dashboard')->with('success', 'Business created. You can now log in to its admin subdomain.');
     }
 }
 ```
@@ -400,29 +400,29 @@ class AdminAuthController extends Controller
 {
     public function loginForm(Request $request)
     {
-        $shop = $request->attributes->get('current_shop');
-        if (Auth::guard('shop_admin')->check() && (int) Auth::guard('shop_admin')->user()->shop_id === (int) $shop->id) return redirect()->route('store.admin.dashboard', ['shop' => $shop->code]);
-        return view('portals.login', ['title' => $shop->name.' · Admin', 'action' => route('store.admin.login.post', ['shop' => $shop->code]), 'registerUrl' => null]);
+        $business = $request->attributes->get('current_business');
+        if (Auth::guard('business_admin')->check() && (int) Auth::guard('business_admin')->user()->business_id === (int) $business->id) return redirect()->route('store.admin.dashboard', ['business' => $business->code]);
+        return view('portals.login', ['title' => $business->name.' · Admin', 'action' => route('store.admin.login.post', ['business' => $business->code]), 'registerUrl' => null]);
     }
     public function login(Request $request)
     {
-        $shop = $request->attributes->get('current_shop');
+        $business = $request->attributes->get('current_business');
         $data = $request->validate(['email' => ['required', 'email'], 'password' => ['required', 'string']]);
-        if (Auth::guard('shop_admin')->attempt([
+        if (Auth::guard('business_admin')->attempt([
             'email' => strtolower(trim($data['email'])), 'password' => $data['password'],
-            'shop_id' => $shop->id, 'approval_status' => 'Approved',
+            'business_id' => $business->id, 'approval_status' => 'Approved',
         ])) {
             $request->session()->regenerate();
-            return redirect()->route('store.admin.dashboard', ['shop' => $shop->code]);
+            return redirect()->route('store.admin.dashboard', ['business' => $business->code]);
         }
-        return back()->withErrors(['email' => 'Invalid credentials for this shop.'])->onlyInput('email');
+        return back()->withErrors(['email' => 'Invalid credentials for this business.'])->onlyInput('email');
     }
     public function logout(Request $request)
     {
-        Auth::guard('shop_admin')->logout();
+        Auth::guard('business_admin')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('store.admin.login', ['shop' => $request->route('shop')]);
+        return redirect()->route('store.admin.login', ['business' => $request->route('business')]);
     }
 }
 ```
@@ -433,7 +433,7 @@ class AdminAuthController extends Controller
 <?php
 namespace App\Http\Controllers\Store\Public\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\ShopCustomer;
+use App\Models\BusinessCustomer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -442,52 +442,52 @@ class CustomerAuthController extends Controller
 {
     public function loginForm(Request $request)
     {
-        $shop = $request->attributes->get('current_shop');
-        if (Auth::guard('shop_customer')->check() && (int) Auth::guard('shop_customer')->user()->shop_id === (int) $shop->id) return redirect()->route('store.customer.dashboard', ['shop' => $shop->code]);
-        return view('portals.login', ['title' => $shop->name.' · Customer', 'action' => route('store.customer.login.post', ['shop' => $shop->code]), 'registerUrl' => route('store.customer.register', ['shop' => $shop->code])]);
+        $business = $request->attributes->get('current_business');
+        if (Auth::guard('business_customer')->check() && (int) Auth::guard('business_customer')->user()->business_id === (int) $business->id) return redirect()->route('store.customer.dashboard', ['business' => $business->code]);
+        return view('portals.login', ['title' => $business->name.' · Customer', 'action' => route('store.customer.login.post', ['business' => $business->code]), 'registerUrl' => route('store.customer.register', ['business' => $business->code])]);
     }
     public function registerForm(Request $request)
     {
-        $shop = $request->attributes->get('current_shop');
-        if (Auth::guard('shop_customer')->check() && (int) Auth::guard('shop_customer')->user()->shop_id === (int) $shop->id) return redirect()->route('store.customer.dashboard', ['shop' => $shop->code]);
-        return view('portals.register', ['title' => $shop->name.' · Register', 'action' => route('store.customer.register.post', ['shop' => $shop->code]), 'loginUrl' => route('store.customer.login', ['shop' => $shop->code])]);
+        $business = $request->attributes->get('current_business');
+        if (Auth::guard('business_customer')->check() && (int) Auth::guard('business_customer')->user()->business_id === (int) $business->id) return redirect()->route('store.customer.dashboard', ['business' => $business->code]);
+        return view('portals.register', ['title' => $business->name.' · Register', 'action' => route('store.customer.register.post', ['business' => $business->code]), 'loginUrl' => route('store.customer.login', ['business' => $business->code])]);
     }
     public function register(Request $request)
     {
         $request->merge(['email' => strtolower(trim((string) $request->input('email')))]);
-        $shop = $request->attributes->get('current_shop');
+        $business = $request->attributes->get('current_business');
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('shop_customers', 'email')->where('shop_id', $shop->id)],
+            'email' => ['required', 'email', 'max:255', Rule::unique('business_customers', 'email')->where('business_id', $business->id)],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
-        $customer = ShopCustomer::create([
-            'shop_id' => $shop->id, 'name' => trim($data['name']), 'email' => strtolower(trim($data['email'])),
+        $customer = BusinessCustomer::create([
+            'business_id' => $business->id, 'name' => trim($data['name']), 'email' => strtolower(trim($data['email'])),
             'code' => 'SC'.Str::upper(Str::random(12)), 'password' => $data['password'], 'approval_status' => 'Approved',
         ]);
-        Auth::guard('shop_customer')->login($customer);
+        Auth::guard('business_customer')->login($customer);
         $request->session()->regenerate();
-        return redirect()->route('store.customer.dashboard', ['shop' => $shop->code]);
+        return redirect()->route('store.customer.dashboard', ['business' => $business->code]);
     }
     public function login(Request $request)
     {
-        $shop = $request->attributes->get('current_shop');
+        $business = $request->attributes->get('current_business');
         $data = $request->validate(['email' => ['required', 'email'], 'password' => ['required', 'string']]);
-        if (Auth::guard('shop_customer')->attempt([
+        if (Auth::guard('business_customer')->attempt([
             'email' => strtolower(trim($data['email'])), 'password' => $data['password'],
-            'shop_id' => $shop->id, 'approval_status' => 'Approved',
+            'business_id' => $business->id, 'approval_status' => 'Approved',
         ])) {
             $request->session()->regenerate();
-            return redirect()->route('store.customer.dashboard', ['shop' => $shop->code]);
+            return redirect()->route('store.customer.dashboard', ['business' => $business->code]);
         }
-        return back()->withErrors(['email' => 'Invalid credentials for this shop.'])->onlyInput('email');
+        return back()->withErrors(['email' => 'Invalid credentials for this business.'])->onlyInput('email');
     }
     public function logout(Request $request)
     {
-        Auth::guard('shop_customer')->logout();
+        Auth::guard('business_customer')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('store.customer.login', ['shop' => $request->route('shop')]);
+        return redirect()->route('store.customer.login', ['business' => $request->route('business')]);
     }
 }
 ```
@@ -498,15 +498,15 @@ class CustomerAuthController extends Controller
 <?php
 use App\Http\Controllers\Saas\Authority\Auth\AuthorityAuthController;
 use App\Http\Controllers\Saas\OwnerPortal\Auth\OwnerAuthController;
-use App\Http\Controllers\Saas\OwnerPortal\ShopRegistration\ShopRegistrationController;
+use App\Http\Controllers\Saas\OwnerPortal\BusinessRegistration\BusinessRegistrationController;
 use App\Http\Controllers\Store\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Store\Public\Auth\CustomerAuthController;
-use App\Models\Shop;
+use App\Models\Business;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 $domain = config('saas.domain');
-// Reserve admin.saas.test for platform authority before resolving shop domains.
+// Reserve admin.saas.test for platform authority before resolving business domains.
 Route::domain('admin.'.$domain)->name('authority.')->group(function () {
     Route::get('/', fn () => redirect()->route('authority.login'))->name('home');
     Route::get('/login', [AuthorityAuthController::class, 'loginForm'])->name('login');
@@ -520,47 +520,47 @@ Route::domain('admin.'.$domain)->name('authority.')->group(function () {
         Route::post('/logout', [AuthorityAuthController::class, 'logout'])->name('logout');
     });
 });
-// Shop admin portals and the wildcard customer storefront are kept independent.
-Route::domain('admin.{shop}.'.$domain)->middleware('shop.resolve')->name('store.admin.')->group(function () {
-    Route::get('/', fn (Request $request) => redirect()->route('store.admin.login', ['shop' => $request->route('shop')]))->name('home');
+// Business admin portals and the wildcard customer storefront are kept independent.
+Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->name('store.admin.')->group(function () {
+    Route::get('/', fn (Request $request) => redirect()->route('store.admin.login', ['business' => $request->route('business')]))->name('home');
     Route::get('/login', [AdminAuthController::class, 'loginForm'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login'])->middleware('throttle:5,1')->name('login.post');
-    Route::middleware('portal.auth:shop_admin')->group(function () {
+    Route::middleware('portal.auth:business_admin')->group(function () {
         Route::get('/dashboard', function (Request $request) {
-            $shop = $request->attributes->get('current_shop');
+            $business = $request->attributes->get('current_business');
             return view('portals.dashboard', [
-                'title' => $shop->name.' · Admin', 'user' => Auth::guard('shop_admin')->user(),
-                'subtitle' => t('Shop administration', 'শপ অ্যাডমিন প্যানেল'),
-                'logoutUrl' => route('store.admin.logout', ['shop' => $shop->code]),
-                'links' => [[t('Visit storefront', 'স্টোরফ্রন্ট দেখুন'), route('store.customer.home', ['shop' => $shop->code])]],
+                'title' => $business->name.' · Admin', 'user' => Auth::guard('business_admin')->user(),
+                'subtitle' => t('Business administration', 'শপ অ্যাডমিন প্যানেল'),
+                'logoutUrl' => route('store.admin.logout', ['business' => $business->code]),
+                'links' => [[t('Visit storefront', 'স্টোরফ্রন্ট দেখুন'), route('store.customer.home', ['business' => $business->code])]],
             ]);
         })->name('dashboard');
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 });
-Route::domain('{shop}.'.$domain)->middleware('shop.resolve')->name('store.customer.')->group(function () {
+Route::domain('{business}.'.$domain)->middleware('business.resolve')->name('store.customer.')->group(function () {
     Route::get('/', function (Request $request) {
-        $shop = $request->attributes->get('current_shop');
+        $business = $request->attributes->get('current_business');
         return view('portals.landing', [
-            'title' => $shop->name, 'description' => t('Welcome to our store.', 'আমাদের স্টোরে স্বাগতম।'),
-            'loginUrl' => route('store.customer.login', ['shop' => $shop->code]),
-            'registerUrl' => route('store.customer.register', ['shop' => $shop->code]),
-            'dashboardUrl' => route('store.customer.dashboard', ['shop' => $shop->code]),
-            'guard' => 'shop_customer',
+            'title' => $business->name, 'description' => t('Welcome to our store.', 'আমাদের স্টোরে স্বাগতম।'),
+            'loginUrl' => route('store.customer.login', ['business' => $business->code]),
+            'registerUrl' => route('store.customer.register', ['business' => $business->code]),
+            'dashboardUrl' => route('store.customer.dashboard', ['business' => $business->code]),
+            'guard' => 'business_customer',
         ]);
     })->name('home');
     Route::get('/login', [CustomerAuthController::class, 'loginForm'])->name('login');
     Route::post('/login', [CustomerAuthController::class, 'login'])->middleware('throttle:5,1')->name('login.post');
     Route::get('/register', [CustomerAuthController::class, 'registerForm'])->name('register');
     Route::post('/register', [CustomerAuthController::class, 'register'])->middleware('throttle:5,1')->name('register.post');
-    Route::middleware('portal.auth:shop_customer')->group(function () {
+    Route::middleware('portal.auth:business_customer')->group(function () {
         Route::get('/dashboard', function (Request $request) {
-            $shop = $request->attributes->get('current_shop');
+            $business = $request->attributes->get('current_business');
             return view('portals.dashboard', [
-                'title' => $shop->name.' · Customer', 'user' => Auth::guard('shop_customer')->user(),
+                'title' => $business->name.' · Customer', 'user' => Auth::guard('business_customer')->user(),
                 'subtitle' => t('My customer account', 'আমার কাস্টমার অ্যাকাউন্ট'),
-                'logoutUrl' => route('store.customer.logout', ['shop' => $shop->code]),
-                'links' => [[t('Store home', 'স্টোর হোম'), route('store.customer.home', ['shop' => $shop->code])]],
+                'logoutUrl' => route('store.customer.logout', ['business' => $business->code]),
+                'links' => [[t('Store home', 'স্টোর হোম'), route('store.customer.home', ['business' => $business->code])]],
             ]);
         })->name('dashboard');
         Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('logout');
@@ -569,7 +569,7 @@ Route::domain('{shop}.'.$domain)->middleware('shop.resolve')->name('store.custom
 Route::domain($domain)->group(function () {
     Route::get('/', function () {
         return view('portals.landing', [
-            'title' => 'SaaS Platform', 'description' => t('Manage your shops in one place.', 'এক জায়গায় আপনার শপ পরিচালনা করুন।'),
+            'title' => 'SaaS Platform', 'description' => t('Manage your businesss in one place.', 'এক জায়গায় আপনার শপ পরিচালনা করুন।'),
             'loginUrl' => route('saas.login'), 'registerUrl' => route('saas.register'),
             'dashboardUrl' => route('saas.dashboard'), 'guard' => 'web',
         ]);
@@ -583,11 +583,11 @@ Route::domain($domain)->group(function () {
             Route::get('/dashboard', function () {
                 return view('portals.owner-dashboard', [
                     'user' => Auth::guard('web')->user(),
-                    'shops' => Shop::where('owner_id', Auth::guard('web')->id())->latest()->get(),
+                    'businesss' => Business::where('owner_id', Auth::guard('web')->id())->latest()->get(),
                 ]);
             })->name('dashboard');
-            Route::get('/shops/create', [ShopRegistrationController::class, 'create'])->name('shops.create');
-            Route::post('/shops', [ShopRegistrationController::class, 'store'])->name('shops.store');
+            Route::get('/businesss/create', [BusinessRegistrationController::class, 'create'])->name('businesss.create');
+            Route::post('/businesss', [BusinessRegistrationController::class, 'store'])->name('businesss.store');
             Route::post('/logout', [OwnerAuthController::class, 'logout'])->name('logout');
         });
     });
@@ -626,25 +626,25 @@ Artisan::command('authority:create', function () {
     $this->info('Authority user created.');
 })->purpose('Create an authority login account interactively');
 
-Artisan::command('shop:employee {shopCode}', function () {
-    $shop = \App\Models\Shop::where('code', $this->argument('shopCode'))->first();
-    if (!$shop) { $this->error('Shop not found.'); return; }
+Artisan::command('business:employee {businessCode}', function () {
+    $business = \App\Models\Business::where('code', $this->argument('businessCode'))->first();
+    if (!$business) { $this->error('Business not found.'); return; }
     $name = trim((string) $this->ask('Employee name'));
     $email = strtolower(trim((string) $this->ask('Employee email')));
     $password = (string) $this->secret('Employee password (min 8 characters)');
     $validation = Validator::make(compact('name', 'email', 'password'), [
         'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'email', \Illuminate\Validation\Rule::unique('business_users', 'email')->where('shop_id', $shop->id)],
+        'email' => ['required', 'email', \Illuminate\Validation\Rule::unique('business_users', 'email')->where('business_id', $business->id)],
         'password' => ['required', 'string', 'min:8'],
     ]);
     if ($validation->fails()) { $this->error($validation->errors()->first()); return; }
     \App\Models\BusinessUser::create([
-        'shop_id' => $shop->id, 'role' => 'employee', 'name' => $name, 'email' => $email,
+        'business_id' => $business->id, 'role' => 'employee', 'name' => $name, 'email' => $email,
         'code' => 'BU'.Str::upper(Str::random(12)), 'password' => $password,
         'approval_status' => 'Approved',
     ]);
-    $this->info('Employee login created for '.$shop->code.'.');
-})->purpose('Create an employee login for an existing shop interactively');
+    $this->info('Employee login created for '.$business->code.'.');
+})->purpose('Create an employee login for an existing business interactively');
 ```
 
 ## `database/migrations/2026_11_11_170000_finalize_auth_schema.php`
@@ -667,14 +667,14 @@ return new class extends Migration
             $table->string('role', 20)->default('employee');
             $table->unsignedBigInteger('user_id')->nullable()->index();
         });
-        Schema::table('shops', function (Blueprint $table) {
+        Schema::table('businesss', function (Blueprint $table) {
             $table->unique('code');
             $table->index('owner_id');
         });
     }
     public function down(): void
     {
-        Schema::table('shops', function (Blueprint $table) {
+        Schema::table('businesss', function (Blueprint $table) {
             $table->dropUnique(['code']);
             $table->dropIndex(['owner_id']);
         });
@@ -697,23 +697,23 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call(ShopCategorySeeder::class);
+        $this->call(BusinessCategorySeeder::class);
     }
 }
 ```
 
-## `database/seeders/ShopCategorySeeder.php`
+## `database/seeders/BusinessCategorySeeder.php`
 
 ```php
 <?php
 namespace Database\Seeders;
-use App\Models\ShopCategory;
+use App\Models\BusinessCategory;
 use Illuminate\Database\Seeder;
-class ShopCategorySeeder extends Seeder
+class BusinessCategorySeeder extends Seeder
 {
     public function run(): void
     {
-        ShopCategory::firstOrCreate(['code' => 'general'], ['name' => 'General', 'approval_status' => 'Approved']);
+        BusinessCategory::firstOrCreate(['code' => 'general'], ['name' => 'General', 'approval_status' => 'Approved']);
     }
 }
 ```
@@ -729,7 +729,7 @@ class ShopCategorySeeder extends Seeder
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'SaaS' }}</title>
     <style>
-        *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;background:#f5f7fb;color:#17233b}a{color:#3157d5;text-decoration:none}a:hover{text-decoration:underline}.nav{background:white;border-bottom:1px solid #e8ecf4;padding:17px max(20px,calc((100% - 1000px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-weight:800;color:#19284d;font-size:20px}.nav-right{display:flex;gap:15px;align-items:center}.lang{background:#f2f5ff;color:#2846aa;border:0;border-radius:9px;padding:8px 11px;cursor:pointer;font-weight:700}.container{width:min(100% - 36px,1000px);margin:44px auto}.card{background:#fff;border:1px solid #e8ecf3;border-radius:18px;box-shadow:0 14px 45px #2432570a;padding:30px}.auth{max-width:450px;margin:0 auto}.title{font-weight:800;letter-spacing:-.5px;font-size:27px;margin:0 0 8px}.sub{color:#778198;margin:0 0 25px;line-height:1.5}label{font-size:13px;font-weight:700;display:block;margin:17px 0 7px}input,select{width:100%;padding:12px 13px;border:1px solid #d9dfeb;border-radius:10px;font:inherit;color:#17233b;background:#fff}input:focus,select:focus{outline:2px solid #b5c4ff;border-color:#5873d8}.btn{background:#2e53d2;color:white;border:0;border-radius:10px;font-weight:700;padding:12px 17px;cursor:pointer;display:inline-block;text-align:center}.btn:hover{background:#2144bd;color:#fff;text-decoration:none}.btn-outline{background:#fff;color:#3456c1;border:1px solid #c5cde0}.btn-outline:hover{background:#f1f4fc;color:#1e3d9a}.wide{width:100%;margin-top:22px}.hint{font-size:13px;color:#7d879b;margin-top:17px}.alert{border-radius:11px;padding:12px 14px;margin:17px 0;font-size:14px}.error{color:#9e2432;background:#fff0f1;border:1px solid #ffd6dc}.success{color:#14683b;background:#e8fff1;border:1px solid #bbefd1}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}.shop{padding:20px;border:1px solid #e6ebf2;border-radius:14px;margin-top:16px}.shop h3{margin:0 0 8px}.small{font-size:13px;color:#778198}.inline{display:inline-block}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.footer{margin-top:50px;text-align:center;font-size:12px;color:#8c94a7}@media(max-width:600px){.nav{padding:16px 18px}.container{margin:24px auto}.card{padding:23px}.title{font-size:24px}}
+        *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;background:#f5f7fb;color:#17233b}a{color:#3157d5;text-decoration:none}a:hover{text-decoration:underline}.nav{background:white;border-bottom:1px solid #e8ecf4;padding:17px max(20px,calc((100% - 1000px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-weight:800;color:#19284d;font-size:20px}.nav-right{display:flex;gap:15px;align-items:center}.lang{background:#f2f5ff;color:#2846aa;border:0;border-radius:9px;padding:8px 11px;cursor:pointer;font-weight:700}.container{width:min(100% - 36px,1000px);margin:44px auto}.card{background:#fff;border:1px solid #e8ecf3;border-radius:18px;box-shadow:0 14px 45px #2432570a;padding:30px}.auth{max-width:450px;margin:0 auto}.title{font-weight:800;letter-spacing:-.5px;font-size:27px;margin:0 0 8px}.sub{color:#778198;margin:0 0 25px;line-height:1.5}label{font-size:13px;font-weight:700;display:block;margin:17px 0 7px}input,select{width:100%;padding:12px 13px;border:1px solid #d9dfeb;border-radius:10px;font:inherit;color:#17233b;background:#fff}input:focus,select:focus{outline:2px solid #b5c4ff;border-color:#5873d8}.btn{background:#2e53d2;color:white;border:0;border-radius:10px;font-weight:700;padding:12px 17px;cursor:pointer;display:inline-block;text-align:center}.btn:hover{background:#2144bd;color:#fff;text-decoration:none}.btn-outline{background:#fff;color:#3456c1;border:1px solid #c5cde0}.btn-outline:hover{background:#f1f4fc;color:#1e3d9a}.wide{width:100%;margin-top:22px}.hint{font-size:13px;color:#7d879b;margin-top:17px}.alert{border-radius:11px;padding:12px 14px;margin:17px 0;font-size:14px}.error{color:#9e2432;background:#fff0f1;border:1px solid #ffd6dc}.success{color:#14683b;background:#e8fff1;border:1px solid #bbefd1}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}.business{padding:20px;border:1px solid #e6ebf2;border-radius:14px;margin-top:16px}.business h3{margin:0 0 8px}.small{font-size:13px;color:#778198}.inline{display:inline-block}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.footer{margin-top:50px;text-align:center;font-size:12px;color:#8c94a7}@media(max-width:600px){.nav{padding:16px 18px}.container{margin:24px auto}.card{padding:23px}.title{font-size:24px}}
     </style>
 </head>
 <body>
@@ -830,42 +830,42 @@ class ShopCategorySeeder extends Seeder
 <div class="card">
     <h1 class="title">{{ t('My SaaS Dashboard', 'আমার SaaS ড্যাশবোর্ড') }}</h1>
     <p class="sub">{{ t('Hello', 'স্বাগতম') }}, {{ $user->name }} · {{ $user->email }}</p>
-    <div class="actions"><a href="{{ route('saas.shops.create') }}" class="btn">{{ t('Create new shop', 'নতুন শপ তৈরি করুন') }}</a><form method="post" action="{{ route('saas.logout') }}">@csrf<button type="submit" class="btn btn-outline">{{ t('Log out', 'লগআউট') }}</button></form></div>
-    <h2 style="margin:35px 0 12px">{{ t('My shops', 'আমার শপগুলো') }}</h2>
-    @forelse($shops as $shop)
-        <div class="shop"><h3>{{ $shop->name }}</h3>
-            <div class="small">{{ $shop->code }} · {{ $shop->approval_status }}</div>
+    <div class="actions"><a href="{{ route('saas.businesss.create') }}" class="btn">{{ t('Create new business', 'নতুন শপ তৈরি করুন') }}</a><form method="post" action="{{ route('saas.logout') }}">@csrf<button type="submit" class="btn btn-outline">{{ t('Log out', 'লগআউট') }}</button></form></div>
+    <h2 style="margin:35px 0 12px">{{ t('My businesss', 'আমার শপগুলো') }}</h2>
+    @forelse($businesss as $business)
+        <div class="business"><h3>{{ $business->name }}</h3>
+            <div class="small">{{ $business->code }} · {{ $business->approval_status }}</div>
             <div class="actions">
-                <a class="btn btn-outline" target="_blank" rel="noopener" href="{{ route('store.admin.login', ['shop' => $shop->code]) }}">{{ t('Shop admin login', 'শপ অ্যাডমিন লগইন') }}</a>
-                <a class="btn btn-outline" target="_blank" rel="noopener" href="{{ route('store.customer.home', ['shop' => $shop->code]) }}">{{ t('Customer storefront', 'কাস্টমার স্টোর') }}</a>
+                <a class="btn btn-outline" target="_blank" rel="noopener" href="{{ route('store.admin.login', ['business' => $business->code]) }}">{{ t('Business admin login', 'শপ অ্যাডমিন লগইন') }}</a>
+                <a class="btn btn-outline" target="_blank" rel="noopener" href="{{ route('store.customer.home', ['business' => $business->code]) }}">{{ t('Customer storefront', 'কাস্টমার স্টোর') }}</a>
             </div>
         </div>
-    @empty<p class="small">{{ t('No shops yet. Create your first shop.', 'এখনো কোনো শপ নেই। প্রথম শপ তৈরি করুন।') }}</p>
+    @empty<p class="small">{{ t('No businesss yet. Create your first business.', 'এখনো কোনো শপ নেই। প্রথম শপ তৈরি করুন।') }}</p>
     @endforelse
 </div>
 @endsection
 ```
 
-## `resources/views/portals/create-shop.blade.php`
+## `resources/views/portals/create-business.blade.php`
 
 ```php
 @extends('layouts.portal')
 @section('content')
 <div class="card auth" style="max-width:560px">
-    <h1 class="title">{{ t('Create shop', 'শপ তৈরি করুন') }}</h1>
-    <p class="sub">{{ t('This will also create your shop owner login.', 'এর সঙ্গে আপনার শপ ওনারের লগইনও তৈরি হবে।') }}</p>
-    <form method="post" action="{{ route('saas.shops.store') }}">
+    <h1 class="title">{{ t('Create business', 'শপ তৈরি করুন') }}</h1>
+    <p class="sub">{{ t('This will also create your business owner login.', 'এর সঙ্গে আপনার শপ ওনারের লগইনও তৈরি হবে।') }}</p>
+    <form method="post" action="{{ route('saas.businesss.store') }}">
         @csrf
-        <label for="name">{{ t('Shop name', 'শপের নাম') }}</label><input id="name" name="name" value="{{ old('name') }}" required>
+        <label for="name">{{ t('Business name', 'শপের নাম') }}</label><input id="name" name="name" value="{{ old('name') }}" required>
         <label for="code">{{ t('Subdomain (lowercase, no spaces)', 'সাবডোমেইন (ছোট হাতের অক্ষর, স্পেস ছাড়া)') }}</label><input id="code" name="code" value="{{ old('code') }}" pattern="[a-z][a-z0-9-]{2,39}" placeholder="rohimstore" required>
         <p class="small">{{ t('Example', 'উদাহরণ') }}: rohimstore.{{ config('saas.domain') }} · admin.rohimstore.{{ config('saas.domain') }}</p>
         <p class="small">{{ t('Reserved: admin, authority, www, api, mail, support. admin.saas.test is reserved for SaaS Authority only.', 'সংরক্ষিত: admin, authority, www, api, mail, support। admin.saas.test শুধু SaaS Authority-এর জন্য সংরক্ষিত।') }}</p>
-        <label for="category_id">{{ t('Shop category', 'শপের ক্যাটাগরি') }}</label>
+        <label for="category_id">{{ t('Business category', 'শপের ক্যাটাগরি') }}</label>
         <select id="category_id" name="category_id" required><option value="">{{ t('Select category', 'ক্যাটাগরি বাছুন') }}</option>@foreach($categories as $category)<option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>{{ $category->name }}</option>@endforeach</select>
         <label for="admin_password">{{ t('Separate admin password (optional)', 'আলাদা অ্যাডমিন পাসওয়ার্ড (ঐচ্ছিক)') }}</label><input id="admin_password" name="admin_password" type="password" minlength="8" autocomplete="new-password">
         <label for="admin_password_confirmation">{{ t('Confirm admin password', 'অ্যাডমিন পাসওয়ার্ড নিশ্চিত করুন') }}</label><input id="admin_password_confirmation" name="admin_password_confirmation" type="password" minlength="8" autocomplete="new-password">
         <p class="small">{{ t('Leave blank to initially use your SaaS account password. Logins remain separate.', 'খালি রাখলে শুরুতে SaaS অ্যাকাউন্টের পাসওয়ার্ড ব্যবহার হবে। লগইন আলাদাই থাকবে।') }}</p>
-        <button type="submit" class="btn wide">{{ t('Create shop', 'শপ তৈরি করুন') }}</button>
+        <button type="submit" class="btn wide">{{ t('Create business', 'শপ তৈরি করুন') }}</button>
     </form>
     <p class="hint"><a href="{{ route('saas.dashboard') }}">{{ t('Back to dashboard', 'ড্যাশবোর্ডে ফিরুন') }}</a></p>
 </div>
@@ -879,20 +879,20 @@ class ShopCategorySeeder extends Seeder
 namespace Tests\Feature;
 use App\Models\AuthorityUser;
 use App\Models\BusinessUser;
-use App\Models\Shop;
-use App\Models\ShopCategory;
-use App\Models\ShopCustomer;
+use App\Models\Business;
+use App\Models\BusinessCategory;
+use App\Models\BusinessCustomer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 class PortalAuthenticationTest extends TestCase
 {
     use RefreshDatabase;
-    private function shop(string $code): Shop
+    private function business(string $code): Business
     {
-        $category = ShopCategory::firstOrCreate(['code' => 'general'], ['name' => 'General', 'approval_status' => 'Approved']);
+        $category = BusinessCategory::firstOrCreate(['code' => 'general'], ['name' => 'General', 'approval_status' => 'Approved']);
         $owner = User::create(['name' => 'Owner', 'code' => 'U-'.$code, 'email' => $code.'@owner.test', 'password' => 'password123', 'approval_status' => 'Approved']);
-        return Shop::create(['owner_id' => $owner->id, 'category_id' => $category->id, 'name' => $code, 'code' => $code, 'approval_status' => 'Approved']);
+        return Business::create(['owner_id' => $owner->id, 'category_id' => $category->id, 'name' => $code, 'code' => $code, 'approval_status' => 'Approved']);
     }
     public function test_saas_registration_does_not_authenticate_authority(): void
     {
@@ -907,11 +907,11 @@ class PortalAuthenticationTest extends TestCase
     public function test_admin_subdomain_is_reserved_for_authority(): void
     {
         $owner = User::create(['name' => 'Owner', 'code' => 'U007', 'email' => 'owner7@example.com', 'password' => 'password123', 'approval_status' => 'Approved']);
-        $category = ShopCategory::create(['code' => 'general', 'name' => 'General', 'approval_status' => 'Approved']);
-        $this->actingAs($owner, 'web')->post('http://saas.test/shops', [
+        $category = BusinessCategory::create(['code' => 'general', 'name' => 'General', 'approval_status' => 'Approved']);
+        $this->actingAs($owner, 'web')->post('http://saas.test/businesss', [
             'name' => 'Fake Authority', 'code' => 'admin', 'category_id' => $category->id,
         ])->assertSessionHasErrors('code');
-        $this->assertDatabaseMissing('shops', ['code' => 'admin']);
+        $this->assertDatabaseMissing('businesss', ['code' => 'admin']);
         $this->get('http://admin.saas.test/login')->assertOk();
         $this->get('http://admin.saas.test/register')->assertNotFound();
     }
@@ -924,50 +924,50 @@ class PortalAuthenticationTest extends TestCase
         $this->assertAuthenticated('authority');
         $this->assertGuest('web');
     }
-    public function test_shop_model_cannot_save_reserved_subdomain(): void
+    public function test_business_model_cannot_save_reserved_subdomain(): void
     {
         $owner = User::create(['name' => 'Owner', 'code' => 'U008', 'email' => 'owner8@example.com', 'password' => 'password123', 'approval_status' => 'Approved']);
-        $category = ShopCategory::create(['code' => 'general', 'name' => 'General', 'approval_status' => 'Approved']);
+        $category = BusinessCategory::create(['code' => 'general', 'name' => 'General', 'approval_status' => 'Approved']);
         $this->expectException(\Illuminate\Validation\ValidationException::class);
-        Shop::create(['owner_id' => $owner->id, 'category_id' => $category->id, 'name' => 'Fake Admin', 'code' => 'admin', 'approval_status' => 'Approved']);
+        Business::create(['owner_id' => $owner->id, 'category_id' => $category->id, 'name' => 'Fake Admin', 'code' => 'admin', 'approval_status' => 'Approved']);
     }
-    public function test_shop_employee_cannot_access_another_shops_admin(): void
+    public function test_business_employee_cannot_access_another_businesss_admin(): void
     {
-        $a = $this->shop('rohimstore');
-        $this->shop('othershop');
+        $a = $this->business('rohimstore');
+        $this->business('otherbusiness');
         $employee = BusinessUser::create([
-            'shop_id' => $a->id, 'name' => 'Employee', 'email' => 'employee@example.com',
+            'business_id' => $a->id, 'name' => 'Employee', 'email' => 'employee@example.com',
             'code' => 'EMP01', 'role' => 'employee', 'password' => 'password123', 'approval_status' => 'Approved',
         ]);
-        $this->actingAs($employee, 'shop_admin');
+        $this->actingAs($employee, 'business_admin');
         $this->get('http://admin.rohimstore.saas.test/dashboard')->assertOk();
-        $this->get('http://admin.othershop.saas.test/dashboard')->assertForbidden();
+        $this->get('http://admin.otherbusiness.saas.test/dashboard')->assertForbidden();
     }
-    public function test_customer_cannot_access_another_shops_storefront_account(): void
+    public function test_customer_cannot_access_another_businesss_storefront_account(): void
     {
-        $a = $this->shop('rohimstore');
-        $this->shop('othershop');
-        $customer = ShopCustomer::create([
-            'shop_id' => $a->id, 'name' => 'Customer', 'email' => 'customer@example.com',
+        $a = $this->business('rohimstore');
+        $this->business('otherbusiness');
+        $customer = BusinessCustomer::create([
+            'business_id' => $a->id, 'name' => 'Customer', 'email' => 'customer@example.com',
             'code' => 'C01', 'password' => 'password123', 'approval_status' => 'Approved',
         ]);
-        $this->actingAs($customer, 'shop_customer');
+        $this->actingAs($customer, 'business_customer');
         $this->get('http://rohimstore.saas.test/dashboard')->assertOk();
-        $this->get('http://othershop.saas.test/dashboard')->assertForbidden();
+        $this->get('http://otherbusiness.saas.test/dashboard')->assertForbidden();
         $this->get('http://admin.rohimstore.saas.test/dashboard')->assertRedirect('http://admin.rohimstore.saas.test/login');
     }
-    public function test_shop_registration_creates_independent_owner_login(): void
+    public function test_business_registration_creates_independent_owner_login(): void
     {
         $owner = User::create(['name' => 'Owner', 'code' => 'U123', 'email' => 'owner@example.com', 'password' => 'rootpassword1', 'approval_status' => 'Approved']);
-        $category = ShopCategory::create(['code' => 'retail', 'name' => 'Retail', 'approval_status' => 'Approved']);
-        $this->actingAs($owner, 'web')->post('http://saas.test/shops', [
+        $category = BusinessCategory::create(['code' => 'retail', 'name' => 'Retail', 'approval_status' => 'Approved']);
+        $this->actingAs($owner, 'web')->post('http://saas.test/businesss', [
             'name' => 'Rohim Store', 'code' => 'rohimstore', 'category_id' => $category->id,
-            'admin_password' => 'shopsecret1', 'admin_password_confirmation' => 'shopsecret1',
+            'admin_password' => 'businesssecret1', 'admin_password_confirmation' => 'businesssecret1',
         ])->assertRedirect('http://saas.test/dashboard');
-        $this->assertDatabaseHas('shops', ['code' => 'rohimstore', 'owner_id' => $owner->id]);
+        $this->assertDatabaseHas('businesss', ['code' => 'rohimstore', 'owner_id' => $owner->id]);
         $this->assertDatabaseHas('business_users', ['email' => 'owner@example.com', 'role' => 'owner']);
         $this->post('http://admin.rohimstore.saas.test/login', ['email' => 'owner@example.com', 'password' => 'rootpassword1'])->assertSessionHasErrors('email');
-        $this->post('http://admin.rohimstore.saas.test/login', ['email' => 'owner@example.com', 'password' => 'shopsecret1'])->assertRedirect('http://admin.rohimstore.saas.test/dashboard');
+        $this->post('http://admin.rohimstore.saas.test/login', ['email' => 'owner@example.com', 'password' => 'businesssecret1'])->assertRedirect('http://admin.rohimstore.saas.test/dashboard');
     }
 }
 ```
@@ -1041,6 +1041,6 @@ AWS_USE_PATH_STYLE_ENDPOINT=false
 
 VITE_APP_NAME="${APP_NAME}"
 
-# SaaS base host without scheme or port; authority is admin.<domain>, shop admin is admin.<shop>.<domain>.
+# SaaS base host without scheme or port; authority is admin.<domain>, business admin is admin.<business>.<domain>.
 SAAS_DOMAIN=saas.test
 ```

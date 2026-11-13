@@ -13,19 +13,15 @@ return new class extends Migration
     {
         Schema::create('business_users', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('shop_id');
+            $table->bigInteger('business_id');
             $table->string('name');
-            $table->string('code')->unique();
+            $table->unsignedBigInteger('role_id');
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->enum('approval_status', approvalStatus())->default('Pending');
-            $table->bigInteger('created_by')->nullable();
-            $table->bigInteger('updated_by')->nullable();
-            $table->date('business_date')->nullable();
-            $table->timestamps();
-            $table->unique(['shop_id', 'email']);
+            $table->unique(['business_id', 'email']);
+            $table->erpCommonColumns();
         });
     }
 

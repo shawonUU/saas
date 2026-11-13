@@ -11,11 +11,11 @@ class PortalAuth
         $login = match ($guard) {
             'authority' => 'authority.login',
             'web' => 'saas.login',
-            'shop_admin' => 'store.admin.login',
-            'shop_customer' => 'store.customer.login',
+            'business_admin' => 'store.admin.login',
+            'business_customer' => 'store.customer.login',
             default => abort(403),
         };
-        $params = in_array($guard, ['shop_admin', 'shop_customer']) ? ['shop' => $request->route('shop')] : [];
+        $params = in_array($guard, ['business_admin', 'business_customer']) ? ['business' => $request->route('business')] : [];
         $user = Auth::guard($guard)->user();
         if (!$user) return redirect()->route($login, $params);
         if ($user->approval_status !== 'Approved') {
@@ -24,9 +24,9 @@ class PortalAuth
             $request->session()->regenerateToken();
             return redirect()->route($login, $params)->withErrors(['email' => 'Account is not active.']);
         }
-        if (in_array($guard, ['shop_admin', 'shop_customer'])) {
-            $shop = $request->attributes->get('current_shop');
-            abort_unless($shop && (int) $user->shop_id === (int) $shop->id, 403);
+        if (in_array($guard, ['business_admin', 'business_customer'])) {
+            $business = $request->attributes->get('current_business');
+            abort_unless($business && (int) $user->business_id === (int) $business->id, 403);
         }
         Auth::shouldUse($guard);
         return $next($request);
