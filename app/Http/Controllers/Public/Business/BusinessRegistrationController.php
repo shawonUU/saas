@@ -1,5 +1,7 @@
 <?php
 namespace App\Http\Controllers\Public\Business;
+
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\BusinessCategory;
@@ -15,29 +17,31 @@ class BusinessRegistrationController extends Controller
 {
     public function create()
     {
-        return view('public.business.business-register', ['categories' => BusinessCategory::where('approval_status', 'Approved')->orderBy('name')->get()]);
+        return view('public.business.business-register', ['categories' => BusinessCategory::where('approval_status', Status::APPROVED)->orderBy('name')->get()]);
     }
     public function store(Request $request)
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'min:3', 'max:40', 'regex:/^[a-z](?:[a-z0-9-]{1,38}[a-z0-9])$/', Rule::notIn(config('saas.reserved_subdomains', [])), 'unique:businesses,code'],
-            'category_id' => ['required', Rule::exists('business_categories', 'id')->where('approval_status', 'Approved')],
+            'category_id' => ['required', Rule::exists('business_categories', 'id')->where('approval_status', Status::APPROVED)],
             'admin_password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
         $owner = Auth::guard('web')->user();
         $business = DB::transaction(function () use ($data, $owner) {
             $business = Business::create([
-                'owner_id' => $owner->id, 'category_id' => $data['category_id'],
-                'name' => trim($data['name']), 'code' => $data['code'], 'approval_status' => 'Approved',
+                'owner_id' => $owner->id, 
+                'category_id' => $data['category_id'],
+                'name' => trim($data['name']), 
+                'code' => $data['code'], 
+                'approval_status' => Status::APPROVED,
             ]);
-            $role = BusinessRole::create(['business_id' => $business->id, 'name' => 'Owner', 'is_owner' => true, 'approval_status' => 'Approved']);
+            $role = BusinessRole::create(['business_id' => $business->id, 'name' => 'Owner', 'is_owner' => true, 'approval_status' => Status::APPROVED]);
             BusinessUser::create([
                 'business_id' => $business->id, 'user_id' => $owner->id, 'role_id' => $role->id,
                 'name' => $owner->name, 'email' => $owner->email,
                 'code' => 'BU'.Str::upper(Str::random(12)),
                 'password' => filled($data['admin_password'] ?? null) ? $data['admin_password'] : $owner->password,
-                'approval_status' => 'Approved',
+                'approval_status' => Status::APPROVED,
             ]);
             return $business;
         });

@@ -1,7 +1,13 @@
 <?php
 namespace Database\Seeders;
-use App\Models\{Module,Menu,ChildMenu,BusinessCategory,BusinessCategoryModule,BusinessCategoryMenu,BusinessCategoryChildMenu};
 use Illuminate\Database\Seeder;
+use App\Models\Module;
+use App\Models\Menu;
+use App\Models\ChildMenu;
+use App\Models\BusinessCategory;
+use App\Models\BusinessCategoryModule;
+use App\Models\BusinessCategoryMenu;
+use App\Models\BusinessCategoryChildMenu;
 class ModuleMenuSeeder extends Seeder
 {
     public function run(): void
@@ -14,6 +20,11 @@ class ModuleMenuSeeder extends Seeder
             ['inventory','Inventory','package',[
                 ['products','Products','boxes',[['product-list','Product List',null],['categories','Categories',null]]],
                 ['stock','Stock','warehouse',[['stock-report','Stock Report',null]]],
+            ]],
+            ['authorization','Authorization','shield-check',[
+                ['role','Role','shield-check',[]],
+                ['permission','Permission','shield-check',[]],
+                ['user-access','User Access','shield-check',[]],
             ]],
             ['settings','Settings','settings',[
                 ['team','Team','shield-check',[['user-permissions','Users & Permissions',null]]],
@@ -44,6 +55,7 @@ class ModuleMenuSeeder extends Seeder
                 }
             }
         }
+        
         $modules = Module::with('menus.children')->get();
         foreach (BusinessCategory::where('approval_status','Approved')->get() as $category) {
             foreach ($modules as $module) {
