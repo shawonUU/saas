@@ -12,13 +12,33 @@ html[data-theme="dark"] .workspace-layout{--ws-panel:#1c2435;--ws-bg:#111827;--w
 </style>
 @endpush
 @section('content')
+
+
 @php
     $menuCount=$modules->sum(fn($module)=>$module->menus->count());
     $pageCount=$modules->sum(fn($module)=>$module->menus->sum(fn($menu)=>$menu->children->count()));
     $quickPages=$modules->flatMap(fn($module)=>$module->menus->flatMap(fn($menu)=>$menu->children->map(fn($child)=>['child'=>$child,'module'=>navName($module),'menu'=>navName($menu)])))->take(8);
     $storefrontUrl=request()->getScheme().'://'.preg_replace('/^admin\./','',request()->getHttpHost());
-    $adminLink=fn($child)=>$child->route==='/dashboard' ? route('store.admin.dashboard',['business'=>$business->code]) : route('store.admin.feature',['business'=>$business->code,'childMenu'=>$child->id]);
+    $featureParams=[];
+    foreach($modules as $module){
+        foreach($module->menus as $menu){
+            foreach($menu->children as $child){
+                $featureParams[$child->id]=[
+                    'moduleSlug'=>$module->slug,
+                    'menuSlug'=>$menu->slug,
+                    'childSlug'=>$child->slug
+                ];
+            }
+        }
+    }
+    $adminLink=function($child) use($featureParams){
+        if($child->route==='/dashboard')return route('store.admin.dashboard');
+        if(!isset($featureParams[$child->id]))return '#';
+        return route('store.admin.feature',$featureParams[$child->id]);
+    };
 @endphp
+
+
 <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
     <symbol id="ws-i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
     <symbol id="ws-i-layer" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 17l9 5 9-5"/></symbol>
