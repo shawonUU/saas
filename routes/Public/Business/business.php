@@ -12,5 +12,5 @@ Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->name
     Route::middleware('portal.auth:business_admin')->group(function () {
         Route::get('/dashboard', [WorkspaceController::class, 'dashboard'])->name('dashboard');
         Route::get('/features/{childMenu}', [WorkspaceController::class, 'feature'])->whereNumber('childMenu')->name('feature');
-    });
+    }); 
 });

@@ -17,7 +17,8 @@ class AdminAuthController extends Controller
         $business = $request->attributes->get('current_business');
         $data = $request->validate(['email' => ['required', 'email'], 'password' => ['required', 'string']]);
         if (Auth::guard('business_admin')->attempt([
-            'email' => strtolower(trim($data['email'])), 'password' => $data['password'],
+            'email' => strtolower(trim($data['email'])), 
+            'password' => $data['password'],
             'business_id' => $business->id, 'approval_status' => 'Approved',
         ])) {
             $request->session()->regenerate();
