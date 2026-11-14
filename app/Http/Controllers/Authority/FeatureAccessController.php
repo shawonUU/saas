@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\Authority;
 use App\Http\Controllers\Controller;
-use App\Models\{Business,BusinessCategory,Module,BusinessCategoryModule,BusinessCategoryMenu,BusinessCategoryChildMenu,BusinessModuleOverride,BusinessMenu,BusinessChildMenu};
+use App\Models\{Business,BusinessCategory,Module,BusinessCategoryModule,BusinessCategoryMenu,BusinessCategoryChildMenu,BusinessModule,BusinessMenu,BusinessChildMenu};
 use App\Services\BusinessNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 class FeatureAccessController extends Controller
 {
     private const CATEGORY = ['module' => [BusinessCategoryModule::class,'module_id'], 'menu' => [BusinessCategoryMenu::class,'menu_id'], 'child' => [BusinessCategoryChildMenu::class,'child_menu_id']];
-    private const OVERRIDE = ['module' => [BusinessModuleOverride::class,'module_id'], 'menu' => [BusinessMenu::class,'menu_id'], 'child' => [BusinessChildMenu::class,'child_menu_id']];
+    private const OVERRIDE = ['module' => [BusinessModule::class,'module_id'], 'menu' => [BusinessMenu::class,'menu_id'], 'child' => [BusinessChildMenu::class,'child_menu_id']];
     public function categories()
     {
         return view('portals.authority-categories', ['categories' => BusinessCategory::orderBy('name')->get(),
@@ -31,7 +31,7 @@ class FeatureAccessController extends Controller
         return view('portals.authority-access', ['mode' => 'shop','subject' => $business->load('category'),
             'modules' => Module::with('menus.children')->orderBy('sort_order')->get(),
             'selected' => [
-                'module' => BusinessModuleOverride::where('business_id',$business->id)->pluck('is_enabled','module_id')->all(),
+                'module' => BusinessModule::where('business_id',$business->id)->pluck('is_enabled','module_id')->all(),
                 'menu' => BusinessMenu::where('business_id',$business->id)->pluck('is_enabled','menu_id')->all(),
                 'child' => BusinessChildMenu::where('business_id',$business->id)->pluck('is_enabled','child_menu_id')->all(),
             ],'defaults' => [

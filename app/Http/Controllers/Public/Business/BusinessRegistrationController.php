@@ -32,14 +32,14 @@ class BusinessRegistrationController extends Controller
                 'owner_id' => $owner->id, 
                 'category_id' => $data['category_id'],
                 'name' => trim($data['name']), 
-                'code' => $data['code'], 
+                'code' => getGenerateCode(Business::class, 'code', 'BUSI'),
                 'approval_status' => Status::APPROVED,
             ]);
             $role = BusinessRole::create(['business_id' => $business->id, 'name' => 'Owner', 'is_owner' => true, 'approval_status' => Status::APPROVED]);
             BusinessUser::create([
                 'business_id' => $business->id, 'user_id' => $owner->id, 'role_id' => $role->id,
                 'name' => $owner->name, 'email' => $owner->email,
-                'code' => 'BU'.Str::upper(Str::random(12)),
+                'code' => getGenerateCode(BusinessUser::class, 'code', 'BUSU'),
                 'password' => filled($data['admin_password'] ?? null) ? $data['admin_password'] : $owner->password,
                 'approval_status' => Status::APPROVED,
             ]);

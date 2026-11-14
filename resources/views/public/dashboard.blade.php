@@ -17,10 +17,10 @@
     <h2 style="margin:35px 0 12px">{{ t('My businesss', 'আমার শপগুলো') }}</h2>
     @forelse($businesss as $business)
         <div class="business"><h3>{{ $business->name }}</h3>
-            <div class="small">{{ $business->code }} · {{ $business->approval_status }}</div>
+            <div class="small">{{ $business->domain }} · {{ $business->approval_status }}</div>
             <div class="actions">
-                <a class="btn btn-outline" target="_blank" rel="noopener" href="{{ route('store.admin.login', ['business' => $business->code]) }}">{{ t('Business admin login', 'শপ অ্যাডমিন লগইন') }}</a>
-                <a class="btn btn-outline" target="_blank" rel="noopener" href="{{ route('store.customer.home', ['business' => $business->code]) }}">{{ t('Customer storefront', 'কাস্টমার স্টোর') }}</a>
+                <a class="btn btn-outline" target="_blank" rel="noopener" href="{{ route('store.admin.login', ['business' => $business->domain]) }}">{{ t('Business admin login', 'শপ অ্যাডমিন লগইন') }}</a>
+                <a class="btn btn-outline" target="_blank" rel="noopener" href="{{ route('store.customer.home', ['business' => $business->domain]) }}">{{ t('Customer storefront', 'কাস্টমার স্টোর') }}</a>
             </div>
         </div>
     @empty<p class="small">{{ t('No businesss yet. Create your first business.', 'এখনো কোনো শপ নেই। প্রথম শপ তৈরি করুন।') }}</p>

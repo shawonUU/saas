@@ -5,6 +5,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call([BusinessCategorySeeder::class, ModuleMenuSeeder::class]);
+        // $this->call([BusinessCategorySeeder::class, ModuleMenuSeeder::class]);
+        $this->call([ModuleMenuSeeder::class]);
     }
 }

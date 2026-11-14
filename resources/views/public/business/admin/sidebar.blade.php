@@ -11,7 +11,7 @@
 .workspace-sidebar .ws-menu-direct:hover{background:rgba(128,128,128,.1);color:inherit;text-decoration:none}
 .workspace-sidebar .ws-menu-direct.active{background:rgba(128,128,128,.15);font-weight:600}
 .workspace-sidebar .ws-menu-direct .ws-svg{width:18px;height:18px;flex-shrink:0}
-.workspace-sidebar .ws-menu-direct .ws-menu-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.workspace-sidebar .ws-menu-direct .ws-menu-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; font-size:12px}
 .workspace-sidebar .ws-nav-group[hidden],.workspace-sidebar .ws-menu[hidden],.workspace-sidebar .ws-menu-direct[hidden]{display:none!important}
 </style>
 <aside class="workspace-sidebar" aria-label="{{ t('Business navigation','বিজনেস নেভিগেশন') }}">

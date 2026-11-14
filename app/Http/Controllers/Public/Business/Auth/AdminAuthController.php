@@ -9,8 +9,8 @@ class AdminAuthController extends Controller
     public function loginForm(Request $request)
     {
         $business = $request->attributes->get('current_business');
-        if (Auth::guard('business_admin')->check() && (int) Auth::guard('business_admin')->user()->business_id === (int) $business->id) return redirect()->route('store.admin.dashboard', ['business' => $business->code]);
-        return view('portals.login', ['title' => $business->name.' · Admin', 'action' => route('store.admin.login.post', ['business' => $business->code]), 'registerUrl' => null]);
+        if (Auth::guard('business_admin')->check() && (int) Auth::guard('business_admin')->user()->business_id === (int) $business->id) return redirect()->route('store.admin.dashboard', ['business' => $business->domain]);
+        return view('portals.login', ['title' => $business->name.' · Admin', 'action' => route('store.admin.login.post', ['business' => $business->domain]), 'registerUrl' => null]);
     }
     public function login(Request $request)
     {
@@ -22,7 +22,7 @@ class AdminAuthController extends Controller
             'business_id' => $business->id, 'approval_status' => 'Approved',
         ])) {
             $request->session()->regenerate();
-            return redirect()->route('store.admin.dashboard', ['business' => $business->code]);
+            return redirect()->route('store.admin.dashboard', ['business' => $business->domain]);
         }
         return back()->withErrors(['email' => 'Invalid credentials for this business.'])->onlyInput('email');
     }

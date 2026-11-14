@@ -3,7 +3,7 @@ namespace App\Models;
 use App\Models\Concerns\ErpCrud;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class BusinessModuleOverride extends Model
+class BusinessModule extends Model
 {
     use ErpCrud, SoftDeletes;
     protected $table = 'business_module_overrides';
