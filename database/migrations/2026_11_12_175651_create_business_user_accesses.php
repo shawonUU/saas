@@ -37,12 +37,6 @@ return new class extends Migration
 
             $table->erpCommonColumns();
 
-            // $table->unique([
-            //     'business_user_id',
-            //     'menu_id',
-            //     'child_menu_id',
-            // ]);
-
             $table->index([
                 'business_user_id',
                 'module_id',

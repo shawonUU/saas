@@ -24,6 +24,7 @@ class BusinessRegistrationController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'category_id' => ['required', Rule::exists('business_categories', 'id')->where('approval_status', Status::APPROVED)],
+            'domain' => ['nullable', 'string', 'max:255', 'unique:businesses,domain'],
             'admin_password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
         $owner = Auth::guard('web')->user();
@@ -31,7 +32,8 @@ class BusinessRegistrationController extends Controller
             $business = Business::create([
                 'owner_id' => $owner->id, 
                 'category_id' => $data['category_id'],
-                'name' => trim($data['name']), 
+                'name' => trim($data['name']),
+                'domain' => $data['domain'],
                 'code' => getGenerateCode(Business::class, 'code', 'BUSI'),
                 'approval_status' => Status::APPROVED,
             ]);

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class BusinessModule extends Model
 {
     use ErpCrud, SoftDeletes;
-    protected $table = 'business_module_overrides';
+    protected $table = 'business_modules';
     protected $guarded = [];
     public function business() { return $this->belongsTo(Business::class); }
     public function module() { return $this->belongsTo(Module::class); }

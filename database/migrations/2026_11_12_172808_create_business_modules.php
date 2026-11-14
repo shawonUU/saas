@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('business_module_overrides', function (Blueprint $table) {
+        Schema::create('business_modules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('business_id')->constrained('businesses')->cascadeOnDelete();
             $table->foreignId('module_id')->constrained('modules')->cascadeOnDelete();
