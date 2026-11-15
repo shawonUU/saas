@@ -10,7 +10,7 @@ class PortalAuth
     {
         $login = match ($guard) {
             'authority' => 'authority.login',
-            'web' => 'saas.login',
+            'saas_user' => 'saas.login',
             'business_admin' => 'store.admin.login',
             'business_customer' => 'store.customer.login',
             default => abort(403),

@@ -1,5 +1,3 @@
-
-use Illuminate\Database\Eloquent\SoftDeletes;
 <?php
 
 use App\Models\AuthorityUser;
