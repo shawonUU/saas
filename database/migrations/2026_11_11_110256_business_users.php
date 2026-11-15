@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('business_users', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->bigInteger('business_id');
             $table->string('name');
             $table->unsignedBigInteger('role_id');
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->unique(['business_id', 'email']);
+            $table->index(['business_id','user_id']);
             $table->erpCommonColumns();
         });
     }

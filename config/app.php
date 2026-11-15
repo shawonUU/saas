@@ -14,6 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'saas_domain' => env('SAAS_DOMAIN', 'saas.test'),
 
     /*
     |--------------------------------------------------------------------------
