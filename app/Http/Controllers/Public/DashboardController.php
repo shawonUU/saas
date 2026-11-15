@@ -12,8 +12,8 @@ class DashboardController extends Controller
     public function index()
     {
         return view('public.dashboard', [
-            'user' => Auth::guard('web')->user(),
-            'businesss' => Business::where('owner_id', Auth::guard('web')->id())->latest()->get(),
+            'user' => Auth::guard('saas_user')->user(),
+            'businesss' => Business::where('owner_id', Auth::guard('saas_user')->user()?->user_id)->latest()->get(),
         ]);
     }
 

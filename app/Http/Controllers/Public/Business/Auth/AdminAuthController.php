@@ -10,7 +10,7 @@ class AdminAuthController extends Controller
     {
         $business = $request->attributes->get('current_business');
         if (Auth::guard('business_admin')->check() && (int) Auth::guard('business_admin')->user()->business_id === (int) $business->id) return redirect()->route('store.admin.dashboard', ['business' => $business->domain]);
-        return view('portals.login', ['title' => $business->name.' · Admin', 'action' => route('store.admin.login.post', ['business' => $business->domain]), 'registerUrl' => null]);
+        return view('portals.login', ['title' => $business->name.' · Admin', 'action' => route('store.admin.login.post', ['business' => $business->domain]), 'registerUrl' => null, 'forgotUrl' => route('store.admin.password.request', ['business' => $business->domain])]);
     }
     public function login(Request $request)
     {
@@ -19,7 +19,7 @@ class AdminAuthController extends Controller
         if (Auth::guard('business_admin')->attempt([
             'email' => strtolower(trim($data['email'])), 
             'password' => $data['password'],
-            'business_id' => $business->id, 'approval_status' => 'Approved',
+            'business_id' => $business->id, 'approval_status' => 'Approved', 'is_active' => true,
         ])) {
             $request->session()->regenerate();
             return redirect()->route('store.admin.dashboard', ['business' => $business->domain]);

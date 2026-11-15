@@ -1,146 +1,89 @@
 <?php
-
 use App\Models\Business;
+use App\Models\BusinessUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
-if (!function_exists('appContext')) {
-    function appContext(): array
+if (!function_exists('appGuard')) {
+    function appGuard(): ?string
     {
-        $saasDomain = config('app.saas_domain', 'saas.test');
         $request = request();
-        $business = $request->attributes->get('current_business');
-        $guards = ['authority','saas_user','business_admin','business_customer',];
         $guard = $request->attributes->get('auth_guard');
-
-        if (!$guard) {
-            $host = $request->getHost();
-            if ($host === 'admin.' . $saasDomain) {$guard = 'authority';} 
-            elseif ($host === $saasDomain) {$guard = 'saas_user';} 
-            elseif ($business) {$guard = str_starts_with($host, 'admin.')? 'business_admin':'business_customer';} 
-            else {
-                foreach ($guards as $item) {
-                    if (Auth::guard($item)->check()) {$guard = $item;break;}
-                }
-            }
-        }
-
-        $guard = in_array($guard, $guards, true) ? $guard : null;
-        $authUser = $guard ? Auth::guard($guard)->user() : null;
-        $userId = $authUser?->user_id;
-        $globalUser = $userId? User::find($userId) : null;
-
-        $portal = match ($guard) {
-            'authority' => 'authority',
-            'saas_user' => 'saas_owner',
-            'business_admin' => 'business_admin',
-            'business_customer' => 'business_customer',
-            default => 'guest',
-        };
-
-        $businessData = $business ? [
-            'id' => $business->id,
-            'name' => $business->name ?? null,
-            'code' => $business->code ?? null,
-        ] : null;
-
-        $authData = $authUser ? [
-            'id' => $authUser->id,
-            'user_id' => $authUser->user_id ?? null,
-            'name' => $authUser->name ?? null,
-            'email' => $authUser->email ?? null,
-            'business_id' => $authUser->business_id ?? null,
-            'role_id' => $authUser->role_id ?? null,
-            'approval_status' => $authUser->approval_status ?? null,
-            'global_user' => $globalUser ? [
-                'id' => $globalUser->id,
-                'name' => $globalUser->name,
-                'email' => $globalUser->email,
-            ] : null,
-        ] : null;
-
-        $route = $request->route();
-
-        $routeParameters = [];
-
-        if ($route) {
-            foreach ($route->parameters() as $key => $value) {
-                $routeParameters[$key] = is_object($value)
-                    ? (method_exists($value, 'getRouteKey') ? $value->getRouteKey() : null)
-                    : $value;
-            }
-        }
-
-        return [
-            'app_mode' => $portal,
-            'actor_type' => $guard,
-            'guard' => $guard,
-            'is_authenticated' => $authUser !== null,
-
-            'auth' => $authData,
-
-            'user' => $globalUser ? [
-                'id' => $globalUser->id,
-                'name' => $globalUser->name,
-                'email' => $globalUser->email,
-            ] : null,
-
-            'business' => $businessData,
-
-            'request' => [
-                'method' => $request->method(),
-                'url' => $request->fullUrl(),
-                'path' => $request->path(),
-                'host' => $request->getHost(),
-                'ip' => $request->ip(),
-                'route_name' => $route?->getName(),
-                'route_parameters' => $routeParameters,
-            ],
-        ];
-    }
-}
-
-if (!function_exists('authUser')) {
-    function authUser(?string $guard = null)
-    {
-        $saasDomain = config('app.saas_domain', 'saas.test');
-        $request = request();
-        if (!$guard) {
-            $guard = $request->attributes->get('auth_guard');
-            if (!$guard) {
-                $host = $request->getHost();
-                $business = $request->attributes->get('current_business');
-                if ($host === 'admin.' . $saasDomain) {$guard = 'authority';} 
-                elseif ($host === $saasDomain) {$guard = 'saas_user';} 
-                elseif ($business) {
-                    $guard = str_starts_with($host, 'admin.') ? 'business_admin' : 'business_customer';
-                }
-            }
-        }
-        $guards = ['authority','saas_user','business_admin','business_customer', ];
-        if ($guard && in_array($guard, $guards, true)) {
-            return Auth::guard($guard)->user();
-        }
-        foreach ($guards as $item) {
-            if (Auth::guard($item)->check()) {return Auth::guard($item)->user();}
+        $allowed = ['authority', 'saas_user', 'business_admin', 'business_customer'];
+        if (in_array($guard, $allowed, true)) return $guard;
+        $host = strtolower($request->getHost());
+        $domain = strtolower(config('saas.domain'));
+        if ($host === 'admin.'.$domain) return 'authority';
+        if ($host === $domain) return 'saas_user';
+        if ($request->attributes->get('current_business')) {
+            return str_starts_with($host, 'admin.') ? 'business_admin' : 'business_customer';
         }
         return null;
     }
 }
-
-
+if (!function_exists('authUser')) {
+    function authUser(?string $guard = null)
+    {
+        $guard ??= appGuard();
+        return $guard && in_array($guard, ['authority','saas_user','business_admin','business_customer'], true)
+            ? Auth::guard($guard)->user() : null;
+    }
+}
+if (!function_exists('appContext')) {
+    function appContext(): array
+    {
+        $request = request();
+        if ($request->attributes->has('app_context_cache')) return $request->attributes->get('app_context_cache');
+        $guard = appGuard();
+        $actor = authUser($guard);
+        $business = $request->attributes->get('current_business');
+        $globalUser = $actor?->user_id ? User::find($actor->user_id) : null;
+        $actorType = $actor ? match ($guard) {
+            'authority' => 'authority',
+            'saas_user' => 'saas_user',
+            'business_admin' => $actor instanceof BusinessUser && $business && $actor->isOwnerOf($business) ? 'business_owner' : 'business_admin',
+            'business_customer' => 'shop_customer',
+            default => 'guest',
+        } : 'guest';
+        $route = $request->route();
+        $params = [];
+        if ($route) foreach ($route->parameters() as $key => $value) {
+            $params[$key] = is_object($value) ? (method_exists($value, 'getRouteKey') ? $value->getRouteKey() : null) : $value;
+        }
+        $result = [
+            'app_mode' => match ($guard) {
+                'authority' => 'authority',
+                'saas_user' => 'saas_owner',
+                'business_admin' => 'business_admin',
+                'business_customer' => 'storefront',
+                default => 'guest',
+            },
+            'actor_type' => $actorType,
+            'guard' => $guard,
+            'is_authenticated' => $actor !== null,
+            'auth' => $actor ? [
+                'table' => $actor->getTable(),
+                'id' => $actor->getAuthIdentifier(),
+                'user_id' => $actor->user_id ?? null,
+                'name' => $actor->name ?? null,
+                'email' => $actor->email ?? null,
+                'business_id' => $actor->business_id ?? null,
+                'role_id' => $actor->role_id ?? null,
+                'approval_status' => $actor->approval_status ?? null,
+            ] : null,
+            'user' => $globalUser ? ['id' => $globalUser->id, 'name' => $globalUser->name, 'email' => $globalUser->email] : null,
+            'business' => $business ? ['id' => $business->id, 'name' => $business->name, 'code' => $business->code, 'domain' => $business->domain] : null,
+            'request' => ['method' => $request->method(), 'url' => $request->fullUrl(), 'path' => $request->path(), 'host' => $request->getHost(), 'ip' => $request->ip(), 'route_name' => $route?->getName(), 'route_parameters' => $params],
+        ];
+        $request->attributes->set('app_context_cache', $result);
+        return $result;
+    }
+}
 if (!function_exists('approvalStatus')) {
     function approvalStatus(): array { return ['Approved', 'Pending', 'Rejected', 'Cancelled']; }
 }
 if (!function_exists('t')) {
     function t(string $english, string $bangla): string {
         return session('portal_lang', 'en') === 'bn' ? $bangla : $english;
-    }
-}
-
-if(!function_exists('currentBusiness')){
-    function currentBusiness():?Business{
-        return request()->attributes->get('currentBusiness');
     }
 }
 
@@ -162,8 +105,7 @@ if (!function_exists('navName')) {
 }
 
 
-if(!function_exists('currentBusiness')){
-    function currentBusiness():?Business{
-        return request()->attributes->get('currentBusiness');
-    }
+
+if (!function_exists('currentBusiness')) {
+    function currentBusiness(): ?Business { return request()->attributes->get('current_business'); }
 }

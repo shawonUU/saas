@@ -13,9 +13,9 @@ class HomeController extends Controller
         return view('public.business.public.home', [
             'title' => $business->name, 
             'description' => t('Welcome to our store.', 'আমাদের স্টোরে স্বাগতম।'),
-            'loginUrl' => route('store.customer.login', ['business' => $business->code]),
-            'registerUrl' => route('store.customer.register', ['business' => $business->code]),
-            'dashboardUrl' => route('store.customer.dashboard', ['business' => $business->code]),
+            'loginUrl' => route('store.customer.login', ['business' => $business->domain]),
+            'registerUrl' => route('store.customer.register', ['business' => $business->domain]),
+            'dashboardUrl' => route('store.customer.dashboard', ['business' => $business->domain]),
             'guard' => 'business_customer',
         ]);
     }

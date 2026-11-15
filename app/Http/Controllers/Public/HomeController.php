@@ -14,7 +14,7 @@ class HomeController extends Controller
             'loginUrl' => route('saas.login'), 
             'registerUrl' => route('saas.register'),
             'dashboardUrl' => route('saas.dashboard'), 
-            'guard' => 'web',
+            'guard' => 'saas_user',
         ]);
     }
 }

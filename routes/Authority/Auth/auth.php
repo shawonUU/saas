@@ -11,9 +11,13 @@ use App\Http\Controllers\Authority\FeatureController;
 $domain = config('saas.domain');
 Route::domain('admin.'.$domain)->name('authority.')->group(function () {
     Route::get('/', fn () => redirect()->route('authority.login'))->name('home');
+    Route::get('/forgot-password', [\App\Http\Controllers\Auth\PortalPasswordController::class, 'forgotForm'])->name('password.request');
+    Route::post('/forgot-password', [\App\Http\Controllers\Auth\PortalPasswordController::class, 'sendLink'])->middleware('throttle:3,1')->name('password.email');
+    Route::get('/reset-password/{token}', [\App\Http\Controllers\Auth\PortalPasswordController::class, 'resetForm'])->name('password.reset');
+    Route::post('/reset-password', [\App\Http\Controllers\Auth\PortalPasswordController::class, 'update'])->middleware('throttle:5,1')->name('password.update');
     Route::get('/login', [AuthorityAuthController::class, 'loginForm'])->name('login');
     Route::post('/login', [AuthorityAuthController::class, 'login'])->middleware('throttle:5,1')->name('login.post');
-    Route::middleware('portal.auth:authority')->group(function () {
+    Route::middleware(['portal.auth:authority', 'auth.session'])->group(function () {
         Route::get('/dashboard', fn () => view('portals.dashboard', [
             'title' => 'SaaS Authority', 'user' => Auth::guard('authority')->user(),
             'subtitle' => t('Platform authority dashboard', 'প্ল্যাটফর্ম অথরিটি ড্যাশবোর্ড'),

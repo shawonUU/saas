@@ -240,7 +240,7 @@ class AuthorizationController extends Controller
         return view('public.business.admin.authorization.index',compact('business','user','members','modules'));
     }
 
-    public function show(Request $request, $memberId)
+    public function show(Request $request, string $business, int $memberId)
     {
         [$business,,$isOwner]=$this->context($request);
         $target=$this->editable($business,(int)$memberId,$isOwner);
@@ -366,6 +366,7 @@ class AuthorizationController extends Controller
             $view=(bool)$entry['can_view'];
 
             $rows[]=[
+                'code'=>uniqid(),
                 'business_user_id'=>$target->id,
                 'module_id'=>$moduleId,
                 'menu_id'=>$menuId,

@@ -16,7 +16,7 @@ $domain = config('saas.domain');
 Route::domain($domain)->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('saas.home');
     Route::name('saas.')->group(function () {
-        Route::middleware('portal.auth:saas_user')->group(function () {
+        Route::middleware(['portal.auth:saas_user', 'auth.session'])->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
             Route::get('/businesss/create', [BusinessRegistrationController::class, 'create'])->name('businesss.create');

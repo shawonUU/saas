@@ -9,9 +9,9 @@ class BusinessNavigationTest extends TestCase
     use RefreshDatabase;
     private function setupBusiness(): array
     {
-        $owner = User::create(['name' => 'Owner','email' => 'owner@test.local','password' => '123456789','approval_status' => 'Approved']);
+        $owner = User::create(['name' => 'Owner','email' => 'owner@test.local','approval_status' => 'Approved']);
         $category = BusinessCategory::create(['name' => 'Retail','slug' => 'retail-test','approval_status' => 'Approved']);
-        $business = Business::create(['name' => 'Shop A','code' => 'shopa','owner_id' => $owner->id,'category_id' => $category->id,'approval_status' => 'Approved']);
+        $business = Business::create(['name' => 'Shop A','domain'=>'shopa','code' => 'shopa','owner_id' => $owner->id,'category_id' => $category->id,'approval_status' => 'Approved']);
         $role = BusinessRole::create(['name' => 'Owner','business_id' => $business->id,'is_owner' => true,'approval_status' => 'Approved']);
         $admin = BusinessUser::create(['name' => 'Owner','business_id' => $business->id,'user_id' => $owner->id,'role_id' => $role->id,'email' => 'owner@test.local','password' => '123456789','approval_status' => 'Approved']);
         $module = Module::create(['name' => 'Inventory','slug' => 'inventory-test','approval_status' => 'Approved']);
@@ -34,21 +34,23 @@ class BusinessNavigationTest extends TestCase
     {
         extract($this->setupBusiness());
         $role = BusinessRole::create(['name'=>'Staff','business_id'=>$business->id,'approval_status'=>'Approved']);
-        $employee = BusinessUser::create(['name'=>'Staff','business_id'=>$business->id,'role_id'=>$role->id,'email'=>'staff@test.local','password'=>'123456789','approval_status'=>'Approved']);
+        $employeeGlobal = User::create(['name'=>'Staff','email'=>'staff@test.local','approval_status'=>'Approved']);
+        $employee = BusinessUser::create(['user_id'=>$employeeGlobal->id,'name'=>'Staff','business_id'=>$business->id,'role_id'=>$role->id,'email'=>'staff@test.local','password'=>'123456789','approval_status'=>'Approved']);
         $service = app(BusinessNavigation::class);
         $this->assertFalse($service->canView($business,$employee,$child->id));
         BusinessUserAccess::create(['business_user_id'=>$employee->id,'module_id'=>$module->id,'menu_id'=>$menu->id,'child_menu_id'=>$child->id,'can_view'=>true]);
         $this->assertTrue($service->canView($business,$employee,$child->id));
-        $this->actingAs($employee,'business_admin')->get('http://admin.shopa.saas.test/features/'.$child->id)->assertOk();
+        $this->actingAs($employee->refresh(),'business_admin')->get('http://admin.shopa.saas.test/'.$module->slug.'/'.$menu->slug.'/'.$child->slug)->assertOk();
         BusinessChildMenu::create(['business_id'=>$business->id,'child_menu_id'=>$child->id,'is_enabled'=>false]);
-        $this->get('http://admin.shopa.saas.test/features/'.$child->id)->assertForbidden();
+        $this->get('http://admin.shopa.saas.test/'.$module->slug.'/'.$menu->slug.'/'.$child->slug)->assertNotFound();
     }
     public function test_only_authority_can_edit_category_access(): void
     {
         extract($this->setupBusiness());
         $this->get('http://admin.saas.test/access')->assertRedirect('http://admin.saas.test/login');
-        $authority = AuthorityUser::create(['name'=>'HQ','email'=>'hq@test.local','password'=>'123456789','approval_status'=>'Approved']);
-        $this->actingAs($authority,'authority')->get('http://admin.saas.test/access')->assertOk();
+        $globalAuthority = User::create(['name'=>'HQ','email'=>'hq-global@test.local','approval_status'=>'Approved']);
+        $authority = AuthorityUser::create(['user_id'=>$globalAuthority->id,'name'=>'HQ','email'=>'hq@test.local','password'=>'123456789','approval_status'=>'Approved']);
+        $this->actingAs($authority->refresh(),'authority')->get('http://admin.saas.test/access')->assertOk();
         $this->put('http://admin.saas.test/access/category/'.$business->category_id,['access'=>['module'=>[$module->id=>'1'],'menu'=>[$menu->id=>'1'],'child'=>[]]])->assertRedirect();
         $this->assertFalse(app(BusinessNavigation::class)->canView($business,$admin,$child->id));
     }

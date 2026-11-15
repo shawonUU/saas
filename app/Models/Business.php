@@ -11,7 +11,7 @@ class Business extends Model
     protected static function booted(): void
     {
         static::saving(function (self $business) {
-            if (in_array(strtolower((string) $business->code), config('saas.reserved_subdomains', []), true)) {
+            if (in_array(strtolower((string) $business->domain), config('saas.reserved_subdomains', []), true)) {
                 throw ValidationException::withMessages(['code' => 'This subdomain is reserved. Please choose another name.']);
             }
         });

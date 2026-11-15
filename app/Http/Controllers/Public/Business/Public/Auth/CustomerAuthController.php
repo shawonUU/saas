@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Business\Public\Auth;
+namespace App\Http\Controllers\Public\Business\Public\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -17,23 +17,24 @@ class CustomerAuthController extends Controller
     public function loginForm(Request $request){
         $business = $request->attributes->get('current_business');
         if (Auth::guard('business_customer')->check() && (int) Auth::guard('business_customer')->user()->business_id === (int) $business->id) {
-            return redirect()->route('store.customer.dashboard', ['business' => $business->code]);
+            return redirect()->route('store.customer.dashboard', ['business' => $business->domain]);
         }
         return view('portals.login', [
             'title' => $business->name.' · Customer',
-            'action' => route('store.customer.login.post', ['business' => $business->code]),
-            'registerUrl' => route('store.customer.register', ['business' => $business->code]),
+            'action' => route('store.customer.login.post', ['business' => $business->domain]),
+            'registerUrl' => route('store.customer.register', ['business' => $business->domain]),
+            'forgotUrl' => route('store.customer.password.request', ['business' => $business->domain]),
         ]);
     }
     public function registerForm(Request $request){
         $business = $request->attributes->get('current_business');
         if (Auth::guard('business_customer')->check() && (int) Auth::guard('business_customer')->user()->business_id === (int) $business->id) {
-            return redirect()->route('store.customer.dashboard', ['business' => $business->code]);
+            return redirect()->route('store.customer.dashboard', ['business' => $business->domain]);
         }
         return view('portals.register', [
             'title' => $business->name.' · Register',
-            'action' => route('store.customer.register.post', ['business' => $business->code]),
-            'loginUrl' => route('store.customer.login', ['business' => $business->code]),
+            'action' => route('store.customer.register.post', ['business' => $business->domain]),
+            'loginUrl' => route('store.customer.login', ['business' => $business->domain]),
         ]);
     }
     public function register(Request $request){
@@ -45,7 +46,7 @@ class CustomerAuthController extends Controller
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('business_customers', 'email')->where('business_id', $business->id)],
+            'email' => ['required', 'email', 'max:255', Rule::unique('business_customers', 'email')->where('business_id', $business->id), Rule::unique('users', 'email')],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
         $customer = DB::transaction(function () use ($data, $business) {
@@ -67,7 +68,7 @@ class CustomerAuthController extends Controller
         });
         Auth::guard('business_customer')->login($customer);
         $request->session()->regenerate();
-        return redirect()->route('store.customer.dashboard', ['business' => $business->code]);
+        return redirect()->route('store.customer.dashboard', ['business' => $business->domain]);
     }
     public function login(Request $request){
         $business = $request->attributes->get('current_business');
@@ -80,9 +81,10 @@ class CustomerAuthController extends Controller
             'password' => $data['password'],
             'business_id' => $business->id,
             'approval_status' => 'Approved',
+            'is_active' => true,
         ])) {
             $request->session()->regenerate();
-            return redirect()->route('store.customer.dashboard', ['business' => $business->code]);
+            return redirect()->route('store.customer.dashboard', ['business' => $business->domain]);
         }
         return back()->withErrors([
             'email' => 'Invalid credentials for this business.',

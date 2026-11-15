@@ -11,6 +11,7 @@
         <input id="password" name="password" type="password" autocomplete="current-password" required>
         <button type="submit" class="btn wide">{{ t('Log in', 'লগইন করুন') }}</button>
     </form>
+    @if(!empty($forgotUrl))<p class="hint"><a href="{{ $forgotUrl }}">{{ t('Forgot password?', 'পাসওয়ার্ড ভুলে গেছেন?') }}</a></p>@endif
     @if($registerUrl)<p class="hint">{{ t('New here?', 'নতুন ব্যবহারকারী?') }} <a href="{{ $registerUrl }}">{{ t('Create account', 'অ্যাকাউন্ট তৈরি করুন') }}</a></p>@endif
 </div>
 @endsection

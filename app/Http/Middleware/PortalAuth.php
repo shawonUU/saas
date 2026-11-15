@@ -8,27 +8,34 @@ class PortalAuth
 {
     public function handle(Request $request, Closure $next, string $guard): Response
     {
-        $login = match ($guard) {
+        $logins = [
             'authority' => 'authority.login',
             'saas_user' => 'saas.login',
             'business_admin' => 'store.admin.login',
             'business_customer' => 'store.customer.login',
-            default => abort(403),
-        };
-        $params = in_array($guard, ['business_admin', 'business_customer']) ? ['business' => $request->route('business')] : [];
+        ];
+        abort_unless(isset($logins[$guard]), 403);
+        $tenantGuard = in_array($guard, ['business_admin', 'business_customer'], true);
+        $business = $tenantGuard ? $request->attributes->get('current_business') : null;
+        if ($tenantGuard) abort_unless($business, 404);
+        $params = $tenantGuard ? ['business' => $business->domain] : [];
+        $request->attributes->set('auth_guard', $guard);
+        Auth::shouldUse($guard);
         $user = Auth::guard($guard)->user();
-        if (!$user) return redirect()->route($login, $params);
-        if ($user->approval_status !== 'Approved') {
+        if (!$user) {
+            return $request->expectsJson()
+                ? response()->json(['message' => 'Unauthenticated.'], 401)
+                : redirect()->route($logins[$guard], $params);
+        }
+        if ($tenantGuard && (int) $user->business_id !== (int) $business->id) abort(403);
+        if ($user->approval_status !== 'Approved' || !$user->is_active) {
             Auth::guard($guard)->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-            return redirect()->route($login, $params)->withErrors(['email' => 'Account is not active.']);
+            return $request->expectsJson()
+                ? response()->json(['message' => 'Account is not active.'], 403)
+                : redirect()->route($logins[$guard], $params)->withErrors(['email' => 'Account is not active.']);
         }
-        if (in_array($guard, ['business_admin', 'business_customer'])) {
-            $business = $request->attributes->get('current_business');
-            abort_unless($business && (int) $user->business_id === (int) $business->id, 403);
-        }
-        Auth::shouldUse($guard);
         return $next($request);
     }
 }

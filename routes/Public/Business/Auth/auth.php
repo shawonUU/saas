@@ -16,9 +16,13 @@ $domain = config('saas.domain');
 // Business admin portals and the wildcard customer storefront are kept independent.
 Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->name('store.admin.')->group(function () {
     Route::get('/', fn (Request $request) => redirect()->route('store.admin.login', ['business' => $request->route('business')]))->name('home');
+    Route::get('/forgot-password', [\App\Http\Controllers\Auth\PortalPasswordController::class, 'forgotForm'])->name('password.request');
+    Route::post('/forgot-password', [\App\Http\Controllers\Auth\PortalPasswordController::class, 'sendLink'])->middleware('throttle:3,1')->name('password.email');
+    Route::get('/reset-password/{token}', [\App\Http\Controllers\Auth\PortalPasswordController::class, 'resetForm'])->name('password.reset');
+    Route::post('/reset-password', [\App\Http\Controllers\Auth\PortalPasswordController::class, 'update'])->middleware('throttle:5,1')->name('password.update');
     Route::get('/login', [AdminAuthController::class, 'loginForm'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login'])->middleware('throttle:5,1')->name('login.post');
-    Route::middleware('portal.auth:business_admin')->group(function () {
+    Route::middleware(['portal.auth:business_admin', 'auth.session'])->group(function () {
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 });

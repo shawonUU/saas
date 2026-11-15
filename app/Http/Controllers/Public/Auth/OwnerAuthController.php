@@ -20,6 +20,7 @@ class OwnerAuthController extends Controller
             'title' => 'SaaS Account',
             'action' => route('saas.login.post'),
             'registerUrl' => route('saas.register'),
+            'forgotUrl' => route('saas.password.request'),
         ]);
     }
 
@@ -42,7 +43,7 @@ class OwnerAuthController extends Controller
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:saas_users,email'],
+            'email' => ['required', 'email', 'max:255', 'unique:saas_users,email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
@@ -80,7 +81,7 @@ class OwnerAuthController extends Controller
 
         $data['email'] = strtolower(trim($data['email']));
 
-        if (Auth::guard('saas_user')->attempt($data)) {
+        if (Auth::guard('saas_user')->attempt([...$data, 'approval_status' => 'Approved', 'is_active' => true])) {
             $request->session()->regenerate();
 
             return redirect()->route('saas.dashboard');

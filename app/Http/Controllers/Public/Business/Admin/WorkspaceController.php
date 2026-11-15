@@ -23,9 +23,9 @@ class WorkspaceController extends Controller
         $user=Auth::guard('business_admin')->user();
         abort_unless($business && $user,403);
 
-        $moduleSlug=(string)$request->route('moduleSlug');
-        $menuSlug=(string)$request->route('menuSlug');
-        $childSlug=$request->route('childSlug');
+        $moduleSlug=(string)$request->route('module');
+        $menuSlug=(string)$request->route('menu');
+        $childSlug=$request->route('child');
 
         $modules=$nav->forBusiness($business,$user);
         $module=$modules->first(fn($item)=>(string)$item->slug===$moduleSlug);

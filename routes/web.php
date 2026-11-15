@@ -3,7 +3,6 @@ use App\Http\Controllers\Authority\Auth\AuthorityAuthController;
 
 use App\Http\Controllers\Authority\FeatureAccessController;
 use App\Http\Controllers\Authority\FeatureController;
-use App\Http\Controllers\Business\Public\Auth\CustomerAuthController;
 use App\Http\Controllers\Public\Auth\OwnerAuthController;
 use App\Http\Controllers\Public\Business\Admin\WorkspaceController;
 use App\Http\Controllers\Public\Business\Auth\AdminAuthController;
@@ -24,8 +23,8 @@ require __DIR__.'/Public/Auth/auth.php';
 require __DIR__.'/Public/Business/business.php';
 require __DIR__.'/Public/Business/Auth/auth.php';
 require __DIR__.'/Public/Business/Admin/admin.php';
-require __DIR__.'/Public/Business/public/public.php';
-require __DIR__.'/Public/Business/public/Auth/auth.php';
+require __DIR__.'/Public/Business/Public/public.php';
+require __DIR__.'/Public/Business/Public/Auth/auth.php';
 
 
 Route::post('/language', function (Request $request) {

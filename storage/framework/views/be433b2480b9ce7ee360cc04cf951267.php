@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="<?php echo e(session('portal_lang', 'en')); ?>" data-theme="light">
 <head>
@@ -396,7 +395,7 @@
                 $portalDashboard = Auth::guard('authority')->check() && request()->getHost() === 'admin.'.config('saas.domain') ? route('authority.dashboard') :
                     (Auth::guard('business_admin')->check() && $businessCode && str_starts_with(request()->getHost(),'admin.') ? route('store.admin.dashboard',['business'=>$businessCode]) :
                     (Auth::guard('business_customer')->check() && $businessCode ? route('store.customer.dashboard',['business'=>$businessCode]) :
-                    (Auth::guard('web')->check() ? route('saas.dashboard') : null)));
+                    (Auth::guard('saas_user')->check() ? route('saas.dashboard') : null)));
             ?>
             <?php if($portalDashboard): ?>
                 <a href="<?php echo e($portalDashboard); ?>" class="btn"><?php echo e(t('Dashboard','ড্যাশবোর্ড')); ?></a>

@@ -11,14 +11,14 @@ class AuthorityAuthController extends Controller
     public function loginForm()
     {
         if (Auth::guard('authority')->check()) return redirect()->route('authority.dashboard');
-        return view('portals.login', ['title' => 'SaaS Authority', 'action' => route('authority.login.post'), 'registerUrl' => null]);
+        return view('portals.login', ['title' => 'SaaS Authority', 'action' => route('authority.login.post'), 'registerUrl' => null, 'forgotUrl' => route('authority.password.request')]);
     }
 
     public function login(Request $request)
     {
         $data = $request->validate(['email' => ['required', 'email'], 'password' => ['required', 'string']]);
         $data['email'] = strtolower(trim($data['email']));
-        if (Auth::guard('authority')->attempt([...$data, 'approval_status' => 'Approved'])) {
+        if (Auth::guard('authority')->attempt([...$data, 'approval_status' => 'Approved', 'is_active' => true])) {
             $request->session()->regenerate();
             return redirect()->route('authority.dashboard');
         }
