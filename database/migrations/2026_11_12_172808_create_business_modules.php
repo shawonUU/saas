@@ -13,10 +13,20 @@ return new class extends Migration
     {
         Schema::create('business_modules', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('business_subscription_id')
+                ->constrained('business_subscriptions')
+                ->cascadeOnDelete();
             $table->foreignId('business_id')->constrained('businesses')->cascadeOnDelete();
             $table->foreignId('module_id')->constrained('modules')->cascadeOnDelete();
-            $table->boolean('is_enabled');
-            $table->unique(['business_id', 'module_id'], 'bmo_unique');
+            $table->string('feature_key');
+
+            $table->enum('source', ['Plan', 'Override'])->default('Plan');
+            $table->boolean('is_enabled')->default(true);
+
+            $table->timestamp('starts_at')->nullable();
+            $table->timestamp('ends_at')->nullable();
+            $table->text('notes')->nullable();
+            $table->unique(['business_subscription_id', 'business_id', 'module_id'], 'bm_unique');
             $table->erpCommonColumns();
         });
     }

@@ -9,13 +9,13 @@ use App\Models\SubscriptionPlan;
 use App\Models\Module;
 use App\Models\Menu;
 use App\Models\ChildMenu;
-class SubscriptionPlanFeature extends Model
+class SubscriptionPlanModule extends Model
 {
     protected $guarded = [];
 
     public function plan(): BelongsTo
     {
-        return $this->belongsTo(SubscriptionPlan::class, 'plan_id');
+        return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id');
     }
 
     public function module(): BelongsTo

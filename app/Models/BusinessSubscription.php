@@ -33,12 +33,4 @@ class BusinessSubscription extends Model
     {
         return $this->belongsTo(SubscriptionPlan::class, 'plan_id');
     }
-
-    public function features(): HasMany
-    {
-        return $this->hasMany(
-            BusinessSubscriptionFeature::class,
-            'business_subscription_id'
-        );
-    }
 }
