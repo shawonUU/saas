@@ -1,11 +1,17 @@
 <?php
 namespace Database\Seeders;
 
-use App\Models\{Module,Menu,ChildMenu,BusinessCategory,BusinessCategoryModule,BusinessCategoryMenu,BusinessCategoryChildMenu};
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
+use App\Models\Module;
+use App\Models\Menu;
+use App\Models\ChildMenu;
+use App\Models\BusinessCategory;
+use App\Models\BusinessCategoryChildMenu;
+use App\Models\BusinessCategoryMenu;
+use App\Models\BusinessCategoryModule;
 class ModuleMenuSeeder extends Seeder
 {
     public function run():void
@@ -15,7 +21,21 @@ class ModuleMenuSeeder extends Seeder
         // Child: [slug, English, বাংলা, route]
         // Menu with [] children is directly clickable.
         $structure=[
-            ['sales','Sales','বিক্রয়','shopping-cart',[
+            ['configurations','Configurations','কনফিগারেশন','settings',[
+                ['customers','Customers','কাস্টমার','user',[]],
+                ['suppliers','Suppliers','সরবরাহকারী','truck',[]],
+                ['units','Units','ইউনিট','ruler',[]],
+                ['sizes','Sizes','সাইজ','ruler',[]],
+                ['colors','Colors','রঙ','ruler',[]],
+                ['brands','Brands','ব্র্যান্ড','package',[]],
+                ['categories','Categories','ক্যাটাগরি','list',[]],
+                ['sub-categories','Sub-Categories','সাব-ক্যাটাগরি','list',[]],
+                ['taxes','Taxes','ট্যাক্স','percent',[]],
+                ['currencies','Currencies','মুদ্রা','currency-bdt',[]],
+                ['payment-methods','Payment Methods','পেমেন্ট পদ্ধতি','credit-card',[]],
+                ['shipping-methods','Shipping Methods','শিপিং পদ্ধতি','truck',[]],
+            ]],
+            ['sales','Sales','বিক্রয়','shopping-cart',[
                 ['orders','Orders','অর্ডার','receipt',[[ 'order-list','Order List','অর্ডার তালিকা',null],['new-order','New Order','নতুন অর্ডার',null],['order-details','Order Details','অর্ডার বিস্তারিত',null]]],
                 ['quotations','Quotations','কোটেশন','file-text',[[ 'quotation-list','Quotation List','কোটেশন তালিকা',null],['new-quotation','New Quotation','নতুন কোটেশন',null]]],
                 ['invoices','Sales Invoices','বিক্রয় ইনভয়েস','file-check',[[ 'invoice-list','Invoice List','ইনভয়েস তালিকা',null],['new-invoice','New Invoice','নতুন ইনভয়েস',null]]],
