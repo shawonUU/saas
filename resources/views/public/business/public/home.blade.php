@@ -2,6 +2,7 @@
 <html lang="{{ session('portal_lang','en') }}" data-theme="light">
 <head>
 <meta charset="utf-8">
+@include('portals.partials.ui-theme-bootstrap')
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @php
@@ -84,7 +85,7 @@
 @endphp
 <title>{{ $storeName }} | {{ t('Shop new arrivals','নতুন কালেকশন দেখুন') }}</title>
 <meta name="description" content="{{ $storeName }} online storefront">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem('nexabiz-theme')==='dark'?'dark':'light';document.documentElement.lang=localStorage.getItem('nexabiz-language')==='bn'?'bn':'en'}catch(e){}</script>
+<script>try{document.documentElement.lang=localStorage.getItem('nexabiz-language')==='bn'?'bn':'en'}catch(e){}</script>
 <style>:root{--brand:{{ $brandColor }};--brand-soft:color-mix(in srgb,var(--brand) 8%,white)}</style>
 @verbatim
 <style>
@@ -105,6 +106,23 @@ html[data-theme=dark]{--bg:#0d1220;--surface:#161d2d;--surface-alt:#202a3e;--tex
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
 </style>
 @endverbatim
+<style id="storefront-ui-polish">
+/* Responsive storefront polish; respects the store's brand color and current theme. */
+html,body{max-width:100%;overflow-x:clip}
+.shell{width:100%;min-width:0}
+.site-grid, .content,.hero-grid,.product-section,.product-grid{min-width:0}
+input,button{min-width:0}
+html[data-theme="dark"] .announcement{background:#0b1120;color:#f1f5fd}
+html[data-theme="dark"] .hero-main{background:linear-gradient(120deg,#292644,#483550);color:#f7f2ff}
+html[data-theme="dark"] .hero-secondary{background:linear-gradient(120deg,#1d3150,#314761);color:#f7faff}
+html[data-theme="dark"] .hero p{color:#d2cfe7}
+html[data-theme="dark"] .hero .cta{background:#e8e5ff;color:#242345}
+html[data-theme="dark"] .hero .eyebrow{background:rgba(255,255,255,.14);color:#faf8ff}
+@media(max-width:900px){.shell{padding-left:16px;padding-right:16px}.header-primary{gap:12px}.search{min-width:0}.hero-grid{grid-template-columns:1fr 1fr}.hero{padding:25px}.hero img{max-width:58%}}
+@media(max-width:680px){.shell{padding-left:12px;padding-right:12px}.header-primary{gap:9px}.logo{min-width:0;flex:1;max-width:none}.logo-text strong{max-width:150px;text-overflow:ellipsis;overflow:hidden}.header-actions{gap:2px}.header-actions .icon-btn{width:35px;height:38px}.header-actions .lang-btn{padding:8px}.content{padding-top:14px}.hero-grid{grid-template-columns:1fr;gap:12px}.hero{min-height:240px;height:auto;padding:26px 21px}.hero h1,.hero h2{font-size:clamp(25px,7vw,34px);max-width:65%}.hero p{max-width:60%}.hero img{width:55%;right:-22px}.benefits{grid-template-columns:1fr;gap:9px}.benefit{padding:12px}.category-strip{display:flex;gap:13px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 3px 10px}.category-chip{flex:0 0 84px;scroll-snap-align:start}.product-section{padding:16px 12px}.block-heading{align-items:flex-start}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.category-thumb{border-width:2px}}
+@media(max-width:400px){.hero h1,.hero h2{font-size:24px;letter-spacing:-.8px}.hero img{opacity:.6}.logo-text small{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
@@ -155,7 +173,7 @@ html[data-theme=dark]{--bg:#0d1220;--surface:#161d2d;--surface-alt:#202a3e;--tex
 <nav class="mobile-nav" aria-label="Mobile navigation"><button class="active" type="button" id="mobile-home"><svg><use href="#ic-home"/></svg><span data-en="Home" data-bn="হোম">{{ t('Home','হোম') }}</span></button><button type="button" id="mobile-categories"><svg><use href="#ic-grid"/></svg><span data-en="Categories" data-bn="ক্যাটাগরি">{{ t('Categories','ক্যাটাগরি') }}</span></button><button type="button" id="mobile-search"><svg><use href="#ic-search"/></svg><span data-en="Search" data-bn="খুঁজুন">{{ t('Search','খুঁজুন') }}</span></button><button type="button" id="mobile-favorites"><svg><use href="#ic-heart"/></svg><span data-en="Saved" data-bn="পছন্দ">{{ t('Saved','পছন্দ') }}</span></button><button type="button" id="mobile-cart"><svg><use href="#ic-bag"/></svg><span data-en="Cart" data-bn="কার্ট">{{ t('Cart','কার্ট') }}</span></button></nav>
 <script>
 (()=>{
-const storeKey=@json((string)$storeCode),langKey='nexabiz-language',themeKey='nexabiz-theme',cartKey='public-shop-cart:'+storeKey,favKey='public-shop-favorites:'+storeKey;
+const storeKey=@json((string)$storeCode),langKey='nexabiz-language',themeKey='saas-ui-theme',cartKey='public-shop-cart:'+storeKey,favKey='public-shop-favorites:'+storeKey;
 const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
 const tr=(en,bn)=>(document.documentElement.lang==='bn'?bn:en);
 const safeRead=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))??fallback}catch(e){return fallback}};
@@ -179,7 +197,7 @@ const closePanels=()=>{$('#side-nav').classList.remove('open');$('#cart-drawer')
 const openSide=()=>{$('#cart-drawer').classList.remove('open');$('#cart-drawer').setAttribute('aria-hidden','true');$('#side-nav').classList.add('open');setScrim()};
 const filterProducts=()=>{const query=$('#store-search').value.trim().toLocaleLowerCase();let visible=0;$$('.product-section').forEach(section=>{let sectionVisible=0;const category=(section.dataset.sectionEn+' '+section.dataset.sectionBn).toLocaleLowerCase();section.querySelectorAll('.product-card').forEach(card=>{const match=!query||category.includes(query)||(card.dataset.productNameEn+' '+card.dataset.productNameBn).toLocaleLowerCase().includes(query);card.classList.toggle('hidden',!match);card.style.display=query&&match?'block':'';if(match){sectionVisible++;visible++}});section.classList.toggle('hidden',sectionVisible===0)});$('#search-empty').style.display=visible?'none':'block';$$('.editorial').forEach(el=>el.classList.toggle('hidden',Boolean(query)));};
 $('#language-toggle').addEventListener('click',()=>{document.documentElement.lang=document.documentElement.lang==='bn'?'en':'bn';try{localStorage.setItem(langKey,document.documentElement.lang)}catch(e){}updateLang()});
-$('#theme-toggle').addEventListener('click',()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';try{localStorage.setItem(themeKey,document.documentElement.dataset.theme)}catch(e){}updateTheme()});
+$('#theme-toggle').addEventListener('click',()=>{window.SaasUITheme?.toggle();updateTheme()});
 $$('.add-btn').forEach(btn=>btn.onclick=()=>addCart(btn.closest('.product-card').dataset.productId));$$('.wish-btn').forEach(btn=>btn.onclick=()=>toggleFavorite(btn.closest('.product-card').dataset.productId));
 $('#cart-open').onclick=openCart;$('#mobile-cart').onclick=openCart;$('#cart-close').onclick=closePanels;$('#cart-scrim').onclick=closePanels;$('#open-mobile-menu').onclick=openSide;$('#mobile-categories').onclick=()=>{closePanels();$('#categories').scrollIntoView({behavior:'smooth'})};$('#mobile-home').onclick=()=>{closePanels();window.scrollTo({top:0,behavior:'smooth'})};
 $('#account-open').onclick=()=>toast('Customer account will be available soon','কাস্টমার অ্যাকাউন্ট শিগগিরই আসবে');$('#checkout-demo').onclick=()=>toast('Checkout integration is coming next','চেকআউট ইন্টিগ্রেশন পরে যুক্ত হবে');

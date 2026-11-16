@@ -2,6 +2,8 @@
 namespace Tests\Feature;
 use App\Models\{User,Business,BusinessUser,BusinessRole,BusinessCategory,Module,Menu,ChildMenu,BusinessCategoryModule,BusinessCategoryMenu,BusinessCategoryChildMenu,BusinessChildMenu,BusinessUserAccess,AuthorityUser};
 use App\Services\BusinessNavigation;
+use App\Services\BusinessSubscriptionService;
+use App\Models\{BusinessSubscription, SubscriptionPlanModule, SubscriptionPlanMenu, SubscriptionPlanChildMenu, BusinessModule};
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 class BusinessNavigationTest extends TestCase
@@ -20,6 +22,7 @@ class BusinessNavigationTest extends TestCase
         foreach ([[BusinessCategoryModule::class,'module_id',$module->id],[BusinessCategoryMenu::class,'menu_id',$menu->id],[BusinessCategoryChildMenu::class,'child_menu_id',$child->id]] as [$model,$column,$id]) {
             $model::create(['business_category_id' => $category->id,$column => $id]);
         }
+        app(BusinessSubscriptionService::class)->activateBasic($business);
         return compact('business','admin','module','menu','child');
     }
     public function test_owner_automatically_gets_category_access_and_override_blocks_it(): void
@@ -54,4 +57,117 @@ class BusinessNavigationTest extends TestCase
         $this->put('http://admin.saas.test/access/category/'.$business->category_id,['access'=>['module'=>[$module->id=>'1'],'menu'=>[$menu->id=>'1'],'child'=>[]]])->assertRedirect();
         $this->assertFalse(app(BusinessNavigation::class)->canView($business,$admin,$child->id));
     }
+
+    public function test_basic_activation_is_free_non_expiring_and_idempotent(): void
+    {
+        extract($this->setupBusiness());
+        $subscription = BusinessSubscription::where('business_id', $business->id)->firstOrFail();
+        $this->assertEquals('active', $subscription->subscription_status);
+        $this->assertNull($subscription->ends_at);
+        $this->assertEquals(0, (float)$subscription->plan->price);
+        $this->assertEquals($business->category_id, $subscription->plan->business_category_id);
+        $this->assertDatabaseHas('subscription_plan_modules', [
+            'subscription_plan_id' => $subscription->plan_id, 'module_id' => $module->id, 'is_enabled' => true,
+        ]);
+        $this->assertDatabaseHas('subscription_plan_menus', [
+            'subscription_plan_id' => $subscription->plan_id, 'menu_id' => $menu->id, 'is_enabled' => true,
+        ]);
+        $this->assertDatabaseHas('subscription_plan_child_menus', [
+            'subscription_plan_id' => $subscription->plan_id, 'child_menu_id' => $child->id, 'is_enabled' => true,
+        ]);
+
+        app(BusinessSubscriptionService::class)->activateBasic($business);
+        $this->assertEquals(1, BusinessSubscription::where('business_id', $business->id)->count());
+        $this->assertDatabaseHas('subscription_plan_modules', [
+            'subscription_plan_id' => $subscription->plan_id, 'module_id' => $module->id, 'is_enabled' => true,
+        ]);
+        $this->assertDatabaseHas('subscription_plan_menus', [
+            'subscription_plan_id' => $subscription->plan_id, 'menu_id' => $menu->id, 'is_enabled' => true,
+        ]);
+        $this->assertDatabaseHas('subscription_plan_child_menus', [
+            'subscription_plan_id' => $subscription->plan_id, 'child_menu_id' => $child->id, 'is_enabled' => true,
+        ]);
+    }
+
+    public function test_subscription_is_required_even_for_owner(): void
+    {
+        extract($this->setupBusiness());
+        $service = app(BusinessNavigation::class);
+        $this->assertTrue($service->canView($business, $admin, $child->id));
+        BusinessSubscription::where('business_id', $business->id)->update(['subscription_status' => 'canceled']);
+        $this->assertFalse($service->canView($business, $admin, $child->id));
+    }
+
+    public function test_expired_subscription_hides_features(): void
+    {
+        extract($this->setupBusiness());
+        BusinessSubscription::where('business_id', $business->id)->update(['ends_at' => now()->subDay()]);
+        $this->assertFalse(app(BusinessNavigation::class)->canView($business, $admin, $child->id));
+    }
+
+    public function test_plan_restriction_cannot_be_overridden_by_business(): void
+    {
+        extract($this->setupBusiness());
+        $service = app(BusinessNavigation::class);
+        $this->assertTrue($service->canView($business, $admin, $child->id));
+        $planId = BusinessSubscription::where('business_id', $business->id)->value('plan_id');
+        SubscriptionPlanChildMenu::where('subscription_plan_id', $planId)
+            ->where('child_menu_id', $child->id)->update(['is_enabled' => false]);
+        $this->assertFalse($service->canView($business, $admin, $child->id));
+        BusinessModule::create(['business_id' => $business->id, 'module_id' => $module->id,
+            'source' => 'Override', 'is_enabled' => true, 'approval_status' => 'Approved']);
+        $this->assertFalse($service->canView($business, $admin, $child->id));
+    }
+
+    public function test_global_inactive_parent_cannot_be_enabled_by_category_or_plan(): void
+    {
+        extract($this->setupBusiness());
+        $module->update(['is_active' => false]);
+        $this->assertFalse(app(BusinessNavigation::class)->canView($business, $admin, $child->id));
+    }
+
+    public function test_basic_plan_sync_updates_plan_mapping_when_category_changes(): void
+    {
+        extract($this->setupBusiness());
+        $service = app(BusinessNavigation::class);
+        $this->assertTrue($service->canView($business, $admin, $child->id));
+        BusinessCategoryChildMenu::where('business_category_id', $business->category_id)
+            ->where('child_menu_id', $child->id)->forceDelete();
+        app(BusinessSubscriptionService::class)->syncBasicPlan($business->category);
+        $this->assertFalse($service->canView($business, $admin, $child->id));
+        $this->assertDatabaseMissing('subscription_plan_child_menus', [
+            'subscription_plan_id' => BusinessSubscription::where('business_id', $business->id)->value('plan_id'),
+            'business_category_id' => $business->category_id,
+            'child_menu_id' => $child->id,
+        ]);
+    }
+
+    public function test_configuration_module_is_assigned_to_categories_by_seeder(): void
+    {
+        $this->seed(\Database\Seeders\ModuleMenuSeeder::class);
+        $this->seed(\Database\Seeders\SubscriptionPlanSeeder::class);
+        $configurations = Module::where('slug', 'configurations')->firstOrFail();
+        $categories = BusinessCategory::where('approval_status', 'Approved')->get();
+        $this->assertGreaterThan(0, $categories->count());
+        foreach ($categories as $category) {
+            $this->assertDatabaseHas('business_category_modules', [
+                'business_category_id' => $category->id, 'module_id' => $configurations->id,
+            ]);
+            $plan = \App\Models\SubscriptionPlan::where('slug', $category->slug . '-basic')->firstOrFail();
+            $this->assertEquals(0, (float)$plan->price);
+            $this->assertDatabaseHas('subscription_plan_modules', [
+                'subscription_plan_id' => $plan->id,
+                'business_category_id' => $category->id,
+                'module_id' => $configurations->id,
+            ]);
+        }
+    }
+
+    public function test_navigation_does_not_require_business_feature_snapshots(): void
+    {
+        extract($this->setupBusiness());
+        $this->assertFalse(\Illuminate\Support\Facades\Schema::hasTable('business_subscription_features'));
+        $this->assertTrue(app(BusinessNavigation::class)->canView($business, $admin, $child->id));
+    }
+
 }

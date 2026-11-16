@@ -22,6 +22,9 @@ class BusinessUserController extends Controller
         $actor = BusinessUser::with('role')->where('business_id', $business->id)->findOrFail($auth->id);
         $isOwner = $actor->isOwnerOf($business);
         abort_unless($isOwner || (!(bool)$actor->role?->is_owner && strtolower(trim((string)$actor->role?->name)) === 'admin'), 403);
+        $tree = app(BusinessNavigation::class)->forBusiness($business, $actor);
+        $authorization = $tree->firstWhere('slug', 'authorization');
+        abort_unless($authorization && $authorization->menus->contains('slug', 'users'), 403);
         return [$business, $actor, $isOwner];
     }
 

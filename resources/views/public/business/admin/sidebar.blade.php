@@ -1,7 +1,7 @@
 
 @php
-    $currentModuleSlug=(string)request()->route('module');
-    $currentMenuSlug=(string)request()->route('menu');
+    $currentModuleSlug=(string)(request()->route('module') ?: (request()->routeIs('store.admin.configurations.*') ? 'configurations' : ''));
+    $currentMenuSlug=(string)(request()->route('menu') ?: (request()->routeIs('store.admin.configurations.*') ? (['supplier'=>'suppliers','color'=>'colors'][request()->segment(2)] ?? request()->segment(2)) : ''));
     $currentChildSlug=(string)request()->route('child');
     $businessRoute=request()->route('business');
     $businessKey=is_object($businessRoute)?(string)($businessRoute->subdomain ?? $businessRoute->slug ?? $businessRoute->domain ?? ''):(string)$businessRoute;
@@ -85,7 +85,14 @@
                                 </div>
                             </details>
                         @else
-                            <a class="ws-menu-direct {{ $menuActive && $currentChildSlug===''?'active':'' }}" href="{{ route('store.admin.feature',$menuParams) }}">
+                            @php
+                                $configRoute = 'store.admin.configurations.'.str_replace('-', '_', (string)$menu->slug).'.index';
+                                $directUrl = (string)$module->slug === 'configurations'
+                                    && Route::has($configRoute)
+                                    ? route($configRoute, ['business' => $businessKey])
+                                    : route('store.admin.feature', $menuParams);
+                            @endphp
+                            <a class="ws-menu-direct {{ $menuActive && $currentChildSlug===''?'active':'' }}" href="{{ $directUrl }}">
                                 <svg class="ws-svg"><use href="#ws-i-folder"/></svg>
                                 <span class="ws-menu-text">{{ navName($menu) }}</span>
                             </a>

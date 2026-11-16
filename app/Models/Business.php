@@ -8,6 +8,7 @@ class Business extends Model
 {
     use ErpCrud, SoftDeletes;
     protected $guarded = [];
+    protected $attributes = ['is_active' => 1];
     protected static function booted(): void
     {
         static::saving(function (self $business) {

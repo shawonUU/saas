@@ -2,7 +2,7 @@
 <html lang="{{ session('portal_lang', 'en') }}" data-theme="light">
 <head>
     <meta charset="utf-8">
-    <script>try{document.documentElement.dataset.theme=localStorage.getItem('nexabiz-theme')==='dark'?'dark':'light'}catch(e){}</script>
+    @include('portals.partials.ui-theme-bootstrap')
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -357,6 +357,7 @@
 
     @include('portals.partials.theme-styles')
     @stack('styles')
+    @include('portals.partials.ui-foundation')
 </head>
 
 <body>
@@ -369,13 +370,14 @@
             Nexa<span>Biz</span>
         </a>
 
-        <nav class="nav-links">
+        <nav id="site-primary-nav" class="nav-links">
             <a href="{{ url('/') }}">{{ t('Home', 'হোম') }}</a>
             <a href="{{ url('/#features') }}">{{ t('Features', 'ফিচার') }}</a>
             <a href="{{ url('/#how-it-works') }}">{{ t('How it works', 'যেভাবে কাজ করে') }}</a>
             <a href="{{ url('/#about') }}">{{ t('About', 'আমাদের সম্পর্কে') }}</a>
         </nav>
 
+        <button type="button" class="nav-menu-toggle" data-site-nav-toggle aria-controls="site-primary-nav" aria-expanded="false" aria-label="{{ t('Open navigation','মেনু খুলুন') }}">☰</button>
         <div class="nav-actions">
             <button type="button" id="theme-toggle" class="theme-btn" aria-label="{{ t('Toggle light and dark mode','লাইট ও ডার্ক মোড বদলান') }}" aria-pressed="false">◐ <span id="theme-label">{{ t('Dark','ডার্ক') }}</span></button>
 
@@ -468,9 +470,7 @@
     </div>
 </footer>
 
-<script>
-(function(){const btn=document.getElementById('theme-toggle');const label=document.getElementById('theme-label');const light=@json(t('Light','লাইট'));const dark=@json(t('Dark','ডার্ক'));function refresh(){const isDark=document.documentElement.dataset.theme==='dark';btn.setAttribute('aria-pressed',isDark?'true':'false');label.textContent=isDark?light:dark;}btn.addEventListener('click',function(){const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('nexabiz-theme',next)}catch(e){}refresh()});refresh()})();
-</script>
+@include('portals.partials.ui-controls')
 @stack('scripts')
 
 </body>

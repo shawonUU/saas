@@ -47,6 +47,11 @@ class AuthorizationController extends Controller
 
         abort_unless(in_array($role,['owner','admin'],true),403,'Only Owner or Admin can manage access.');
 
+        // Direct /authorization URLs are subject to the same navigation layers.
+        $tree = app(\App\Services\BusinessNavigation::class)->forBusiness($business, $actor);
+        $authorization = $tree->firstWhere('slug', 'authorization');
+        abort_unless($authorization && $authorization->menus->contains('slug', 'access-control'), 403);
+
         return [$business,$actor,$role==='owner'];
     }
 
@@ -67,72 +72,9 @@ class AuthorizationController extends Controller
 
     private function tree(object $business): Collection
     {
-        $businessId=(int)$business->id;
-        $categoryId=(int)$business->category_id;
-
-        $moduleIds=BusinessCategoryModule::query()
-            ->where('business_category_id',$categoryId)
-            ->pluck('module_id');
-
-        $disabledModules=BusinessModule::query()
-            ->where('business_id',$businessId)
-            ->where('is_enabled',false)
-            ->pluck('module_id');
-
-        $modules=Module::query()
-            ->whereIn('id',$moduleIds)
-            ->whereNotIn('id',$disabledModules)
-            ->orderBy('sort_order')
-            ->orderBy('id')
-            ->get();
-
-        $menuIds=BusinessCategoryMenu::query()
-            ->where('business_category_id',$categoryId)
-            ->pluck('menu_id');
-
-        $disabledMenus=BusinessMenu::query()
-            ->where('business_id',$businessId)
-            ->where('is_enabled',false)
-            ->pluck('menu_id');
-
-        $menus=Menu::query()
-            ->whereIn('module_id',$modules->pluck('id'))
-            ->whereIn('id',$menuIds)
-            ->whereNotIn('id',$disabledMenus)
-            ->orderBy('sort_order')
-            ->orderBy('id')
-            ->get();
-
-        $childIds=BusinessCategoryChildMenu::query()
-            ->where('business_category_id',$categoryId)
-            ->pluck('child_menu_id');
-
-        $disabledChildren=BusinessChildMenu::query()
-            ->where('business_id',$businessId)
-            ->where('is_enabled',false)
-            ->pluck('child_menu_id');
-
-        $children=ChildMenu::query()
-            ->whereIn('menu_id',$menus->pluck('id'))
-            ->whereIn('id',$childIds)
-            ->whereNotIn('id',$disabledChildren)
-            ->orderBy('sort_order')
-            ->orderBy('id')
-            ->get()
-            ->groupBy('menu_id');
-
-        $menuGroups=$menus->groupBy('module_id');
-
-        return $modules->map(function($module) use($menuGroups,$children){
-            $module->setRelation('menus',
-                ($menuGroups->get($module->id)??collect())
-                    ->map(function($menu) use($children){
-                        $menu->setRelation('children',$children->get($menu->id)??collect());
-                        return $menu;
-                    })->values()
-            );
-            return $module;
-        });
+        // Show only features that pass Global, Category, Subscription and
+        // Business Override checks; do not apply the editor's own user access.
+        return app(\App\Services\BusinessNavigation::class)->forBusiness($business);
     }
 
     private function definitions(object $business,Collection $modules): Collection

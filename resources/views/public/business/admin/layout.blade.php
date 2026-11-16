@@ -3,7 +3,7 @@
 <html lang="{{ session('portal_lang', 'en') }}" data-theme="light">
 <head>
     <meta charset="utf-8">
-    <script>try{document.documentElement.dataset.theme=localStorage.getItem('store-admin-theme')==='dark'?'dark':'light'}catch(e){}</script>
+    @include('portals.partials.ui-theme-bootstrap')
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -394,6 +394,7 @@
 
     @include('portals.partials.theme-styles')
     @stack('styles')
+    @include('portals.partials.ui-foundation')
 </head>
 
 <body>
@@ -411,7 +412,7 @@
                 <span class="brand-subtitle">{{ t('Store Administration','স্টোর অ্যাডমিন') }}</span>
             </span>
         </a>
-        <nav class="nav-links" aria-label="Store navigation">
+        <nav id="site-primary-nav" class="nav-links" aria-label="Store navigation">
             <a class="{{ request()->routeIs('store.admin.dashboard') ? 'active' : '' }}" href="{{ $dashboardUrl }}">{{ t('Dashboard','ড্যাশবোর্ড') }}</a>
             @if(Route::has('store.admin.products.index'))
                 <a href="{{ route('store.admin.products.index',['business'=>$storeCode]) }}">{{ t('Products','পণ্য') }}</a>
@@ -424,6 +425,7 @@
             @endif
             <a href="{{ $storefrontUrl }}" target="_blank" rel="noopener noreferrer">{{ t('View Store','স্টোর দেখুন') }} ↗</a>
         </nav>
+        <button type="button" class="nav-menu-toggle" data-site-nav-toggle aria-controls="site-primary-nav" aria-expanded="false" aria-label="{{ t('Open navigation','মেনু খুলুন') }}">☰</button>
         <div class="nav-actions">
             <a href="{{ $dashboardUrl }}" class="btn btn-outline mobile-dashboard">{{ t('Dashboard','ড্যাশবোর্ড') }}</a>
             <button type="button" id="theme-toggle" class="theme-btn" aria-label="{{ t('Toggle light and dark mode','লাইট ও ডার্ক মোড বদলান') }}" aria-pressed="false">◐ <span id="theme-label">{{ t('Dark','ডার্ক') }}</span></button>
@@ -459,9 +461,7 @@
 
 <main class="admin-main">@yield('content')</main>
 
-<script>
-(function(){const btn=document.getElementById('theme-toggle');const label=document.getElementById('theme-label');const light=@json(t('Light','লাইট'));const dark=@json(t('Dark','ডার্ক'));function refresh(){const isDark=document.documentElement.dataset.theme==='dark';btn.setAttribute('aria-pressed',isDark?'true':'false');label.textContent=isDark?light:dark;}btn.addEventListener('click',function(){const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('store-admin-theme',next)}catch(e){}refresh()});refresh()})();
-</script>
+@include('portals.partials.ui-controls')
 @stack('scripts')
 
 </body>

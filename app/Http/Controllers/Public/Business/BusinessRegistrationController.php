@@ -12,24 +12,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
-use RuntimeException;
-
-use App\Models\SubscriptionPlan;
-use App\Models\BusinessSubscription;
-use App\Models\SubscriptionPlanFeature;
-use App\Models\BusinessSubscriptionFeature;
+use App\Services\BusinessSubscriptionService;
 class BusinessRegistrationController extends Controller
 {
     public function create()
     {
         return view('public.business.business-register', [
             'categories' => BusinessCategory::where('approval_status', Status::APPROVED)
+                ->where('is_active', true)
                 ->orderBy('name')
                 ->get()
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, BusinessSubscriptionService $subscriptions)
     {
         $request->merge([
             'domain' => strtolower(trim((string) $request->input('domain')))
@@ -41,6 +37,7 @@ class BusinessRegistrationController extends Controller
                 'required',
                 Rule::exists('business_categories', 'id')
                     ->where('approval_status', Status::APPROVED)
+                    ->where('is_active', true)
             ],
             'domain' => [
                 'required',
@@ -58,20 +55,7 @@ class BusinessRegistrationController extends Controller
 
         abort_unless($owner && $owner->user_id, 403);
 
-        $business = DB::transaction(function () use ($data, $owner) {
-
-            $category = BusinessCategory::findOrFail($data['category_id']);
-
-            // Find category-wise Basic Plan
-            $plan = SubscriptionPlan::where('business_category_id', $category->id)
-                ->where('slug', $category->slug . '-basic')
-                ->first();
-
-            if (!$plan) {
-                throw new RuntimeException(
-                    "Basic subscription plan not found for {$category->name} category."
-                );
-            }
+        $business = DB::transaction(function () use ($data, $owner, $subscriptions) {
 
             $business = Business::create([
                 'owner_id' => $owner->user_id,
@@ -102,63 +86,9 @@ class BusinessRegistrationController extends Controller
                 'approval_status' => Status::APPROVED,
             ]);
 
-            // Create Active Basic Subscription
-            $now = now();
-
-            // Free plan will not expire
-            $endsAt = null;
-
-            if ((float) $plan->price > 0) {
-                $interval = max(1, (int) $plan->billing_interval);
-
-                $endsAt = match (strtolower($plan->billing_cycle)) {
-                    'yearly' => $now->copy()->addYears($interval),
-                    default => $now->copy()->addMonths($interval),
-                };
-            }
-
-            $subscriptionId = BusinessSubscription::insertGetId([
-                'code' => getGenerateCode(BusinessSubscription::class, 'code', 'BUSS'),
-                'business_id' => $business->id,
-                'plan_id' => $plan->id,
-                'subscription_status' => 'active',
-                'starts_at' => $now,
-                'ends_at' => $endsAt,
-                'trial_ends_at' => null,
-                'canceled_at' => null,
-                'auto_renew' => false,
-                'external_reference' => null,
-                'notes' => 'Automatically assigned Basic Plan during business registration.',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ]);
-
-            // Copy Plan Features to Business Subscription Features
-            $planFeatures = SubscriptionPlanFeature::where('plan_id', $plan->id)->get();
-
-            $subscriptionFeatures = [];
-
-            foreach ($planFeatures as $feature) {
-                $subscriptionFeatures[] = [
-                    'code' => uniqid(),
-                    'business_subscription_id' => $subscriptionId,
-                    'module_id' => $feature->module_id,
-                    'menu_id' => $feature->menu_id,
-                    'child_menu_id' => $feature->child_menu_id,
-                    'feature_key' => $feature->feature_key,
-                    'source' => 'plan',
-                    'is_enabled' => true,
-                    'starts_at' => $now,
-                    'ends_at' => $endsAt,
-                    'notes' => null,
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ];
-            }
-
-            if (!empty($subscriptionFeatures)) {
-                BusinessSubscriptionFeature::insert($subscriptionFeatures);
-            }
+            // Activation and feature snapshot happen in this same transaction.
+            // A failed activation rolls back business, role and owner creation.
+            $subscriptions->activateBasic($business);
 
             return $business;
         });

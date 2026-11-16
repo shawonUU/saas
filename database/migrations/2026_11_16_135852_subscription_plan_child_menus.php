@@ -6,36 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('subscription_plan_menus', function (Blueprint $table) {
+        Schema::create('subscription_plan_child_menus', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_plan_id')
-                ->constrained('subscription_plans')
-                ->cascadeOnDelete();
-
-            $table->foreignId('business_id')->constrained('businesses')->cascadeOnDelete();
+            $table->foreignId('subscription_plan_id')->constrained('subscription_plans')->cascadeOnDelete();
+            $table->foreignId('business_category_id')->constrained('business_categories')->cascadeOnDelete();
             $table->foreignId('child_menu_id')->constrained('child_menus')->cascadeOnDelete();
-
-            $table->enum('source', ['Plan', 'Override'])->default('Plan');
             $table->boolean('is_enabled')->default(true);
-
-            $table->timestamp('starts_at')->nullable();
-            $table->timestamp('ends_at')->nullable();
-            $table->text('notes')->nullable();
-            $table->unique(['subscription_plan_id', 'business_id', 'child_menu_id'], 'spm_unique');
+            $table->unique(['subscription_plan_id', 'business_category_id', 'child_menu_id'], 'sp_child_unique');
             $table->erpCommonColumns();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('subscription_plan_child_menus');
     }
 };

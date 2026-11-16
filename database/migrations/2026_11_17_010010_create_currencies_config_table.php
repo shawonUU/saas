@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        // Existing installs may already have this table from the legacy combined migration.
+        if (Schema::hasTable('config_currencies')) return;
+
+        Schema::create('config_currencies', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('business_id')->constrained('businesses')->cascadeOnDelete();
+            $table->string('name');
+            $table->string('currency_code', 3);
+            $table->string('symbol', 20);
+            $table->decimal('exchange_rate', 16, 6)->default(1);
+            $table->boolean('is_default')->default(false);
+            $table->index(['business_id', 'currency_code']);
+            $table->erpCommonColumns();
+            $table->index(['business_id', 'name']);
+            $table->index(['business_id', 'is_active']);
+        });
+    }
+
+    public function down(): void
+    {
+        // Intentionally non-destructive: an older migration may own this table and its data.
+        // Drop only via an explicit, reviewed data-removal migration.
+    }
+};

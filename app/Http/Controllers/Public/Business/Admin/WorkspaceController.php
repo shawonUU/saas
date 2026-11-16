@@ -41,7 +41,7 @@ class WorkspaceController extends Controller
             abort_unless($nav->canView($business,$user,$child->id),403);
             $child->loadMissing('menu.module');
         }else{
-            abort_if($menu->children->isNotEmpty(),404);
+            abort_if((int) $menu->children_count > 0, 404);
         }
 
         return view('public.business.admin.feature',[

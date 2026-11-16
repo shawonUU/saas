@@ -2,34 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ErpCrud;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Models\SubscriptionPlan;
-use App\Models\Module;
-use App\Models\Menu;
-use App\Models\ChildMenu;
 class SubscriptionPlanModule extends Model
 {
+    use ErpCrud, SoftDeletes;
+
     protected $guarded = [];
-
-    public function plan(): BelongsTo
-    {
-        return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id');
-    }
-
-    public function module(): BelongsTo
-    {
-        return $this->belongsTo(Module::class, 'module_id');
-    }
-
-    public function menu(): BelongsTo
-    {
-        return $this->belongsTo(Menu::class, 'menu_id');
-    }
-
-    public function childMenu(): BelongsTo
-    {
-        return $this->belongsTo(ChildMenu::class, 'child_menu_id');
-    }
+    public function plan() { return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id'); }
+    public function category() { return $this->belongsTo(BusinessCategory::class, 'business_category_id'); }
+    public function module() { return $this->belongsTo(Module::class); }
 }

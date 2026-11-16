@@ -261,6 +261,11 @@ class ModuleMenuSeeder extends Seeder
 
         // Reusable category profiles: '*' = all children of this menu; [] = direct menu only.
         $common=[
+            'configurations'=>[
+                'customers'=>[], 'suppliers'=>[], 'units'=>[], 'sizes'=>[],
+                'colors'=>[], 'brands'=>[], 'categories'=>[], 'sub-categories'=>[],
+                'taxes'=>[], 'currencies'=>[], 'payment-methods'=>[], 'shipping-methods'=>[],
+            ],
             'authorization'=>['users'=>'*','roles'=>'*','permissions'=>'*','access-control'=>'*'],
             'settings'=>['navigation-management'=>'*','business'=>'*','team'=>'*','locations'=>'*','taxes'=>'*','integrations'=>'*','notifications'=>'*','security'=>'*','audit'=>'*'],
             'analytics'=>['overview'=>'*','reports'=>'*'],
@@ -610,9 +615,26 @@ class ModuleMenuSeeder extends Seeder
                 BusinessCategoryChildMenu::where('business_category_id',$id)->whereNotIn('child_menu_id',$childIds)->delete();
                 BusinessCategoryMenu::where('business_category_id',$id)->whereNotIn('menu_id',$menuIds)->delete();
                 BusinessCategoryModule::where('business_category_id',$id)->whereNotIn('module_id',$moduleIds)->delete();
-                foreach(array_unique($moduleIds) as $moduleId)BusinessCategoryModule::firstOrCreate(['business_category_id'=>$id,'module_id'=>$moduleId]);
-                foreach(array_unique($menuIds) as $menuId)BusinessCategoryMenu::firstOrCreate(['business_category_id'=>$id,'menu_id'=>$menuId]);
-                foreach(array_unique($childIds) as $childId)BusinessCategoryChildMenu::firstOrCreate(['business_category_id'=>$id,'child_menu_id'=>$childId]);
+                foreach(array_unique($moduleIds) as $moduleId)BusinessCategoryModule::withTrashed()->updateOrCreate(['business_category_id'=>$id,'module_id'=>$moduleId],['deleted_at'=>null]);
+                foreach(array_unique($menuIds) as $menuId)BusinessCategoryMenu::withTrashed()->updateOrCreate(['business_category_id'=>$id,'menu_id'=>$menuId],['deleted_at'=>null]);
+                foreach(array_unique($childIds) as $childId)BusinessCategoryChildMenu::withTrashed()->updateOrCreate(['business_category_id'=>$id,'child_menu_id'=>$childId],['deleted_at'=>null]);
+            }
+            // Also cover pre-existing approved categories not defined in $categories.
+            // Never overwrite their other assigned modules or menus.
+            $config = $modules->get('configurations');
+            if ($config) {
+                foreach (BusinessCategory::where('approval_status', 'Approved')->get() as $existingCategory) {
+                    BusinessCategoryModule::withTrashed()->updateOrCreate([
+                        'business_category_id' => $existingCategory->id,
+                        'module_id' => $config->id,
+                    ], ['deleted_at' => null, 'approval_status' => 'Approved']);
+                    foreach ($config->menus as $menu) {
+                        BusinessCategoryMenu::withTrashed()->updateOrCreate([
+                            'business_category_id' => $existingCategory->id,
+                            'menu_id' => $menu->id,
+                        ], ['deleted_at' => null, 'approval_status' => 'Approved']);
+                    }
+                }
             }
         });
     }

@@ -27,6 +27,22 @@ Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->grou
             Route::delete('/users/{memberId}',[BusinessUserController::class,'destroy'])->name('users.destroy');
         });
 
+        // Independent CRUD route files; deliberately registered before the generic feature route.
+        Route::prefix('configurations')->name('store.admin.configurations.')->group(function () {
+            require __DIR__.'/configurations/customers.php';
+            require __DIR__.'/configurations/suppliers.php';
+            require __DIR__.'/configurations/units.php';
+            require __DIR__.'/configurations/sizes.php';
+            require __DIR__.'/configurations/colors.php';
+            require __DIR__.'/configurations/brands.php';
+            require __DIR__.'/configurations/categories.php';
+            require __DIR__.'/configurations/sub_categories.php';
+            require __DIR__.'/configurations/taxes.php';
+            require __DIR__.'/configurations/currencies.php';
+            require __DIR__.'/configurations/payment_methods.php';
+            require __DIR__.'/configurations/shipping_methods.php';
+        });
+
         Route::get('/{module}/{menu}/{child?}',[WorkspaceController::class,'feature'])->name('store.admin.feature');   
 
     });

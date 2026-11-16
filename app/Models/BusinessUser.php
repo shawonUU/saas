@@ -8,6 +8,7 @@ class BusinessUser extends Authenticatable
 {
     use Notifiable, ErpCrud, SoftDeletes;
     protected $guarded = [];
+    protected $attributes = ['is_active' => 1];
     protected $hidden = ['password', 'remember_token'];
     protected function casts(): array { return ['password' => 'hashed', 'email_verified_at' => 'datetime']; }
     public function getEmailForPasswordReset(): string
