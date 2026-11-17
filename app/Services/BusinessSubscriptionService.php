@@ -49,26 +49,13 @@ class BusinessSubscriptionService
                     ]
                 );
 
-                foreach ($configurations->menus as $menu) {
+                if($configurations->menus){
+                    foreach ($configurations->menus as $menu) {
 
-                    BusinessCategoryMenu::withTrashed()->updateOrCreate(
-                        [
-                            'business_category_id' => $category->id,
-                            'menu_id' => $menu->id,
-                        ],
-                        [
-                            'deleted_at' => null,
-                            'approval_status' => 'Approved',
-                            'is_active' => true,
-                        ]
-                    );
-
-                    foreach ($menu->childMenus as $childMenu) {
-
-                        BusinessCategoryChildMenu::withTrashed()->updateOrCreate(
+                        BusinessCategoryMenu::withTrashed()->updateOrCreate(
                             [
                                 'business_category_id' => $category->id,
-                                'child_menu_id' => $childMenu->id,
+                                'menu_id' => $menu->id,
                             ],
                             [
                                 'deleted_at' => null,
@@ -76,6 +63,23 @@ class BusinessSubscriptionService
                                 'is_active' => true,
                             ]
                         );
+
+                        if($configurations->childMenus){
+                            foreach ($menu->childMenus as $childMenu) {
+
+                                BusinessCategoryChildMenu::withTrashed()->updateOrCreate(
+                                    [
+                                        'business_category_id' => $category->id,
+                                        'child_menu_id' => $childMenu->id,
+                                    ],
+                                    [
+                                        'deleted_at' => null,
+                                        'approval_status' => 'Approved',
+                                        'is_active' => true,
+                                    ]
+                                );
+                            }
+                        }
                     }
                 }
             }

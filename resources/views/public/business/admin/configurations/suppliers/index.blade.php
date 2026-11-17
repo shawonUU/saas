@@ -1,3 +1,4 @@
+
 @extends('public.business.admin.layout')
 
 @push('styles')
@@ -35,21 +36,21 @@
         <div class="cfg-heading">
             <button type="button" class="cfg-btn cfg-nav-toggle" data-ws-sidebar-toggle aria-expanded="false" aria-label="{{ t('Open navigation','নেভিগেশন খুলুন') }}">☰ {{ t('Menu','মেনু') }}</button>
             <div>
-                <div class="cfg-eyebrow">{{ t('Configurations','কনফিগারেশন') }} / Suppliers</div>
+                <div class="cfg-eyebrow">{{ t('Configurations','কনফিগারেশন') }} / {{ t('Suppliers','সরবরাহকারী') }}</div>
                 <h1>{{ session('portal_lang') === 'bn' ? $titleBn : $title }}</h1>
-                <p>{{ t('Manage master records. Search, filters and pagination run in the database.','তথ্য, ফিল্টার ও পেজিনেশন ডাটাবেজে পরিচালিত হয়।') }}</p>
+                <p>{{ t('Manage master records. Search, filters and pagination run in the database.','মাস্টার তথ্য পরিচালনা করুন। সার্চ, ফিল্টার ও পেজিনেশন ডাটাবেজে পরিচালিত হয়।') }}</p>
             </div>
             @if($permissions['create'])<button type="button" class="cfg-btn cfg-primary" id="cfg-add">+ {{ t('Add New','নতুন যোগ করুন') }}</button>@endif
         </div>
         <section class="cfg-panel">
             <form method="GET" action="{{ $indexUrl }}" id="cfg-filter-form" class="cfg-toolbar">
-                <input name="search" value="{{ $search }}" class="cfg-input cfg-search" placeholder="Search Suppliers..." aria-label="Search"/>
-                <select name="per_page" class="cfg-input cfg-small" aria-label="Rows per page">
-                    @foreach([10,15,25,50,100] as $size)<option value="{{ $size }}" @selected($perPage === $size)>{{ $size }} / page</option>@endforeach
+                <input name="search" value="{{ $search }}" class="cfg-input cfg-search" placeholder="{{ t('Search Suppliers...','সরবরাহকারী খুঁজুন...') }}" aria-label="{{ t('Search','খুঁজুন') }}"/>
+                <select name="per_page" class="cfg-input cfg-small" aria-label="{{ t('Rows per page','প্রতি পৃষ্ঠায় সারি সংখ্যা') }}">
+                    @foreach([10,15,25,50,100] as $size)<option value="{{ $size }}" @selected($perPage === $size)>{{ $size }} / {{ t('page','পৃষ্ঠা') }}</option>@endforeach
                 </select>
-                <button class="cfg-btn cfg-primary" type="submit">Apply Filters</button>
-                <button type="button" class="cfg-btn" id="cfg-toggle-filters" aria-expanded="true">Hide Column Filters</button>
-                <a class="cfg-btn" href="{{ $indexUrl }}">Reset</a>
+                <button class="cfg-btn cfg-primary" type="submit">{{ t('Apply Filters','ফিল্টার প্রয়োগ করুন') }}</button>
+                <button type="button" class="cfg-btn" id="cfg-toggle-filters" aria-expanded="true">{{ t('Hide Column Filters','কলাম ফিল্টার লুকান') }}</button>
+                <a class="cfg-btn" href="{{ $indexUrl }}">{{ t('Reset','রিসেট') }}</a>
             </form>
             <div class="cfg-table-scroll">
                 <table class="cfg-table">
@@ -58,17 +59,17 @@
                         @foreach($columns as $column=>$meta)
                             <th scope="col"><a href="{{ request()->fullUrlWithQuery(['sort'=>$column,'dir'=>$sort===$column && $dir==='asc'?'desc':'asc','page'=>1]) }}">{{ $meta['label'] }} @if($sort===$column){{ $dir==='asc'?'↑':'↓' }}@endif</a></th>
                         @endforeach
-                        <th>Actions</th>
+                        <th>{{ t('Actions','অ্যাকশন') }}</th>
                     </tr>
                     <tr class="cfg-filter-row" id="cfg-filter-row">
                         @foreach($columns as $column=>$meta)
                             <th>
                                 @if(in_array($meta['type'],['status','boolean','select','category'],true))
-                                    <select class="cfg-input" name="f[{{ $column }}]" form="cfg-filter-form" aria-label="Filter {{ $meta['label'] }}">
-                                        <option value="">All</option>
+                                    <select class="cfg-input" name="f[{{ $column }}]" form="cfg-filter-form" aria-label="{{ t('Filter','ফিল্টার করুন') }} {{ $meta['label'] }}">
+                                        <option value="">{{ t('All','সব') }}</option>
                                         @if(in_array($meta['type'],['status','boolean'],true))
-                                            <option value="1" @selected((string)($filters[$column]??'')==='1')>{{ $meta['type']==='status'?'Active':'Yes' }}</option>
-                                            <option value="0" @selected((string)($filters[$column]??'')==='0')>{{ $meta['type']==='status'?'Inactive':'No' }}</option>
+                                            <option value="1" @selected((string)($filters[$column]??'')==='1')>{{ $meta['type']==='status'?t('Active','সক্রিয়'):t('Yes','হ্যাঁ') }}</option>
+                                            <option value="0" @selected((string)($filters[$column]??'')==='0')>{{ $meta['type']==='status'?t('Inactive','নিষ্ক্রিয়'):t('No','না') }}</option>
                                         @elseif($meta['type']==='category')
                                             @foreach($categories as $category)<option value="{{ $category->id }}" @selected((string)($filters[$column]??'')===(string)$category->id)>{{ $category->name }}</option>@endforeach
                                         @else
@@ -76,11 +77,11 @@
                                         @endif
                                     </select>
                                 @else
-                                    <input name="f[{{ $column }}]" form="cfg-filter-form" class="cfg-input" type="{{ $meta['type']==='date'?'date':'text' }}" value="{{ is_scalar($filters[$column]??null)?$filters[$column]:'' }}" placeholder="Filter..." aria-label="Filter {{ $meta['label'] }}"/>
+                                    <input name="f[{{ $column }}]" form="cfg-filter-form" class="cfg-input" type="{{ $meta['type']==='date'?'date':'text' }}" value="{{ is_scalar($filters[$column]??null)?$filters[$column]:'' }}" placeholder="{{ t('Filter...','ফিল্টার করুন...') }}" aria-label="{{ t('Filter','ফিল্টার করুন') }} {{ $meta['label'] }}"/>
                                 @endif
                             </th>
                         @endforeach
-                        <th><button class="cfg-btn cfg-primary" form="cfg-filter-form" type="submit">Go</button></th>
+                        <th><button class="cfg-btn cfg-primary" form="cfg-filter-form" type="submit">{{ t('Go','যান') }}</button></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -89,8 +90,8 @@
                             @foreach($columns as $column=>$meta)
                                 <td title="{{ $record->getAttribute($column) }}">
                                     @if($column==='code')<span class="cfg-code">{{ $record->code }}</span>
-                                    @elseif($column==='is_active')<span class="cfg-status {{ $record->is_active?'':'off' }}">{{ $record->is_active?'Active':'Inactive' }}</span>
-                                    @elseif($meta['type']==='boolean'){{ $record->getAttribute($column)?'Yes':'No' }}
+                                    @elseif($column==='is_active')<span class="cfg-status {{ $record->is_active?'':'off' }}">{{ $record->is_active?t('Active','সক্রিয়'):t('Inactive','নিষ্ক্রিয়') }}</span>
+                                    @elseif($meta['type']==='boolean'){{ $record->getAttribute($column)?t('Yes','হ্যাঁ'):t('No','না') }}
                                     @elseif($meta['type']==='category'){{ $categoryNames[$record->getAttribute($column)] ?? '—' }}
                                     @elseif($meta['type']==='select'){{ $meta['options'][$record->getAttribute($column)] ?? $record->getAttribute($column) ?? '—' }}
                                     @elseif($meta['type']==='date'){{ $record->getAttribute($column)?->format('Y-m-d H:i') ?? '—' }}
@@ -100,27 +101,27 @@
                                 </td>
                             @endforeach
                             <td><div class="cfg-actions">
-                                @if($permissions['update'])<button type="button" class="cfg-btn cfg-edit" data-id="{{ $record->id }}">Edit</button>@endif
+                                @if($permissions['update'])<button type="button" class="cfg-btn cfg-edit" data-id="{{ $record->id }}">{{ t('Edit','সম্পাদনা') }}</button>@endif
                                 @if($permissions['delete'])
                                     <form method="POST" action="{{ route($routePrefix.'.destroy',['business'=>$businessKey,'record'=>$record->id]) }}" class="cfg-delete-form">
-                                        @csrf @method('DELETE')<button type="submit" class="cfg-btn cfg-danger">Delete</button>
+                                        @csrf @method('DELETE')<button type="submit" class="cfg-btn cfg-danger">{{ t('Delete','মুছে ফেলুন') }}</button>
                                     </form>
                                 @endif
                                 @unless($permissions['update'] || $permissions['delete'])<span class="cfg-count">—</span>@endunless
                             </div></td>
                         </tr>
                     @empty
-                        <tr><td colspan="{{ count($columns)+1 }}" class="cfg-empty">No records found. Try resetting filters.</td></tr>
+                        <tr><td colspan="{{ count($columns)+1 }}" class="cfg-empty">{{ t('No records found. Try resetting filters.','কোনো তথ্য পাওয়া যায়নি। ফিল্টার রিসেট করে দেখুন।') }}</td></tr>
                     @endforelse
                     </tbody>
                 </table>
             </div>
             <div class="cfg-bottom">
-                <span>{{ $records->firstItem()??0 }}–{{ $records->lastItem()??0 }} of {{ $records->total() }} records</span>
-                <nav class="cfg-pagination" aria-label="Pagination">
-                    @if($records->previousPageUrl())<a href="{{ $records->previousPageUrl() }}">← Prev</a>@else<span>Prev</span>@endif
+                <span>{{ $records->firstItem()??0 }}–{{ $records->lastItem()??0 }} {{ t('of','এর মধ্যে') }} {{ $records->total() }} {{ t('records','টি রেকর্ড') }}</span>
+                <nav class="cfg-pagination" aria-label="{{ t('Pagination','পেজিনেশন') }}">
+                    @if($records->previousPageUrl())<a href="{{ $records->previousPageUrl() }}">← {{ t('Prev','পূর্ববর্তী') }}</a>@else<span>{{ t('Prev','পূর্ববর্তী') }}</span>@endif
                     <span>{{ $records->currentPage() }} / {{ max(1,$records->lastPage()) }}</span>
-                    @if($records->nextPageUrl())<a href="{{ $records->nextPageUrl() }}">Next →</a>@else<span>Next</span>@endif
+                    @if($records->nextPageUrl())<a href="{{ $records->nextPageUrl() }}">{{ t('Next','পরবর্তী') }} →</a>@else<span>{{ t('Next','পরবর্তী') }}</span>@endif
                 </nav>
             </div>
         </section>
@@ -130,8 +131,8 @@
 <div class="cfg-modal" id="cfg-modal" hidden>
     <div class="cfg-dialog" role="dialog" aria-modal="true" aria-labelledby="cfg-dialog-title" tabindex="-1">
         <div class="cfg-dialog-header">
-            <div><h2 id="cfg-dialog-title">Create Suppliers</h2><p>Complete the form and save your changes.</p></div>
-            <button class="cfg-btn cfg-dialog-close" type="button" id="cfg-close" aria-label="Close modal">×</button>
+            <div><h2 id="cfg-dialog-title">{{ t('Create Suppliers','সরবরাহকারী তৈরি করুন') }}</h2><p>{{ t('Complete the form and save your changes.','ফর্মটি পূরণ করে পরিবর্তনগুলো সংরক্ষণ করুন।') }}</p></div>
+            <button class="cfg-btn cfg-dialog-close" type="button" id="cfg-close" aria-label="{{ t('Close modal','মডাল বন্ধ করুন') }}">×</button>
         </div>
         <form class="cfg-form" method="POST" id="cfg-form" action="{{ $storeUrl }}">
             @csrf
@@ -142,37 +143,37 @@
             @if($errors->any())<div class="cfg-notice">{{ $errors->first() }}</div>@endif
             <div class="cfg-fields">
                     <div class="cfg-field">
-                        <label for="cfg-name">Supplier Name <span class="cfg-required">*</span></label>
+                        <label for="cfg-name">{{ t('Supplier Name','সরবরাহকারীর নাম') }} <span class="cfg-required">*</span></label>
                         <input name="name" id="cfg-name" type="text" class="cfg-input" maxlength="255" required/>
                     </div>
                     <div class="cfg-field">
-                        <label for="cfg-contact_person">Contact Person</label>
+                        <label for="cfg-contact_person">{{ t('Contact Person','যোগাযোগের ব্যক্তির নাম') }}</label>
                         <input name="contact_person" id="cfg-contact_person" type="text" class="cfg-input" maxlength="255"/>
                     </div>
                     <div class="cfg-field">
-                        <label for="cfg-phone">Phone</label>
+                        <label for="cfg-phone">{{ t('Phone','ফোন নম্বর') }}</label>
                         <input name="phone" id="cfg-phone" type="text" class="cfg-input" maxlength="255"/>
                     </div>
                     <div class="cfg-field">
-                        <label for="cfg-email">Email</label>
+                        <label for="cfg-email">{{ t('Email','ইমেইল') }}</label>
                         <input name="email" id="cfg-email" type="email" class="cfg-input" maxlength="255"/>
                     </div>
                     <div class="cfg-field wide">
-                        <label for="cfg-address">Address</label>
+                        <label for="cfg-address">{{ t('Address','ঠিকানা') }}</label>
                         <textarea name="address" id="cfg-address" class="cfg-input" maxlength="2000"></textarea>
                     </div>
                     <div class="cfg-field wide">
-                        <label for="cfg-notes">Notes</label>
+                        <label for="cfg-notes">{{ t('Notes','নোট') }}</label>
                         <textarea name="notes" id="cfg-notes" class="cfg-input" maxlength="2000"></textarea>
                     </div>
                 <div class="cfg-field">
-                    <label for="cfg-is-active">Status <span class="cfg-required">*</span></label>
-                    <select name="is_active" id="cfg-is-active" class="cfg-input"><option value="1">Active</option><option value="0">Inactive</option></select>
+                    <label for="cfg-is-active">{{ t('Status','স্ট্যাটাস') }} <span class="cfg-required">*</span></label>
+                    <select name="is_active" id="cfg-is-active" class="cfg-input"><option value="1">{{ t('Active','সক্রিয়') }}</option><option value="0">{{ t('Inactive','নিষ্ক্রিয়') }}</option></select>
                 </div>
             </div>
             <div class="cfg-actions-footer">
-                <button type="button" class="cfg-btn" id="cfg-cancel">Cancel</button>
-                <button type="submit" class="cfg-btn cfg-primary" id="cfg-save">Save Changes</button>
+                <button type="button" class="cfg-btn" id="cfg-cancel">{{ t('Cancel','বাতিল') }}</button>
+                <button type="submit" class="cfg-btn cfg-primary" id="cfg-save">{{ t('Save Changes','পরিবর্তন সংরক্ষণ করুন') }}</button>
             </div>
         </form>
     </div>
