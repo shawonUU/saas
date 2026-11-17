@@ -43,6 +43,32 @@ Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->grou
             require __DIR__.'/configurations/shipping_methods.php';
         });
 
+        // Retail & e-commerce modules: explicit independent controller/route files.
+        Route::name('store.admin.retail.')->group(function(){
+            require __DIR__.'/retail/products.php';
+            require __DIR__.'/retail/stock.php';
+            require __DIR__.'/retail/orders.php';
+            require __DIR__.'/retail/pos.php';
+            require __DIR__.'/retail/purchases.php';
+            require __DIR__.'/retail/returns.php';
+            require __DIR__.'/retail/payments.php';
+            require __DIR__.'/retail/delivery.php';
+            require __DIR__.'/retail/discounts.php';
+            require __DIR__.'/retail/accounts.php';
+            require __DIR__.'/retail/reports.php';
+            require __DIR__.'/retail/purchase_orders.php';
+            require __DIR__.'/retail/warehouses.php';
+            require __DIR__.'/retail/manual_journals.php';
+            require __DIR__.'/retail/expenses.php';
+            require __DIR__.'/retail/purchase_returns.php';
+            require __DIR__.'/retail/quotations.php';
+            require __DIR__.'/retail/marketing.php';
+            require __DIR__.'/retail/integrations.php';
+            require __DIR__.'/retail/courier.php';
+            require __DIR__.'/retail/bank_transfers.php';
+            require __DIR__.'/retail/account_groups.php';
+        });
+
         Route::get('/{module}/{menu}/{child?}',[WorkspaceController::class,'feature'])->name('store.admin.feature');   
 
     });

@@ -10,6 +10,10 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $business = $request->attributes->get('current_business');
+        // Retail and e-commerce stores show live purchasable inventory, not demo catalog.
+        if (in_array($business->category?->slug, ['retail','grocery','ecommerce','online-store'], true)) {
+            return redirect()->route('store.customer.shop');
+        }
         return view('public.business.public.home', [
             'title' => $business->name, 
             'description' => t('Welcome to our store.', 'আমাদের স্টোরে স্বাগতম।'),

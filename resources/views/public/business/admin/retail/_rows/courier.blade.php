@@ -1,0 +1,1 @@
+@if($record->consignment_id)<form method="POST" action="{{ route('store.admin.retail.courier.refresh',$record->id) }}">@csrf<button class="ret-btn alt">{{ t('Refresh Status','অবস্থা দেখুন') }}</button></form>@endif

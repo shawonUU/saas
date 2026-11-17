@@ -1,0 +1,13 @@
+<?php $__env->startSection('content'); ?>
+<div class="ret-page"><?php echo $__env->make('public.business.admin.retail._styles', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php echo $__env->make('public.business.admin.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><div class="ws-sidebar-overlay" data-ws-sidebar-overlay></div>
+<main class="workspace-content"><div class="ret-title"><div><button type="button" class="ret-btn alt ret-mobile-nav" data-ws-sidebar-toggle>☰</button><h1><?php echo e(t("New Purchase Order","নতুন ক্রয় আদেশ")); ?></h1><p><?php echo e(t('Business workspace','বিজনেস ওয়ার্কস্পেস')); ?></p></div><div class="ret-actions"><a class="ret-btn alt" href="<?php echo e(route('store.admin.dashboard')); ?>"><?php echo e(t('Dashboard','ড্যাশবোর্ড')); ?></a></div></div>
+<?php if(session('success')): ?><div class="ret-toast"><?php echo e(session('success')); ?></div><?php endif; ?>
+<?php if($errors->any()): ?><div class="ret-error"><?php echo e($errors->first()); ?></div><?php endif; ?>
+<form class="ret-card" method="POST" action="<?php echo e(route('store.admin.retail.purchase_orders.store')); ?>"><?php echo csrf_field(); ?>
+<div class="ret-grid"><div class="ret-field"><label><?php echo e(t('Supplier','সরবরাহকারী')); ?></label><select required class="ret-input" name="supplier_id"><option value="">—</option><?php $__currentLoopData = $suppliers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($s->id); ?>"><?php echo e($s->name); ?></option><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></select></div><div class="ret-field"><label><?php echo e(t('Notes','নোট')); ?></label><input name="notes" class="ret-input"></div></div>
+<hr class="ret-divider"><?php $purchaseMode=true; ?> <?php echo $__env->make('public.business.admin.retail._cart_editor', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><button class="ret-btn"><?php echo e(t('Save Draft','ড্রাফট সংরক্ষণ')); ?></button></form>
+</main></div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('public.business.admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\saas-backend\resources\views/public/business/admin/retail/purchase_orders/form.blade.php ENDPATH**/ ?>

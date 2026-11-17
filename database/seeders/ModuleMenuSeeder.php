@@ -42,7 +42,8 @@ class ModuleMenuSeeder extends Seeder
                 ['invoices','Sales Invoices','বিক্রয় ইনভয়েস','file-check',[[ 'invoice-list','Invoice List','ইনভয়েস তালিকা',null],['new-invoice','New Invoice','নতুন ইনভয়েস',null]]],
                 ['returns','Sales Returns','বিক্রয় রিটার্ন','undo-2',[[ 'return-list','Return List','রিটার্ন তালিকা',null],['new-return','New Return','নতুন রিটার্ন',null]]],
                 ['customers','Customers','কাস্টমার','users',[[ 'customer-list','Customer List','কাস্টমার তালিকা',null],['customer-groups','Customer Groups','কাস্টমার গ্রুপ',null]]],
-                ['discounts','Discounts','ডিসকাউন্ট','badge-percent',[[ 'coupons','Coupons','কুপন',null],['price-rules','Price Rules','মূল্যছাড়ের নিয়ম',null]]]
+                ['discounts','Discounts','ডিসকাউন্ট','badge-percent',[[ 'coupons','Coupons','কুপন',null],['price-rules','Price Rules','মূল্যছাড়ের নিয়ম',null]]],
+                ['reports','Sales Reports','বিক্রয় রিপোর্ট','chart-bar',[[ 'sales-summary','Sales Summary','বিক্রয় সারাংশ',null]]]
             ]],
             ['pos','Point of Sale','পয়েন্ট অব সেল','monitor-smartphone',[
                 ['counter','POS Counter','পস কাউন্টার','scan-barcode',[[ 'new-sale','New Sale','নতুন বিক্রয়',null],['held-sales','Held Sales','স্থগিত বিক্রয়',null]]],
@@ -75,6 +76,11 @@ class ModuleMenuSeeder extends Seeder
                 ['online-orders','Online Orders','অনলাইন অর্ডার','package-search',[[ 'online-order-list','Order List','অর্ডার তালিকা',null],['fulfillment','Fulfillment','অর্ডার পূরণ',null]]],
                 ['checkout','Checkout','চেকআউট','credit-card',[[ 'shipping-methods','Shipping Methods','ডেলিভারি পদ্ধতি',null],['payment-methods','Payment Methods','পেমেন্ট পদ্ধতি',null]]],
                 ['online-marketing','Marketing','মার্কেটিং','megaphone',[[ 'campaigns','Campaigns','ক্যাম্পেইন',null],['abandoned-carts','Abandoned Carts','অসম্পূর্ণ কার্ট',null]]]
+            ]],
+            ['logistics','Logistics','লজিস্টিকস','truck',[
+                ['shipments','Shipments','শিপমেন্ট','package',[]],
+                ['delivery','Delivery','ডেলিভারি','truck',[]],
+                ['cod','Cash on Delivery','ক্যাশ অন ডেলিভারি','banknote',[]]
             ]],
             ['restaurant','Restaurant Operations','রেস্টুরেন্ট পরিচালনা','utensils',[
                 ['dining','Tables & Dining','টেবিল ও ডাইনিং','layout-grid',[[ 'table-map','Table Map','টেবিল ম্যাপ',null],['dining-areas','Dining Areas','ডাইনিং এরিয়া',null]]],
@@ -147,7 +153,7 @@ class ModuleMenuSeeder extends Seeder
         ];
         $profiles=[
             'retail'=>[
-                'sales'=>['orders'=>'*','invoices'=>'*','returns'=>'*','customers'=>'*','discounts'=>'*'],
+                'sales'=>['orders'=>'*','quotations'=>'*','invoices'=>'*','returns'=>'*','customers'=>'*','discounts'=>'*','reports'=>'*'],
                 'pos'=>['counter'=>'*','registers'=>'*','shifts'=>'*'],
                 'inventory'=>['stock'=>'*','movements'=>'*','masters'=>'*'],
                 'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
@@ -156,15 +162,16 @@ class ModuleMenuSeeder extends Seeder
                 'hr'=>['employees'=>'*','attendance'=>'*','payroll'=>'*']
             ],
             'online'=>[
-                'sales'=>['orders'=>'*','invoices'=>'*','returns'=>'*','customers'=>'*','discounts'=>'*'],
+                'sales'=>['orders'=>'*','quotations'=>'*','invoices'=>'*','returns'=>'*','customers'=>'*','discounts'=>'*','reports'=>'*'],
+                'pos'=>['counter'=>'*','registers'=>'*','shifts'=>'*'],
                 'ecommerce'=>['storefront'=>'*','catalog'=>'*','online-orders'=>'*','checkout'=>'*','online-marketing'=>'*'],
                 'inventory'=>['stock'=>'*','movements'=>'*','masters'=>'*'],
-                'purchasing'=>['purchase-orders'=>'*','receiving'=>'*'],
-                'finance'=>['receivables'=>'*','payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
+                'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
+                'finance'=>['chart-of-accounts'=>'*','ledger'=>'*','receivables'=>'*','payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
                 'logistics'=>['shipments'=>'*','delivery'=>'*','cod'=>'*'],
             ],
             'food'=>[
-                'sales'=>['orders'=>'*','invoices'=>'*','customers'=>'*','discounts'=>'*'],
+                'sales'=>['orders'=>'*','invoices'=>'*','customers'=>'*','discounts'=>'*','reports'=>'*'],
                 'pos'=>['counter'=>'*','registers'=>'*','shifts'=>'*'],
                 'restaurant'=>['dining'=>'*','food-menu'=>'*','kitchen-display'=>'*','table-bookings'=>'*','buffet'=>'*'],
                 'kitchen'=>['recipes'=>'*','preparation'=>'*','food-costing'=>'*'],
@@ -202,8 +209,8 @@ class ModuleMenuSeeder extends Seeder
             // 'pet-shop'=>['Pet Shop','পোষাপ্রাণীর দোকান','retail'],
             // 'wholesale'=>['Wholesale','পাইকারি ব্যবসা','wholesale'],
             // 'distribution'=>['Distribution Business','ডিস্ট্রিবিউশন ব্যবসা','wholesale'],
-            // 'ecommerce'=>['E-Commerce','ই-কমার্স','online'],
-            // 'online-store'=>['Online Store','অনলাইন দোকান','online'],
+            'ecommerce'=>['E-Commerce','ই-কমার্স','online'],
+            'online-store'=>['Online Store','অনলাইন দোকান','online'],
             // 'restaurant'=>['Restaurant','রেস্টুরেন্ট','food'],
             // 'cafe'=>['Cafe','ক্যাফে','food'],
             // 'bakery'=>['Bakery','বেকারি','food'],
