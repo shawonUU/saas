@@ -48,4 +48,4 @@
   window.addEventListener('storage', event => { if (event.key === key && valid(event.newValue)) apply(event.newValue, false); });
 })();
 </script>
-<?php /**PATH C:\laragon\www\saas-backend\resources\views/portals/partials/ui-theme-bootstrap.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\saas\resources\views/portals/partials/ui-theme-bootstrap.blade.php ENDPATH**/ ?>

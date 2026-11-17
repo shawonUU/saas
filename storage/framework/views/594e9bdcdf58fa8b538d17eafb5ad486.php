@@ -44,4 +44,4 @@
   else init();
 })();
 </script>
-<?php /**PATH C:\laragon\www\saas-backend\resources\views/portals/partials/ui-controls.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\saas\resources\views/portals/partials/ui-controls.blade.php ENDPATH**/ ?>

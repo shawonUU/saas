@@ -33,21 +33,21 @@
         <div class="cfg-heading">
             <button type="button" class="cfg-btn cfg-nav-toggle" data-ws-sidebar-toggle aria-expanded="false" aria-label="<?php echo e(t('Open navigation','নেভিগেশন খুলুন')); ?>">☰ <?php echo e(t('Menu','মেনু')); ?></button>
             <div>
-                <div class="cfg-eyebrow"><?php echo e(t('Configurations','কনফিগারেশন')); ?> / Categories</div>
+                <div class="cfg-eyebrow"><?php echo e(t('Configurations','কনফিগারেশন')); ?> / <?php echo e(t('Suppliers','সরবরাহকারী')); ?></div>
                 <h1><?php echo e(session('portal_lang') === 'bn' ? $titleBn : $title); ?></h1>
-                <p><?php echo e(t('Manage master records. Search, filters and pagination run in the database.','তথ্য, ফিল্টার ও পেজিনেশন ডাটাবেজে পরিচালিত হয়।')); ?></p>
+                <p><?php echo e(t('Manage master records. Search, filters and pagination run in the database.','মাস্টার তথ্য পরিচালনা করুন। সার্চ, ফিল্টার ও পেজিনেশন ডাটাবেজে পরিচালিত হয়।')); ?></p>
             </div>
             <?php if($permissions['create']): ?><button type="button" class="cfg-btn cfg-primary" id="cfg-add">+ <?php echo e(t('Add New','নতুন যোগ করুন')); ?></button><?php endif; ?>
         </div>
         <section class="cfg-panel">
             <form method="GET" action="<?php echo e($indexUrl); ?>" id="cfg-filter-form" class="cfg-toolbar">
-                <input name="search" value="<?php echo e($search); ?>" class="cfg-input cfg-search" placeholder="Search Categories..." aria-label="Search"/>
-                <select name="per_page" class="cfg-input cfg-small" aria-label="Rows per page">
-                    <?php $__currentLoopData = [10,15,25,50,100]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $size): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($size); ?>" <?php if($perPage === $size): echo 'selected'; endif; ?>><?php echo e($size); ?> / page</option><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <input name="search" value="<?php echo e($search); ?>" class="cfg-input cfg-search" placeholder="<?php echo e(t('Search Suppliers...','সরবরাহকারী খুঁজুন...')); ?>" aria-label="<?php echo e(t('Search','খুঁজুন')); ?>"/>
+                <select name="per_page" class="cfg-input cfg-small" aria-label="<?php echo e(t('Rows per page','প্রতি পৃষ্ঠায় সারি সংখ্যা')); ?>">
+                    <?php $__currentLoopData = [10,15,25,50,100]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $size): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($size); ?>" <?php if($perPage === $size): echo 'selected'; endif; ?>><?php echo e($size); ?> / <?php echo e(t('page','পৃষ্ঠা')); ?></option><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
-                <button class="cfg-btn cfg-primary" type="submit">Apply Filters</button>
-                <button type="button" class="cfg-btn" id="cfg-toggle-filters" aria-expanded="true">Hide Column Filters</button>
-                <a class="cfg-btn" href="<?php echo e($indexUrl); ?>">Reset</a>
+                <button class="cfg-btn cfg-primary" type="submit"><?php echo e(t('Apply Filters','ফিল্টার প্রয়োগ করুন')); ?></button>
+                <button type="button" class="cfg-btn" id="cfg-toggle-filters" aria-expanded="true"><?php echo e(t('Hide Column Filters','কলাম ফিল্টার লুকান')); ?></button>
+                <a class="cfg-btn" href="<?php echo e($indexUrl); ?>"><?php echo e(t('Reset','রিসেট')); ?></a>
             </form>
             <div class="cfg-table-scroll">
                 <table class="cfg-table">
@@ -56,17 +56,17 @@
                         <?php $__currentLoopData = $columns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $column=>$meta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <th scope="col"><a href="<?php echo e(request()->fullUrlWithQuery(['sort'=>$column,'dir'=>$sort===$column && $dir==='asc'?'desc':'asc','page'=>1])); ?>"><?php echo e($meta['label']); ?> <?php if($sort===$column): ?><?php echo e($dir==='asc'?'↑':'↓'); ?><?php endif; ?></a></th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        <th>Actions</th>
+                        <th><?php echo e(t('Actions','অ্যাকশন')); ?></th>
                     </tr>
                     <tr class="cfg-filter-row" id="cfg-filter-row">
                         <?php $__currentLoopData = $columns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $column=>$meta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <th>
                                 <?php if(in_array($meta['type'],['status','boolean','select','category'],true)): ?>
-                                    <select class="cfg-input" name="f[<?php echo e($column); ?>]" form="cfg-filter-form" aria-label="Filter <?php echo e($meta['label']); ?>">
-                                        <option value="">All</option>
+                                    <select class="cfg-input" name="f[<?php echo e($column); ?>]" form="cfg-filter-form" aria-label="<?php echo e(t('Filter','ফিল্টার করুন')); ?> <?php echo e($meta['label']); ?>">
+                                        <option value=""><?php echo e(t('All','সব')); ?></option>
                                         <?php if(in_array($meta['type'],['status','boolean'],true)): ?>
-                                            <option value="1" <?php if((string)($filters[$column]??'')==='1'): echo 'selected'; endif; ?>><?php echo e($meta['type']==='status'?'Active':'Yes'); ?></option>
-                                            <option value="0" <?php if((string)($filters[$column]??'')==='0'): echo 'selected'; endif; ?>><?php echo e($meta['type']==='status'?'Inactive':'No'); ?></option>
+                                            <option value="1" <?php if((string)($filters[$column]??'')==='1'): echo 'selected'; endif; ?>><?php echo e($meta['type']==='status'?t('Active','সক্রিয়'):t('Yes','হ্যাঁ')); ?></option>
+                                            <option value="0" <?php if((string)($filters[$column]??'')==='0'): echo 'selected'; endif; ?>><?php echo e($meta['type']==='status'?t('Inactive','নিষ্ক্রিয়'):t('No','না')); ?></option>
                                         <?php elseif($meta['type']==='category'): ?>
                                             <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($category->id); ?>" <?php if((string)($filters[$column]??'')===(string)$category->id): echo 'selected'; endif; ?>><?php echo e($category->name); ?></option><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         <?php else: ?>
@@ -74,11 +74,11 @@
                                         <?php endif; ?>
                                     </select>
                                 <?php else: ?>
-                                    <input name="f[<?php echo e($column); ?>]" form="cfg-filter-form" class="cfg-input" type="<?php echo e($meta['type']==='date'?'date':'text'); ?>" value="<?php echo e(is_scalar($filters[$column]??null)?$filters[$column]:''); ?>" placeholder="Filter..." aria-label="Filter <?php echo e($meta['label']); ?>"/>
+                                    <input name="f[<?php echo e($column); ?>]" form="cfg-filter-form" class="cfg-input" type="<?php echo e($meta['type']==='date'?'date':'text'); ?>" value="<?php echo e(is_scalar($filters[$column]??null)?$filters[$column]:''); ?>" placeholder="<?php echo e(t('Filter...','ফিল্টার করুন...')); ?>" aria-label="<?php echo e(t('Filter','ফিল্টার করুন')); ?> <?php echo e($meta['label']); ?>"/>
                                 <?php endif; ?>
                             </th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        <th><button class="cfg-btn cfg-primary" form="cfg-filter-form" type="submit">Go</button></th>
+                        <th><button class="cfg-btn cfg-primary" form="cfg-filter-form" type="submit"><?php echo e(t('Go','যান')); ?></button></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -87,8 +87,8 @@
                             <?php $__currentLoopData = $columns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $column=>$meta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <td title="<?php echo e($record->getAttribute($column)); ?>">
                                     <?php if($column==='code'): ?><span class="cfg-code"><?php echo e($record->code); ?></span>
-                                    <?php elseif($column==='is_active'): ?><span class="cfg-status <?php echo e($record->is_active?'':'off'); ?>"><?php echo e($record->is_active?'Active':'Inactive'); ?></span>
-                                    <?php elseif($meta['type']==='boolean'): ?><?php echo e($record->getAttribute($column)?'Yes':'No'); ?>
+                                    <?php elseif($column==='is_active'): ?><span class="cfg-status <?php echo e($record->is_active?'':'off'); ?>"><?php echo e($record->is_active?t('Active','সক্রিয়'):t('Inactive','নিষ্ক্রিয়')); ?></span>
+                                    <?php elseif($meta['type']==='boolean'): ?><?php echo e($record->getAttribute($column)?t('Yes','হ্যাঁ'):t('No','না')); ?>
 
                                     <?php elseif($meta['type']==='category'): ?><?php echo e($categoryNames[$record->getAttribute($column)] ?? '—'); ?>
 
@@ -104,27 +104,27 @@
                                 </td>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             <td><div class="cfg-actions">
-                                <?php if($permissions['update']): ?><button type="button" class="cfg-btn cfg-edit" data-id="<?php echo e($record->id); ?>">Edit</button><?php endif; ?>
+                                <?php if($permissions['update']): ?><button type="button" class="cfg-btn cfg-edit" data-id="<?php echo e($record->id); ?>"><?php echo e(t('Edit','সম্পাদনা')); ?></button><?php endif; ?>
                                 <?php if($permissions['delete']): ?>
                                     <form method="POST" action="<?php echo e(route($routePrefix.'.destroy',['business'=>$businessKey,'record'=>$record->id])); ?>" class="cfg-delete-form">
-                                        <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?><button type="submit" class="cfg-btn cfg-danger">Delete</button>
+                                        <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?><button type="submit" class="cfg-btn cfg-danger"><?php echo e(t('Delete','মুছে ফেলুন')); ?></button>
                                     </form>
                                 <?php endif; ?>
                                 <?php if (! ($permissions['update'] || $permissions['delete'])): ?><span class="cfg-count">—</span><?php endif; ?>
                             </div></td>
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                        <tr><td colspan="<?php echo e(count($columns)+1); ?>" class="cfg-empty">No records found. Try resetting filters.</td></tr>
+                        <tr><td colspan="<?php echo e(count($columns)+1); ?>" class="cfg-empty"><?php echo e(t('No records found. Try resetting filters.','কোনো তথ্য পাওয়া যায়নি। ফিল্টার রিসেট করে দেখুন।')); ?></td></tr>
                     <?php endif; ?>
                     </tbody>
                 </table>
             </div>
             <div class="cfg-bottom">
-                <span><?php echo e($records->firstItem()??0); ?>–<?php echo e($records->lastItem()??0); ?> of <?php echo e($records->total()); ?> records</span>
-                <nav class="cfg-pagination" aria-label="Pagination">
-                    <?php if($records->previousPageUrl()): ?><a href="<?php echo e($records->previousPageUrl()); ?>">← Prev</a><?php else: ?><span>Prev</span><?php endif; ?>
+                <span><?php echo e($records->firstItem()??0); ?>–<?php echo e($records->lastItem()??0); ?> <?php echo e(t('of','এর মধ্যে')); ?> <?php echo e($records->total()); ?> <?php echo e(t('records','টি রেকর্ড')); ?></span>
+                <nav class="cfg-pagination" aria-label="<?php echo e(t('Pagination','পেজিনেশন')); ?>">
+                    <?php if($records->previousPageUrl()): ?><a href="<?php echo e($records->previousPageUrl()); ?>">← <?php echo e(t('Prev','পূর্ববর্তী')); ?></a><?php else: ?><span><?php echo e(t('Prev','পূর্ববর্তী')); ?></span><?php endif; ?>
                     <span><?php echo e($records->currentPage()); ?> / <?php echo e(max(1,$records->lastPage())); ?></span>
-                    <?php if($records->nextPageUrl()): ?><a href="<?php echo e($records->nextPageUrl()); ?>">Next →</a><?php else: ?><span>Next</span><?php endif; ?>
+                    <?php if($records->nextPageUrl()): ?><a href="<?php echo e($records->nextPageUrl()); ?>"><?php echo e(t('Next','পরবর্তী')); ?> →</a><?php else: ?><span><?php echo e(t('Next','পরবর্তী')); ?></span><?php endif; ?>
                 </nav>
             </div>
         </section>
@@ -134,8 +134,8 @@
 <div class="cfg-modal" id="cfg-modal" hidden>
     <div class="cfg-dialog" role="dialog" aria-modal="true" aria-labelledby="cfg-dialog-title" tabindex="-1">
         <div class="cfg-dialog-header">
-            <div><h2 id="cfg-dialog-title">Create Categories</h2><p>Complete the form and save your changes.</p></div>
-            <button class="cfg-btn cfg-dialog-close" type="button" id="cfg-close" aria-label="Close modal">×</button>
+            <div><h2 id="cfg-dialog-title"><?php echo e(t('Create Suppliers','সরবরাহকারী তৈরি করুন')); ?></h2><p><?php echo e(t('Complete the form and save your changes.','ফর্মটি পূরণ করে পরিবর্তনগুলো সংরক্ষণ করুন।')); ?></p></div>
+            <button class="cfg-btn cfg-dialog-close" type="button" id="cfg-close" aria-label="<?php echo e(t('Close modal','মডাল বন্ধ করুন')); ?>">×</button>
         </div>
         <form class="cfg-form" method="POST" id="cfg-form" action="<?php echo e($storeUrl); ?>">
             <?php echo csrf_field(); ?>
@@ -146,21 +146,37 @@
             <?php if($errors->any()): ?><div class="cfg-notice"><?php echo e($errors->first()); ?></div><?php endif; ?>
             <div class="cfg-fields">
                     <div class="cfg-field">
-                        <label for="cfg-name">Category Name <span class="cfg-required">*</span></label>
+                        <label for="cfg-name"><?php echo e(t('Supplier Name','সরবরাহকারীর নাম')); ?> <span class="cfg-required">*</span></label>
                         <input name="name" id="cfg-name" type="text" class="cfg-input" maxlength="255" required/>
                     </div>
+                    <div class="cfg-field">
+                        <label for="cfg-contact_person">fghfghggf<?php echo e(t('Contact Person','যোগাযোগের ব্যক্তির নাম')); ?></label>
+                        <input name="contact_person" id="cfg-contact_person" type="text" class="cfg-input" maxlength="255"/>
+                    </div>
+                    <div class="cfg-field">
+                        <label for="cfg-phone"><?php echo e(t('Phone','ফোন নম্বর')); ?></label>
+                        <input name="phone" id="cfg-phone" type="text" class="cfg-input" maxlength="255"/>
+                    </div>
+                    <div class="cfg-field">
+                        <label for="cfg-email"><?php echo e(t('Email','ইমেইল')); ?></label>
+                        <input name="email" id="cfg-email" type="email" class="cfg-input" maxlength="255"/>
+                    </div>
                     <div class="cfg-field wide">
-                        <label for="cfg-description">Description</label>
-                        <textarea name="description" id="cfg-description" class="cfg-input" maxlength="2000"></textarea>
+                        <label for="cfg-address"><?php echo e(t('Address','ঠিকানা')); ?></label>
+                        <textarea name="address" id="cfg-address" class="cfg-input" maxlength="2000"></textarea>
+                    </div>
+                    <div class="cfg-field wide">
+                        <label for="cfg-notes"><?php echo e(t('Notes','নোট')); ?></label>
+                        <textarea name="notes" id="cfg-notes" class="cfg-input" maxlength="2000"></textarea>
                     </div>
                 <div class="cfg-field">
-                    <label for="cfg-is-active">Status <span class="cfg-required">*</span></label>
-                    <select name="is_active" id="cfg-is-active" class="cfg-input"><option value="1">Active</option><option value="0">Inactive</option></select>
+                    <label for="cfg-is-active"><?php echo e(t('Status','স্ট্যাটাস')); ?> <span class="cfg-required">*</span></label>
+                    <select name="is_active" id="cfg-is-active" class="cfg-input"><option value="1"><?php echo e(t('Active','সক্রিয়')); ?></option><option value="0"><?php echo e(t('Inactive','নিষ্ক্রিয়')); ?></option></select>
                 </div>
             </div>
             <div class="cfg-actions-footer">
-                <button type="button" class="cfg-btn" id="cfg-cancel">Cancel</button>
-                <button type="submit" class="cfg-btn cfg-primary" id="cfg-save">Save Changes</button>
+                <button type="button" class="cfg-btn" id="cfg-cancel"><?php echo e(t('Cancel','বাতিল')); ?></button>
+                <button type="submit" class="cfg-btn cfg-primary" id="cfg-save"><?php echo e(t('Save Changes','পরিবর্তন সংরক্ষণ করুন')); ?></button>
             </div>
         </form>
     </div>
@@ -172,4 +188,4 @@
 <?php echo $__env->make('public.business.admin.configurations._ui_scripts', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <?php $__env->stopPush(); ?>
 
-<?php echo $__env->make('public.business.admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\saas-backend\resources\views/public/business/admin/configurations/categories/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('public.business.admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\saas\resources\views/public/business/admin/configurations/suppliers/index.blade.php ENDPATH**/ ?>

@@ -194,10 +194,10 @@ class BusinessSubscriptionService
                         'module_id' => $item->module_id,
                     ],
                     [
-                        'business_subscription_id' => $subscription->id,
+                        'business_subscription_id' => $businessSubscription->id,
                         'source' => 'Plan',
                         'is_enabled' => true,
-                        'starts_at' => $subscription->starts_at,
+                        'starts_at' => $businessSubscription->starts_at,
                         'ends_at' => null,
                     ]
                 );
@@ -215,10 +215,10 @@ class BusinessSubscriptionService
                         'menu_id' => $item->menu_id,
                     ],
                     [
-                        'business_subscription_id' => $subscription->id,
+                        'business_subscription_id' => $businessSubscription->id,
                         'source' => 'Plan',
                         'is_enabled' => true,
-                        'starts_at' => $subscription->starts_at,
+                        'starts_at' => $businessSubscription->starts_at,
                         'ends_at' => null,
                     ]
                 );
@@ -236,10 +236,10 @@ class BusinessSubscriptionService
                         'child_menu_id' => $item->child_menu_id,
                     ],
                     [
-                        'business_subscription_id' => $subscription->id,
+                        'business_subscription_id' => $businessSubscription->id,
                         'source' => 'Plan',
                         'is_enabled' => true,
-                        'starts_at' => $subscription->starts_at,
+                        'starts_at' => $businessSubscription->starts_at,
                         'ends_at' => null,
                     ]
                 );

@@ -466,4 +466,4 @@
 
 </body>
 </html>
-<?php /**PATH C:\laragon\www\saas-backend\resources\views/public/business/admin/layout.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\saas\resources\views/public/business/admin/layout.blade.php ENDPATH**/ ?>
