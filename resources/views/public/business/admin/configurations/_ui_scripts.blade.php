@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!filterRow || !filterToggle) return;
         filterRow.hidden = !filterVisible;
         filterToggle.setAttribute('aria-expanded', String(filterVisible));
-        filterToggle.textContent = filterVisible ? 'Hide Column Filters' : 'Show Column Filters';
+        filterToggle.textContent = filterVisible ? @json(t('Hide Column Filters', 'কলাম ফিল্টার লুকান')) : @json(t('Show Column Filters', 'কলাম ফিল্টার দেখান'));
     }
     refreshFilters();
     filterToggle?.addEventListener('click', () => {
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         refreshFilters();
     });
     document.querySelectorAll('.cfg-delete-form').forEach(form => form.addEventListener('submit', e => {
-        if (!confirm('Delete this record?')) e.preventDefault();
+        if (!confirm(@json(t('Delete this record?', 'এই রেকর্ডটি মুছে ফেলবেন?')))) e.preventDefault();
     }));
 
     const modal = document.getElementById('cfg-modal');
@@ -49,7 +49,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const records = @json($recordPayload);
     const storeUrl = @json($storeUrl);
     const updateTemplate = @json($updateTemplate);
-    const resourceTitle = @json($title);
+    const resourceTitle = @json(session('portal_lang') === 'bn' ? $titleBn : $title);
+    const createLabel = @json(t('Create', 'নতুন'));
+    const editLabel = @json(t('Edit', 'সম্পাদনা'));
     let previousFocus = null;
     let previousOverflow = '';
 
@@ -61,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         editId.value = row ? String(recordId) : '';
         method.disabled = !row;
         form.action = row ? updateTemplate.replace('__ID__', encodeURIComponent(String(recordId))) : storeUrl;
-        title.textContent = (row ? 'Edit ' : 'Create ') + resourceTitle;
+        title.textContent = (row ? editLabel : createLabel) + ' ' + resourceTitle;
         if (row) {
             fields.forEach(field => {
                 const input = form.elements.namedItem(field);

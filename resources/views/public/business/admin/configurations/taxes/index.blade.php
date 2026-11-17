@@ -57,7 +57,7 @@
                     <thead>
                     <tr>
                         @foreach($columns as $column=>$meta)
-                            <th scope="col"><a href="{{ request()->fullUrlWithQuery(['sort'=>$column,'dir'=>$sort===$column && $dir==='asc'?'desc':'asc','page'=>1]) }}">{{ $meta['label'] }} @if($sort===$column){{ $dir==='asc'?'↑':'↓' }}@endif</a></th>
+                            <th scope="col"><a href="{{ request()->fullUrlWithQuery(['sort'=>$column,'dir'=>$sort===$column && $dir==='asc'?'desc':'asc','page'=>1]) }}">{{ t($meta['label'], $meta['label_bn'] ?? $meta['label']) }} @if($sort===$column){{ $dir==='asc'?'↑':'↓' }}@endif</a></th>
                         @endforeach
                         <th>{{ t('Actions','অ্যাকশন') }}</th>
                     </tr>
@@ -65,7 +65,7 @@
                         @foreach($columns as $column=>$meta)
                             <th>
                                 @if(in_array($meta['type'],['status','boolean','select','category'],true))
-                                    <select class="cfg-input" name="f[{{ $column }}]" form="cfg-filter-form" aria-label="{{ t('Filter','ফিল্টার করুন') }} {{ $meta['label'] }}">
+                                    <select class="cfg-input" name="f[{{ $column }}]" form="cfg-filter-form" aria-label="{{ t('Filter','ফিল্টার করুন') }} {{ t($meta['label'], $meta['label_bn'] ?? $meta['label']) }}">
                                         <option value="">{{ t('All','সব') }}</option>
                                         @if(in_array($meta['type'],['status','boolean'],true))
                                             <option value="1" @selected((string)($filters[$column]??'')==='1')>{{ $meta['type']==='status'?t('Active','সক্রিয়'):t('Yes','হ্যাঁ') }}</option>
@@ -73,11 +73,11 @@
                                         @elseif($meta['type']==='category')
                                             @foreach($categories as $category)<option value="{{ $category->id }}" @selected((string)($filters[$column]??'')===(string)$category->id)>{{ $category->name }}</option>@endforeach
                                         @else
-                                            @foreach($meta['options'] as $value=>$text)<option value="{{ $value }}" @selected((string)($filters[$column]??'')===(string)$value)>{{ $text }}</option>@endforeach
+                                            @foreach($meta['options'] as $value=>$text)<option value="{{ $value }}" @selected((string)($filters[$column]??'')===(string)$value)>{{ t($text, $meta['options_bn'][$value] ?? $text) }}</option>@endforeach
                                         @endif
                                     </select>
                                 @else
-                                    <input name="f[{{ $column }}]" form="cfg-filter-form" class="cfg-input" type="{{ $meta['type']==='date'?'date':'text' }}" value="{{ is_scalar($filters[$column]??null)?$filters[$column]:'' }}" placeholder="{{ t('Filter...','ফিল্টার করুন...') }}" aria-label="{{ t('Filter','ফিল্টার করুন') }} {{ $meta['label'] }}"/>
+                                    <input name="f[{{ $column }}]" form="cfg-filter-form" class="cfg-input" type="{{ $meta['type']==='date'?'date':'text' }}" value="{{ is_scalar($filters[$column]??null)?$filters[$column]:'' }}" placeholder="{{ t('Filter...','ফিল্টার করুন...') }}" aria-label="{{ t('Filter','ফিল্টার করুন') }} {{ t($meta['label'], $meta['label_bn'] ?? $meta['label']) }}"/>
                                 @endif
                             </th>
                         @endforeach
@@ -93,7 +93,7 @@
                                     @elseif($column==='is_active')<span class="cfg-status {{ $record->is_active?'':'off' }}">{{ $record->is_active?t('Active','সক্রিয়'):t('Inactive','নিষ্ক্রিয়') }}</span>
                                     @elseif($meta['type']==='boolean'){{ $record->getAttribute($column)?t('Yes','হ্যাঁ'):t('No','না') }}
                                     @elseif($meta['type']==='category'){{ $categoryNames[$record->getAttribute($column)] ?? '—' }}
-                                    @elseif($meta['type']==='select'){{ $meta['options'][$record->getAttribute($column)] ?? $record->getAttribute($column) ?? '—' }}
+                                    @elseif($meta['type']==='select'){{ t($meta['options'][$record->getAttribute($column)] ?? '—', $meta['options_bn'][$record->getAttribute($column)] ?? ($meta['options'][$record->getAttribute($column)] ?? '—')) }}
                                     @elseif($meta['type']==='date'){{ $record->getAttribute($column)?->format('Y-m-d H:i') ?? '—' }}
                                     @elseif($meta['type']==='hex' && $record->getAttribute($column))<span class="cfg-swatches" style="background:{{ preg_match('/^#[0-9a-fA-F]{6}$/',(string)$record->getAttribute($column))?$record->getAttribute($column):'transparent' }}"></span>{{ $record->getAttribute($column) }}
                                     @else{{ $record->getAttribute($column) ?? '—' }}

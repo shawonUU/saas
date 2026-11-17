@@ -137,7 +137,7 @@
                                         'dir' => $sort === $column && $dir === 'asc' ? 'desc' : 'asc',
                                         'page' => 1
                                     ]) }}">
-                                        {{ $meta['label'] }}
+                                        {{ t($meta['label'], $meta['label_bn'] ?? $meta['label']) }}
 
                                         @if($sort === $column)
                                             {{ $dir === 'asc' ? '↑' : '↓' }}
@@ -160,7 +160,7 @@
                                             class="cfg-input"
                                             name="f[{{ $column }}]"
                                             form="cfg-filter-form"
-                                            aria-label="{{ t('Filter', 'ফিল্টার') }} {{ $meta['label'] }}"
+                                            aria-label="{{ t('Filter', 'ফিল্টার') }} {{ t($meta['label'], $meta['label_bn'] ?? $meta['label']) }}"
                                         >
 
                                             <option value="">
@@ -205,7 +205,7 @@
                                                         value="{{ $value }}"
                                                         @selected((string)($filters[$column] ?? '') === (string)$value)
                                                     >
-                                                        {{ $text }}
+                                                        {{ t($text, $meta['options_bn'][$value] ?? $text) }}
                                                     </option>
                                                 @endforeach
 
@@ -222,7 +222,7 @@
                                             type="{{ $meta['type'] === 'date' ? 'date' : 'text' }}"
                                             value="{{ is_scalar($filters[$column] ?? null) ? $filters[$column] : '' }}"
                                             placeholder="{{ t('Filter...', 'ফিল্টার করুন...') }}"
-                                            aria-label="{{ t('Filter', 'ফিল্টার') }} {{ $meta['label'] }}"
+                                            aria-label="{{ t('Filter', 'ফিল্টার') }} {{ t($meta['label'], $meta['label_bn'] ?? $meta['label']) }}"
                                         />
 
                                     @endif

@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="<?php echo e(session('portal_lang', 'en')); ?>" data-theme="light">
 <head>
@@ -7,21 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
-    <?php
-        $routeBusiness = request()->route('business');
-        $store = $currentBusiness ?? $business ?? $shop ?? request()->attributes->get('business');
-        $store = is_object($store) ? $store : null;
-        $storeCode = is_object($routeBusiness) ? (data_get($routeBusiness,'slug') ?? data_get($routeBusiness,'code')) : $routeBusiness;
-        $storeCode = $storeCode ?: (data_get($store,'slug') ?? data_get($store,'code'));
-        $storeName = data_get($store,'name') ?? data_get($store,'business_name') ?? ($storeCode ? ucwords(str_replace(['-','_'],' ',$storeCode)) : 'My Store');
-        $logoPath = data_get($store,'logo') ?? data_get($store,'logo_path') ?? data_get($store,'business_logo');
-        $storeLogo = $logoPath ? (preg_match('~^https?://~i',$logoPath) ? $logoPath : (str_starts_with($logoPath,'/') ? url($logoPath) : (str_starts_with($logoPath,'storage/') || str_starts_with($logoPath,'images/') ? asset($logoPath) : asset('storage/'.$logoPath)))) : null;
-        $adminUser = Auth::guard('business_admin')->user();
-        $dashboardUrl = $storeCode && Route::has('store.admin.dashboard') ? route('store.admin.dashboard',['business'=>$storeCode]) : url('/');
-        $storefrontUrl = request()->getScheme().'://'.preg_replace('/^admin\./','',request()->getHttpHost());
-    ?>
-    <title><?php echo e($title ?? t('Dashboard','ড্যাশবোর্ড')); ?> | <?php echo e($storeName); ?></title>
-    <meta name="description" content="<?php echo e($storeName); ?> admin portal">
+    <title><?php echo e($title ?? 'NexaBiz - Business Management Platform'); ?></title>
+
+    <meta name="description" content="NexaBiz helps businesses manage operations, branches, sales, inventory and customers from one platform.">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
@@ -366,30 +353,6 @@
                 flex-direction: column;
             }
         }
-        /* Store admin header */
-        body{background:var(--bg)}
-        .site-header{height:76px;background:var(--white)}
-        .nav-inner{width:calc(100% - 48px);max-width:1600px;gap:20px}
-        .brand{min-width:0;gap:12px;font-size:17px;letter-spacing:-.35px}
-        .brand-logo{width:43px;height:43px;object-fit:contain;border:1px solid var(--border);border-radius:12px;background:#fff;padding:3px;flex-shrink:0}
-        .brand-fallback{display:grid;place-items:center;background:var(--primary);color:#fff;font-size:21px;font-weight:800}
-        .brand-details{display:flex;flex-direction:column;min-width:0;line-height:1.3}
-        .brand-name{max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .brand-subtitle{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:0;margin-top:2px}
-        .nav-links{gap:8px;margin-left:auto}
-        .nav-links a{padding:11px 14px;border-radius:10px;white-space:nowrap}
-        .nav-links a.active,.nav-links a:hover{color:var(--primary);background:#f4f3ff}
-        .nav-actions{gap:10px}
-        .admin-profile{display:flex;align-items:center;gap:9px;padding-left:12px;border-left:1px solid var(--border)}
-        .admin-avatar{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;background:#e9e7ff;color:var(--primary);font-weight:800}
-        .admin-name{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:700}
-        .admin-role{font-size:11px;color:var(--muted)}
-        .admin-logout{border:1px solid var(--border);border-radius:9px;background:#fff;padding:9px 11px;cursor:pointer;color:var(--text)}
-        .admin-logout:hover{background:#fff0f1;color:#b42335}
-        .admin-main{min-height:calc(100vh - 76px)}
-        .nav-actions .mobile-dashboard{display:none}
-        @media(max-width:1000px){.nav-links{display:none}.nav-actions .mobile-dashboard{display:inline-flex;padding:9px 12px}}
-        @media(max-width:700px){.nav-inner{width:calc(100% - 24px);gap:10px}.site-header{height:68px}.brand-logo{height:36px;width:36px}.brand-name{max-width:130px;font-size:14px}.brand-subtitle,.admin-name,.admin-role,.nav-actions .mobile-dashboard{display:none}.admin-profile{padding-left:0;border-left:0}.nav-actions{gap:6px}.language-btn{padding:8px}.admin-logout{padding:8px}.admin-main{min-height:calc(100vh - 68px)}}
     </style>
 
     <?php echo $__env->make('portals.partials.theme-styles', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
@@ -401,48 +364,55 @@
 
 <header class="site-header">
     <div class="nav-inner">
-        <a href="<?php echo e($dashboardUrl); ?>" class="brand" title="<?php echo e($storeName); ?>">
-            <?php if($storeLogo): ?>
-                <img src="<?php echo e($storeLogo); ?>" alt="<?php echo e($storeName); ?>" class="brand-logo" onerror="this.style.display='none'">
-            <?php else: ?>
-                <span class="brand-logo brand-fallback"><?php echo e(mb_strtoupper(mb_substr($storeName,0,1))); ?></span>
-            <?php endif; ?>
-            <span class="brand-details">
-                <span class="brand-name"><?php echo e($storeName); ?></span>
-                <span class="brand-subtitle"><?php echo e(t('Store Administration','স্টোর অ্যাডমিন')); ?></span>
-            </span>
+
+        <a href="<?php echo e(url('/')); ?>" class="brand">
+            <span class="brand-mark">N</span>
+            Nexa<span>Biz</span>
         </a>
-        <nav id="site-primary-nav" class="nav-links" aria-label="Store navigation">
-            <a class="<?php echo e(request()->routeIs('store.admin.dashboard') ? 'active' : ''); ?>" href="<?php echo e($dashboardUrl); ?>"><?php echo e(t('Dashboard','ড্যাশবোর্ড')); ?></a>
-            <?php if(Route::has('store.admin.products.index')): ?>
-                <a href="<?php echo e(route('store.admin.products.index',['business'=>$storeCode])); ?>"><?php echo e(t('Products','পণ্য')); ?></a>
-            <?php endif; ?>
-            <?php if(Route::has('store.admin.orders.index')): ?>
-                <a href="<?php echo e(route('store.admin.orders.index',['business'=>$storeCode])); ?>"><?php echo e(t('Orders','অর্ডার')); ?></a>
-            <?php endif; ?>
-            <?php if(Route::has('store.admin.settings.index')): ?>
-                <a href="<?php echo e(route('store.admin.settings.index',['business'=>$storeCode])); ?>"><?php echo e(t('Settings','সেটিংস')); ?></a>
-            <?php endif; ?>
-            <a href="<?php echo e($storefrontUrl); ?>" target="_blank" rel="noopener noreferrer"><?php echo e(t('View Store','স্টোর দেখুন')); ?> ↗</a>
+
+        <nav id="site-primary-nav" class="nav-links">
+            <a href="<?php echo e(url('/')); ?>"><?php echo e(t('Home', 'হোম')); ?></a>
+            <a href="<?php echo e(url('/#features')); ?>"><?php echo e(t('Features', 'ফিচার')); ?></a>
+            <a href="<?php echo e(url('/#how-it-works')); ?>"><?php echo e(t('How it works', 'যেভাবে কাজ করে')); ?></a>
+            <a href="<?php echo e(url('/#about')); ?>"><?php echo e(t('About', 'আমাদের সম্পর্কে')); ?></a>
         </nav>
+
         <button type="button" class="nav-menu-toggle" data-site-nav-toggle aria-controls="site-primary-nav" aria-expanded="false" aria-label="<?php echo e(t('Open navigation','মেনু খুলুন')); ?>">☰</button>
         <div class="nav-actions">
-            <a href="<?php echo e($dashboardUrl); ?>" class="btn btn-outline mobile-dashboard"><?php echo e(t('Dashboard','ড্যাশবোর্ড')); ?></a>
             <button type="button" id="theme-toggle" class="theme-btn" aria-label="<?php echo e(t('Toggle light and dark mode','লাইট ও ডার্ক মোড বদলান')); ?>" aria-pressed="false">◐ <span id="theme-label"><?php echo e(t('Dark','ডার্ক')); ?></span></button>
+
             <form class="language-form" action="<?php echo e(url('/language')); ?>" method="POST">
                 <?php echo csrf_field(); ?>
-                <input type="hidden" name="lang" value="<?php echo e(session('portal_lang','en') === 'en' ? 'bn' : 'en'); ?>">
-                <button class="language-btn" type="submit"><?php echo e(session('portal_lang','en') === 'en' ? 'বাংলা' : 'EN'); ?></button>
+                <input type="hidden" name="lang"
+                       value="<?php echo e(session('portal_lang', 'en') === 'en' ? 'bn' : 'en'); ?>">
+
+                <button class="language-btn" type="submit">
+                    <?php echo e(session('portal_lang', 'en') === 'en' ? 'বাংলা' : 'EN'); ?>
+
+                </button>
             </form>
-            <?php if($adminUser): ?>
-                <div class="admin-profile">
-                    <span class="admin-avatar"><?php echo e(mb_strtoupper(mb_substr($adminUser->name ?? 'A',0,1))); ?></span>
-                    <span><span class="admin-name" style="display:block"><?php echo e($adminUser->name ?? 'Admin'); ?></span><span class="admin-role"><?php echo e(t('Administrator','অ্যাডমিন')); ?></span></span>
-                </div>
-                <?php if(Route::has('store.admin.logout')): ?>
-                    <form method="POST" action="<?php echo e(route('store.admin.logout',['business'=>$storeCode])); ?>"><?php echo csrf_field(); ?><button type="submit" class="admin-logout"><?php echo e(t('Log out','লগআউট')); ?></button></form>
-                <?php endif; ?>
+
+            <?php
+                $businessCode = request()->route('business');
+                $portalDashboard = Auth::guard('authority')->check() && request()->getHost() === 'admin.'.config('saas.domain') ? route('authority.dashboard') :
+                    (Auth::guard('business_admin')->check() && $businessCode && str_starts_with(request()->getHost(),'admin.') ? route('store.admin.dashboard',['business'=>$businessCode]) :
+                    (Auth::guard('business_customer')->check() && $businessCode ? route('store.customer.dashboard',['business'=>$businessCode]) :
+                    (Auth::guard('saas_user')->check() ? route('saas.dashboard') : null)));
+            ?>
+            <?php if($portalDashboard): ?>
+                <a href="<?php echo e($portalDashboard); ?>" class="btn"><?php echo e(t('Dashboard','ড্যাশবোর্ড')); ?></a>
+            <?php else: ?>
+                <a href="<?php echo e(route('saas.login')); ?>" class="btn btn-outline">
+                    <?php echo e(t('Log in', 'লগইন')); ?>
+
+                </a>
+
+                <a href="<?php echo e(route('saas.register')); ?>" class="btn">
+                    <?php echo e(t('Get Started', 'শুরু করুন')); ?>
+
+                </a>
             <?php endif; ?>
+
         </div>
     </div>
 </header>
@@ -459,11 +429,54 @@
     </div>
 <?php endif; ?>
 
-<main class="admin-main"><?php echo $__env->yieldContent('content'); ?></main>
+<?php echo $__env->yieldContent('content'); ?>
+
+<footer class="site-footer">
+    <div class="container">
+
+        <div class="footer-grid">
+
+            <div>
+                <a href="<?php echo e(url('/')); ?>" class="brand footer-brand">
+                    <span class="brand-mark">N</span>
+                    Nexa<span>Biz</span>
+                </a>
+
+                <p class="footer-description">
+                    <?php echo e(t(
+                        'A smarter way to manage your business. Simplify operations, grow your business and manage everything from one platform.',
+                        'আপনার ব্যবসা পরিচালনার আরও স্মার্ট উপায়। একটি প্ল্যাটফর্ম থেকেই ব্যবসার কার্যক্রম পরিচালনা করুন এবং ব্যবসাকে এগিয়ে নিন।'
+                    )); ?>
+
+                </p>
+            </div>
+
+            <div class="footer-column">
+                <h4><?php echo e(t('Platform', 'প্ল্যাটফর্ম')); ?></h4>
+                <a href="<?php echo e(url('/#features')); ?>"><?php echo e(t('Features', 'ফিচার')); ?></a>
+                <a href="<?php echo e(url('/#how-it-works')); ?>"><?php echo e(t('How it works', 'যেভাবে কাজ করে')); ?></a>
+                <a href="<?php echo e(route('saas.register')); ?>"><?php echo e(t('Create account', 'অ্যাকাউন্ট তৈরি করুন')); ?></a>
+            </div>
+
+            <div class="footer-column">
+                <h4><?php echo e(t('Account', 'অ্যাকাউন্ট')); ?></h4>
+                <a href="<?php echo e(route('saas.login')); ?>"><?php echo e(t('Log in', 'লগইন')); ?></a>
+                <a href="<?php echo e(route('saas.register')); ?>"><?php echo e(t('Register', 'রেজিস্ট্রেশন')); ?></a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span>© <?php echo e(date('Y')); ?> <?php echo e(config('app.name')); ?> <?php echo e(t('All rights reserved.', 'সর্বস্বত্ব সংরক্ষিত।')); ?></span>
+            <span><?php echo e(t('Built for growing businesses.', 'ব্যবসার উন্নতির জন্য তৈরি।')); ?></span>
+        </div>
+
+    </div>
+</footer>
 
 <?php echo $__env->make('portals.partials.ui-controls', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <?php echo $__env->yieldPushContent('scripts'); ?>
 
 </body>
 </html>
-<?php /**PATH C:\laragon\www\saas\resources\views/public/business/admin/layout.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\saas-backend\resources\views/layouts/portal.blade.php ENDPATH**/ ?>

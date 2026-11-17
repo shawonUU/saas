@@ -30,6 +30,7 @@ class ModuleMenuSeeder extends Seeder
                 ['brands','Brands','ব্র্যান্ড','package',[]],
                 ['categories','Categories','ক্যাটাগরি','list',[]],
                 ['sub-categories','Sub-Categories','সাব-ক্যাটাগরি','list',[]],
+                ['products','Products','পণ্য','package',[]],
                 ['taxes','Taxes','ট্যাক্স','percent',[]],
                 ['currencies','Currencies','মুদ্রা','currency-bdt',[]],
                 ['payment-methods','Payment Methods','পেমেন্ট পদ্ধতি','credit-card',[]],
@@ -137,41 +138,38 @@ class ModuleMenuSeeder extends Seeder
         $common=[
             'configurations'=>[
                 'customers'=>[], 'suppliers'=>[], 'units'=>[], 'sizes'=>[],
-                'colors'=>[], 'brands'=>[], 'categories'=>[], 'sub-categories'=>[],
+                'colors'=>[], 'brands'=>[], 'categories'=>[], 'sub-categories'=>[],'products'=>[],
                 'taxes'=>[], 'currencies'=>[], 'payment-methods'=>[], 'shipping-methods'=>[],
             ],
             'authorization'=>['users'=>'*','roles'=>'*','permissions'=>'*','access-control'=>'*'],
             'settings'=>['navigation-management'=>'*','business'=>'*','team'=>'*','locations'=>'*','taxes'=>'*','integrations'=>'*','notifications'=>'*','security'=>'*','audit'=>'*'],
-            'analytics'=>['overview'=>'*','reports'=>'*'],
             'support'=>['tickets'=>'*','feedback'=>'*'],
         ];
         $profiles=[
             'retail'=>[
                 'sales'=>['orders'=>'*','invoices'=>'*','returns'=>'*','customers'=>'*','discounts'=>'*'],
                 'pos'=>['counter'=>'*','registers'=>'*','shifts'=>'*'],
-                'inventory'=>['products'=>'*','stock'=>'*','movements'=>'*','masters'=>'*'],
-                'purchasing'=>['suppliers'=>'*','purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
+                'inventory'=>['stock'=>'*','movements'=>'*','masters'=>'*'],
+                'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
                 'finance'=>['chart-of-accounts'=>'*','ledger'=>'*','receivables'=>'*','payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
-                'crm'=>['contacts'=>'*','loyalty'=>'*'],
                 'ecommerce'=>['storefront'=>'*','catalog'=>'*','online-orders'=>'*','checkout'=>'*','online-marketing'=>'*'],
                 'hr'=>['employees'=>'*','attendance'=>'*','payroll'=>'*']
             ],
             'online'=>[
                 'sales'=>['orders'=>'*','invoices'=>'*','returns'=>'*','customers'=>'*','discounts'=>'*'],
                 'ecommerce'=>['storefront'=>'*','catalog'=>'*','online-orders'=>'*','checkout'=>'*','online-marketing'=>'*'],
-                'inventory'=>['products'=>'*','stock'=>'*','movements'=>'*','masters'=>'*'],
-                'purchasing'=>['suppliers'=>'*','purchase-orders'=>'*','receiving'=>'*'],
+                'inventory'=>['stock'=>'*','movements'=>'*','masters'=>'*'],
+                'purchasing'=>['purchase-orders'=>'*','receiving'=>'*'],
                 'finance'=>['receivables'=>'*','payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
                 'logistics'=>['shipments'=>'*','delivery'=>'*','cod'=>'*'],
-                'crm'=>['contacts'=>'*','loyalty'=>'*']
             ],
             'food'=>[
                 'sales'=>['orders'=>'*','invoices'=>'*','customers'=>'*','discounts'=>'*'],
                 'pos'=>['counter'=>'*','registers'=>'*','shifts'=>'*'],
                 'restaurant'=>['dining'=>'*','food-menu'=>'*','kitchen-display'=>'*','table-bookings'=>'*','buffet'=>'*'],
                 'kitchen'=>['recipes'=>'*','preparation'=>'*','food-costing'=>'*'],
-                'inventory'=>['products'=>'*','stock'=>'*','movements'=>'*','masters'=>'*'],
-                'purchasing'=>['suppliers'=>'*','requisitions'=>'*','purchase-orders'=>'*','receiving'=>'*'],
+                'inventory'=>['stock'=>'*','movements'=>'*','masters'=>'*'],
+                'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
                 'finance'=>['payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
                 'hr'=>['employees'=>'*','attendance'=>'*','payroll'=>'*']
             ],
@@ -180,14 +178,13 @@ class ModuleMenuSeeder extends Seeder
                 'sales'=>['orders'=>'*','invoices'=>'*','returns'=>'*','customers'=>'*'],
                 'pos'=>['counter'=>'*','registers'=>'*','shifts'=>'*'],
                 'inventory'=>['stock'=>'*','movements'=>'*','masters'=>'*'],
-                'purchasing'=>['suppliers'=>'*','purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
+                'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
                 'finance'=>['payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*']
             ],
             'education'=>[
                 'education'=>['students'=>'*','courses'=>'*','classes'=>'*','exams'=>'*','student-fees'=>'*'],
                 'finance'=>['receivables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
                 'hr'=>['employees'=>'*','attendance'=>'*','leave'=>'*','payroll'=>'*'],
-                'crm'=>['contacts'=>'*','leads'=>'*','followups'=>'*']
             ],
         ];
 
@@ -317,26 +314,9 @@ class ModuleMenuSeeder extends Seeder
                 BusinessCategoryChildMenu::where('business_category_id',$id)->whereNotIn('child_menu_id',$childIds)->delete();
                 BusinessCategoryMenu::where('business_category_id',$id)->whereNotIn('menu_id',$menuIds)->delete();
                 BusinessCategoryModule::where('business_category_id',$id)->whereNotIn('module_id',$moduleIds)->delete();
-                foreach(array_unique($moduleIds) as $moduleId)BusinessCategoryModule::withTrashed()->updateOrCreate(['business_category_id'=>$id,'module_id'=>$moduleId],['deleted_at'=>null]);
-                foreach(array_unique($menuIds) as $menuId)BusinessCategoryMenu::withTrashed()->updateOrCreate(['business_category_id'=>$id,'menu_id'=>$menuId],['deleted_at'=>null]);
-                foreach(array_unique($childIds) as $childId)BusinessCategoryChildMenu::withTrashed()->updateOrCreate(['business_category_id'=>$id,'child_menu_id'=>$childId],['deleted_at'=>null]);
-            }
-            // Also cover pre-existing approved categories not defined in $categories.
-            // Never overwrite their other assigned modules or menus.
-            $config = $modules->get('configurations');
-            if ($config) {
-                foreach (BusinessCategory::where('approval_status', 'Approved')->get() as $existingCategory) {
-                    BusinessCategoryModule::withTrashed()->updateOrCreate([
-                        'business_category_id' => $existingCategory->id,
-                        'module_id' => $config->id,
-                    ], ['deleted_at' => null, 'approval_status' => 'Approved']);
-                    foreach ($config->menus as $menu) {
-                        BusinessCategoryMenu::withTrashed()->updateOrCreate([
-                            'business_category_id' => $existingCategory->id,
-                            'menu_id' => $menu->id,
-                        ], ['deleted_at' => null, 'approval_status' => 'Approved']);
-                    }
-                }
+                foreach(array_unique($moduleIds) as $moduleId)BusinessCategoryModule::withTrashed()->updateOrCreate(['business_category_id'=>$id,'module_id'=>$moduleId],['deleted_at'=>null,'approval_status'=>'Approved','is_active'=>true]);
+                foreach(array_unique($menuIds) as $menuId)BusinessCategoryMenu::withTrashed()->updateOrCreate(['business_category_id'=>$id,'menu_id'=>$menuId],['deleted_at'=>null,'approval_status'=>'Approved','is_active'=>true]);
+                foreach(array_unique($childIds) as $childId)BusinessCategoryChildMenu::withTrashed()->updateOrCreate(['business_category_id'=>$id,'child_menu_id'=>$childId],['deleted_at'=>null,'approval_status'=>'Approved','is_active'=>true]);
             }
         });
     }

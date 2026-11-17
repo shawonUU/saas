@@ -156,4 +156,4 @@ html[data-theme="dark"] .hero-label, html[data-theme="dark"] .eyebrow { color: v
     *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
 </style>
-<?php /**PATH C:\laragon\www\saas\resources\views/portals/partials/ui-foundation.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\saas-backend\resources\views/portals/partials/ui-foundation.blade.php ENDPATH**/ ?>

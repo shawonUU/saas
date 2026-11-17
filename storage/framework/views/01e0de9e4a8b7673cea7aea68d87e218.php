@@ -78,4 +78,4 @@ html[data-theme="dark"] .cfg-pagination a,html[data-theme="dark"] .cfg-paginatio
 @media(max-width:750px){.cfg-heading{gap:10px}.cfg-toolbar{gap:8px}.cfg-toolbar>.cfg-search{min-width:100%;flex-basis:100%}.cfg-toolbar .cfg-btn{flex:1 1 auto}.cfg-toolbar .cfg-small{flex:0 0 100px}.cfg-dialog{max-height:calc(100dvh - 26px);border-radius:14px}.cfg-modal{padding:13px 9px}.cfg-actions-footer .cfg-btn{flex:1}.cfg-bottom{flex-direction:column;align-items:stretch}.cfg-pagination{justify-content:space-between}}
 @media(max-width:390px){.cfg-toolbar .cfg-btn{padding:0 10px;font-size:11px}.cfg-dialog-header h2{font-size:18px}}
 </style>
-<?php /**PATH C:\laragon\www\saas\resources\views/public/business/admin/configurations/_ui_styles.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\saas-backend\resources\views/public/business/admin/configurations/_ui_styles.blade.php ENDPATH**/ ?>

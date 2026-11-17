@@ -21,4 +21,4 @@ html[data-theme="dark"] .workspace-layout{--ws-panel:#1c2435;--ws-bg:#111827;--w
 
 
 </style>
-<?php /**PATH C:\laragon\www\saas\resources\views/public/business/admin/configurations/_workspace_styles.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\saas-backend\resources\views/public/business/admin/configurations/_workspace_styles.blade.php ENDPATH**/ ?>

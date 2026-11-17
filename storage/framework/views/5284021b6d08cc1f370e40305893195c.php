@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!filterRow || !filterToggle) return;
         filterRow.hidden = !filterVisible;
         filterToggle.setAttribute('aria-expanded', String(filterVisible));
-        filterToggle.textContent = filterVisible ? 'Hide Column Filters' : 'Show Column Filters';
+        filterToggle.textContent = filterVisible ? <?php echo json_encode(t('Hide Column Filters', 'কলাম ফিল্টার লুকান'), 512) ?> : <?php echo json_encode(t('Show Column Filters', 'কলাম ফিল্টার দেখান'), 512) ?>;
     }
     refreshFilters();
     filterToggle?.addEventListener('click', () => {
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         refreshFilters();
     });
     document.querySelectorAll('.cfg-delete-form').forEach(form => form.addEventListener('submit', e => {
-        if (!confirm('Delete this record?')) e.preventDefault();
+        if (!confirm(<?php echo json_encode(t('Delete this record?', 'এই রেকর্ডটি মুছে ফেলবেন?'), 512) ?>)) e.preventDefault();
     }));
 
     const modal = document.getElementById('cfg-modal');
@@ -49,7 +49,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const records = <?php echo json_encode($recordPayload, 15, 512) ?>;
     const storeUrl = <?php echo json_encode($storeUrl, 15, 512) ?>;
     const updateTemplate = <?php echo json_encode($updateTemplate, 15, 512) ?>;
-    const resourceTitle = <?php echo json_encode($title, 15, 512) ?>;
+    const resourceTitle = <?php echo json_encode(session('portal_lang') === 'bn' ? $titleBn : $title, 15, 512) ?>;
+    const createLabel = <?php echo json_encode(t('Create', 'নতুন'), 512) ?>;
+    const editLabel = <?php echo json_encode(t('Edit', 'সম্পাদনা'), 512) ?>;
     let previousFocus = null;
     let previousOverflow = '';
 
@@ -61,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         editId.value = row ? String(recordId) : '';
         method.disabled = !row;
         form.action = row ? updateTemplate.replace('__ID__', encodeURIComponent(String(recordId))) : storeUrl;
-        title.textContent = (row ? 'Edit ' : 'Create ') + resourceTitle;
+        title.textContent = (row ? editLabel : createLabel) + ' ' + resourceTitle;
         if (row) {
             fields.forEach(field => {
                 const input = form.elements.namedItem(field);
@@ -111,4 +113,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script>
-<?php /**PATH C:\laragon\www\saas\resources\views/public/business/admin/configurations/_ui_scripts.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\saas-backend\resources\views/public/business/admin/configurations/_ui_scripts.blade.php ENDPATH**/ ?>

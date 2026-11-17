@@ -12,8 +12,6 @@ class SubscriptionPlanSeeder extends Seeder
     {
         $subscriptions = app(BusinessSubscriptionService::class);
         BusinessCategory::query()
-            ->where('approval_status', 'Approved')
-            ->where('is_active', true)
             ->orderBy('id')
             ->chunkById(50, function ($categories) use ($subscriptions) {
                 foreach ($categories as $category) {

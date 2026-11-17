@@ -96,7 +96,7 @@
                             @foreach($columns as $column=>$meta)
                                 <th scope="col">
                                     <a href="{{ request()->fullUrlWithQuery(['sort'=>$column,'dir'=>$sort===$column && $dir==='asc'?'desc':'asc','page'=>1]) }}">
-                                        {{ $meta['label'] }}
+                                        {{ t($meta['label'], $meta['label_bn'] ?? $meta['label']) }}
                                         @if($sort===$column)
                                             {{ $dir==='asc'?'↑':'↓' }}
                                         @endif
@@ -115,7 +115,7 @@
                                             class="cfg-input"
                                             name="f[{{ $column }}]"
                                             form="cfg-filter-form"
-                                            aria-label="{{ t('Filter','ফিল্টার') }} {{ $meta['label'] }}"
+                                            aria-label="{{ t('Filter','ফিল্টার') }} {{ t($meta['label'], $meta['label_bn'] ?? $meta['label']) }}"
                                         >
                                             <option value="">{{ t('All','সব') }}</option>
 
@@ -136,7 +136,7 @@
                                             @else
                                                 @foreach($meta['options'] as $value=>$text)
                                                     <option value="{{ $value }}" @selected((string)($filters[$column]??'')===(string)$value)>
-                                                        {{ $text }}
+                                                        {{ t($text, $meta['options_bn'][$value] ?? $text) }}
                                                     </option>
                                                 @endforeach
                                             @endif
@@ -149,7 +149,7 @@
                                             type="{{ $meta['type']==='date'?'date':'text' }}"
                                             value="{{ is_scalar($filters[$column]??null)?$filters[$column]:'' }}"
                                             placeholder="{{ t('Filter...','ফিল্টার করুন...') }}"
-                                            aria-label="{{ t('Filter','ফিল্টার') }} {{ $meta['label'] }}"
+                                            aria-label="{{ t('Filter','ফিল্টার') }} {{ t($meta['label'], $meta['label_bn'] ?? $meta['label']) }}"
                                         />
                                     @endif
                                 </th>
@@ -183,7 +183,7 @@
                                             {{ $categoryNames[$record->getAttribute($column)] ?? '—' }}
 
                                         @elseif($meta['type']==='select')
-                                            {{ $meta['options'][$record->getAttribute($column)] ?? $record->getAttribute($column) ?? '—' }}
+                                            {{ t($meta['options'][$record->getAttribute($column)] ?? '—', $meta['options_bn'][$record->getAttribute($column)] ?? ($meta['options'][$record->getAttribute($column)] ?? '—')) }}
 
                                         @elseif($meta['type']==='date')
                                             {{ $record->getAttribute($column)?->format('Y-m-d H:i') ?? '—' }}
