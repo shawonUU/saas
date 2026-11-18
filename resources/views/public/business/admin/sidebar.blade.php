@@ -39,27 +39,16 @@
         <symbol id="rs-i-logout" viewBox="0 0 24 24"><path d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4m5-4 4-4-4-4m4 4H9"/></symbol>
     </svg>
     <div class="ws-side-top">
-        <div class="ws-side-brand">
-            <span class="ws-brand-avatar" aria-hidden="true">
-                @if($sideLogo)<img src="{{ $sideLogo }}" alt="" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>{{ mb_strtoupper(mb_substr($sideName,0,1)) }}</span>
-                @else{{ mb_strtoupper(mb_substr($sideName,0,1)) }}@endif
-            </span>
-            <span class="ws-side-brand-text"><strong title="{{ $sideName }}">{{ $sideName }}</strong><small>{{ t('Business workspace','বিজনেস ওয়ার্কস্পেস') }}</small></span>
-            <button type="button" class="ws-close-sidebar" data-ws-sidebar-toggle aria-label="{{ t('Close menu','মেনু বন্ধ করুন') }}" aria-controls="ws-sidebar-navigation">
-                <svg class="ws-svg"><use href="#rs-i-x"/></svg>
-            </button>
-        </div>
         <label class="ws-side-search">
             <svg class="ws-svg" aria-hidden="true"><use href="#rs-i-search"/></svg>
             <input type="search" id="ws-sidebar-search" placeholder="{{ t('Search menu...','মেনু খুঁজুন...') }}" autocomplete="off" aria-label="{{ t('Search menu','মেনু খুঁজুন') }}">
         </label>
     </div>
     <nav class="ws-side-scroll" aria-label="{{ t('Business modules','ব্যবসার মডিউল') }}">
-        <div class="ws-nav-label">{{ t('OVERVIEW','সংক্ষিপ্ত বিবরণ') }}</div>
         <a class="ws-nav-dashboard {{ request()->routeIs('store.admin.dashboard')?'active':'' }}" href="{{ route('store.admin.dashboard',['business'=>$sideBusinessKey]) }}" @if(request()->routeIs('store.admin.dashboard')) aria-current="page" @endif>
             <svg class="ws-svg" aria-hidden="true"><use href="#rs-i-grid"/></svg><span>{{ t('Dashboard','ড্যাশবোর্ড') }}</span>
         </a>
-        <div class="ws-nav-label ws-nav-modules-label">{{ t('MODULES','মডিউল') }}</div>
+       
         @forelse(($modules ?? collect()) as $module)
             @php
                 $moduleActive = $sideModule === (string)$module->slug;
@@ -122,7 +111,7 @@
 html[data-theme="dark"] .workspace-sidebar{--ws-side-surface:#182234;--ws-side-ink:#f0f3fb;--ws-side-muted:#a9b6ca;--ws-side-border:#344257;--ws-side-hover:#26334a;--ws-side-accent:#c0b8ff;--ws-side-accent-bg:#332e5a;--ws-side-field:#222e43}
 .workspace-sidebar .ws-sidebar-sprite{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
 .workspace-sidebar .ws-svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;overflow:visible}
-.workspace-sidebar .ws-side-top{flex:0 0 auto;padding:18px 16px 15px;border-bottom:1px solid var(--ws-side-border)}
+.workspace-sidebar .ws-side-top{flex:0 0 auto;padding:0px 16px 15px;border-bottom:1px solid var(--ws-side-border)}
 .workspace-sidebar .ws-side-brand{display:flex;align-items:center;gap:10px;min-width:0}
 .workspace-sidebar .ws-brand-avatar{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border-radius:12px;background:var(--ws-side-accent-bg);color:var(--ws-side-accent);font-size:20px;font-weight:800;overflow:hidden}
 .workspace-sidebar .ws-brand-avatar img{width:100%;height:100%;object-fit:contain;background:var(--ws-side-surface)}
@@ -131,12 +120,12 @@ html[data-theme="dark"] .workspace-sidebar{--ws-side-surface:#182234;--ws-side-i
 .workspace-sidebar .ws-side-brand-text small{display:block;color:var(--ws-side-muted);font-size:10px;line-height:1.4;font-weight:600}
 .workspace-sidebar .ws-close-sidebar{display:none;align-items:center;justify-content:center;width:32px;height:32px;flex:0 0 32px;border:1px solid var(--ws-side-border);border-radius:9px;background:var(--ws-side-field);color:var(--ws-side-muted)}
 .workspace-sidebar .ws-close-sidebar:hover{background:var(--ws-side-hover);color:var(--ws-side-ink)}
-.workspace-sidebar .ws-side-search{display:block;position:relative;margin:18px 0 0;min-width:0}
+.workspace-sidebar .ws-side-search{display:block;position:relative;margin:0px 0 0;min-width:0}
 .workspace-sidebar .ws-side-search>.ws-svg{position:absolute;left:13px;top:12px;width:17px;height:17px;color:var(--ws-side-muted);pointer-events:none}
 .workspace-sidebar .ws-side-search input{display:block;width:100%;height:41px;min-width:0;padding:0 12px 0 40px;border:1px solid var(--ws-side-border);border-radius:11px;background:var(--ws-side-field);color:var(--ws-side-ink);font-size:12px;font-weight:500;outline:0}
 .workspace-sidebar .ws-side-search input::placeholder{color:var(--ws-side-muted);opacity:.9}
 .workspace-sidebar .ws-side-search input:focus{border-color:var(--ws-side-accent);box-shadow:0 0 0 3px rgba(95,80,220,.11)}
-.workspace-sidebar .ws-side-scroll{display:block;flex:1;min-height:0;padding:18px 11px 14px;overflow-x:hidden;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--ws-side-border) transparent;overscroll-behavior:contain}
+.workspace-sidebar .ws-side-scroll{display:block;flex:1;min-height:0;padding:0px 11px 14px;overflow-x:hidden;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--ws-side-border) transparent;overscroll-behavior:contain}
 .workspace-sidebar .ws-nav-label{padding:0 12px;margin:0 0 11px;color:var(--ws-side-muted);font-size:10px;font-weight:800;letter-spacing:1.05px;line-height:1.5}
 .workspace-sidebar .ws-nav-modules-label{margin:25px 0 11px;padding-top:0}
 .workspace-sidebar .ws-nav-dashboard{display:flex;align-items:center;gap:12px;min-height:43px;padding:0 13px;border-radius:10px;color:var(--ws-side-ink);font-size:13px;font-weight:700;text-decoration:none;transition:background .15s,color .15s}

@@ -19,7 +19,7 @@ class CustomerAuthController extends Controller
         if (Auth::guard('business_customer')->check() && (int) Auth::guard('business_customer')->user()->business_id === (int) $business->id) {
             return redirect()->route('store.customer.dashboard', ['business' => $business->domain]);
         }
-        return view('portals.login', [
+        return view('public.business.public.auth.login', [
             'title' => $business->name.' · Customer',
             'action' => route('store.customer.login.post', ['business' => $business->domain]),
             'registerUrl' => route('store.customer.register', ['business' => $business->domain]),
@@ -31,7 +31,7 @@ class CustomerAuthController extends Controller
         if (Auth::guard('business_customer')->check() && (int) Auth::guard('business_customer')->user()->business_id === (int) $business->id) {
             return redirect()->route('store.customer.dashboard', ['business' => $business->domain]);
         }
-        return view('portals.register', [
+        return view('public.business.public.auth.register', [
             'title' => $business->name.' · Register',
             'action' => route('store.customer.register.post', ['business' => $business->domain]),
             'loginUrl' => route('store.customer.login', ['business' => $business->domain]),

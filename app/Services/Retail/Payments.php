@@ -1,9 +1,13 @@
 <?php
 namespace App\Services\Retail;
+use App\Models\Accounts\Payment;
 use App\Models\Business;
-use App\Models\Retail\{Order,Purchase,SaleReturn,Payment};
+use App\Models\Purchase\Purchase;
+use App\Models\Sales\Order;
+use App\Models\Sales\SaleReturn;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+
 class Payments {
  private function validateAmount(float $amount,string $method):void {
   if(!in_array($method,['cash','bank'],true) || $amount<=0)throw ValidationException::withMessages(['amount'=>'Select a method and enter a positive amount.']);

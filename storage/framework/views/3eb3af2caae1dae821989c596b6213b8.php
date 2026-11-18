@@ -1,0 +1,12 @@
+<div class="ret-field"><label><?php echo e(t('Items / Variants','পণ্য / ভ্যারিয়েন্ট')); ?></label><div id="ret-items"></div><button type="button" class="ret-btn alt" id="ret-add-item">+ <?php echo e(t('Add Item','পণ্য যোগ করুন')); ?></button></div>
+<template id="ret-line-template"><div class="ret-cart-row <?php echo e(($purchaseMode??false)?'purchase':''); ?>"><select name="items[__N__][variant_id]" class="ret-input" required><option value=""><?php echo e(t('Choose product / variant','পণ্য / ভ্যারিয়েন্ট বাছাই')); ?></option>
+ <?php $__currentLoopData = $variants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $variant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($variant->id); ?>" data-price="<?php echo e($purchaseMode??false ? $variant->cost : $variant->price); ?>"><?php echo e($variant->product?->name); ?> — <?php echo e($variant->sku); ?> (<?php echo e(number_format($variant->stock,2)); ?>)</option><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+ </select><input class="ret-input" type="number" name="items[__N__][quantity]" min="0.001" step="0.001" value="1" required aria-label="Quantity">
+ <?php if($purchaseMode??false): ?><input class="ret-input" type="number" name="items[__N__][cost]" min="0" step=".01" placeholder="<?php echo e(t('Unit cost','ক্রয়মূল্য')); ?>" required><?php else: ?><span class="ret-help"><?php echo e(t('Price from catalog','মূল্য ক্যাটালগ অনুযায়ী')); ?></span><?php endif; ?>
+ <button type="button" class="ret-btn alt ret-delete">×</button></div></template>
+<script>
+ document.addEventListener('DOMContentLoaded',()=>{const holder=document.getElementById('ret-items'),template=document.getElementById('ret-line-template');if(!holder||!template)return;let n=0;
+ const add=()=>{const block=template.innerHTML.replaceAll('__N__',String(n++));holder.insertAdjacentHTML('beforeend',block);const row=holder.lastElementChild;row.querySelector('.ret-delete').onclick=()=>row.remove();const sel=row.querySelector('select');sel.onchange=()=>{const cost=row.querySelector('input[name$="[cost]"]');if(cost&&sel.selectedOptions[0])cost.value=sel.selectedOptions[0].dataset.price||0;};};
+ document.getElementById('ret-add-item').onclick=add;add();});
+</script>
+<?php /**PATH C:\laragon\www\saas\resources\views/public/business/admin/retail/_cart_editor.blade.php ENDPATH**/ ?>

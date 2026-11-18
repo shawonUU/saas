@@ -1,4 +1,4 @@
-@extends('layouts.portal')
+@extends('public.business.layout')
 @section('content')
 <div class="workspace-layout">
     @include('portals.partials.admin-sidebar')
