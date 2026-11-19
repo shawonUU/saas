@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Public\Business\Admin\Retail\CourierController;
 Route::get('ecommerce/online-orders/fulfillment/courier',[CourierController::class,'index'])->name('courier.index');
 Route::post('ecommerce/online-orders/fulfillment/courier',[CourierController::class,'book'])->name('courier.book');

@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Public\Business\Admin;
+namespace App\Http\Controllers\Public\Business\Admin\Authorization;
 
 use App\Http\Controllers\Controller;
 use App\Models\{Business, BusinessRole, BusinessUser, User};
@@ -7,8 +7,8 @@ use App\Services\BusinessNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
 class BusinessUserController extends Controller

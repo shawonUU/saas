@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Public\Business\Admin\Retail\OrderController;
 Route::get('sales/orders/order-list',[OrderController::class,'index'])->name('orders.index');
 Route::get('sales/orders/new-order',[OrderController::class,'create'])->name('orders.create');

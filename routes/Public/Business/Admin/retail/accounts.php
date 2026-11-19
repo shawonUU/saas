@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Public\Business\Admin\Retail\AccountController;
 Route::get('finance/chart-of-accounts/account-list',[AccountController::class,'index'])->name('accounts.index');
 Route::post('finance/chart-of-accounts/account-list',[AccountController::class,'store'])->name('accounts.store');

@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Public\Business\Admin\Retail\MarketingController;
 Route::get('ecommerce/online-marketing/campaigns',[MarketingController::class,'campaigns'])->name('marketing.campaigns');
 Route::post('ecommerce/online-marketing/campaigns',[MarketingController::class,'store'])->name('marketing.store');

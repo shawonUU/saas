@@ -1,11 +1,12 @@
 <?php
-namespace App\Http\Controllers\Public\Business\Admin\Retail;
+namespace App\Http\Controllers\Public\Business\Admin\Inventory;
 use App\Http\Controllers\Controller;
 use App\Models\Retail\{Variant,StockMovement};
 use App\Services\Retail\{Access,Lists,Inventory,Accounting};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+
 class StockController extends Controller {
  public function report(Request $r,Access $a){$v=$a->check($r,'inventory','stock','stock-report');$v['title']='Stock Report';$v['records']=Lists::page(Variant::with('product')->where('business_id',$v['business']->id),$r,['id'=>'number','sku'=>'text','price'=>'number','cost'=>'number','stock'=>'number','created_at'=>'date']);return view('public.business.admin.retail.stock.report',$v);}
  public function low(Request $r,Access $a){$v=$a->check($r,'inventory','stock','low-stock');$v['title']='Low Stock';$v['records']=Lists::page(Variant::with('product')->where('business_id',$v['business']->id)->where('stock','<=',5),$r,['id'=>'number','sku'=>'text','stock'=>'number']);return view('public.business.admin.retail.stock.low',$v);}

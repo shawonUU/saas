@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Public\Business\Admin\Retail\PaymentController;
 Route::get('finance/receivables/collections',[PaymentController::class,'index'])->defaults('kind','customer')->name('payments.customers');
 Route::post('finance/receivables/collections',[PaymentController::class,'store'])->defaults('kind','customer')->name('payments.customer.store');

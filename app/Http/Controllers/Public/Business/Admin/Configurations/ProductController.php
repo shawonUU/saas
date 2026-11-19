@@ -1,11 +1,12 @@
 <?php
-namespace App\Http\Controllers\Public\Business\Admin\Retail;
+namespace App\Http\Controllers\Public\Business\Admin\Configurations;
 use App\Http\Controllers\Controller;
-use App\Services\Retail\{Access,Lists,Inventory,Accounting};
 use App\Models\Retail\{Product,Variant};
+use App\Services\Retail\{Access,Lists,Inventory,Accounting};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+
 class ProductController extends Controller {
  private function reference($business){return ['categories'=>DB::table('config_categories')->where('business_id',$business->id)->where('is_active',true)->orderBy('name')->get(),
  'brands'=>DB::table('config_brands')->where('business_id',$business->id)->where('is_active',true)->orderBy('name')->get(),

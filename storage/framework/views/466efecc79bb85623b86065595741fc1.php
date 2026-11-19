@@ -1,1 +1,0 @@
-<?php /**PATH C:\laragon\www\saas\resources\views/portals/login.blade.php ENDPATH**/ ?>

@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Public\Business\Admin\Retail\ReportController;
 Route::get('finance/ledger/general-ledger',[ReportController::class,'ledger'])->name('reports.ledger');
 Route::get('finance/financial-reports/cash-flow',[ReportController::class,'cash'])->name('reports.cash');

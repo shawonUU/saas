@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Public\Business\Admin;
+namespace App\Http\Controllers\Public\Business\Admin\Authorization;
 
 use App\Http\Controllers\Controller;
 use App\Models\{

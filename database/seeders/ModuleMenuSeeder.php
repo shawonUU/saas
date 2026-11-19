@@ -89,33 +89,11 @@ class ModuleMenuSeeder extends Seeder
                 ['table-bookings','Table Reservations','টেবিল রিজার্ভেশন','calendar-days',[[ 'reservation-list','Reservation List','রিজার্ভেশন তালিকা',null],['new-reservation','New Reservation','নতুন রিজার্ভেশন',null]]],
                 ['buffet','Buffet','বুফে','salad',[[ 'buffet-sessions','Buffet Sessions','বুফে সেশন',null],['buffet-production','Buffet Production','বুফে প্রোডাকশন',null]]]
             ]],
-            ['pharmacy','Pharmacy','ফার্মেসি','pill',[
-                ['medicines','Medicines','ওষুধ','tablets',[[ 'medicine-list','Medicine List','ওষুধ তালিকা',null],['medicine-categories','Categories','ক্যাটাগরি',null]]],
-                ['medicine-batches','Batches & Expiry','ব্যাচ ও মেয়াদ','calendar-x',[[ 'batch-list','Batch List','ব্যাচ তালিকা',null],['expiry-alerts','Expiry Alerts','মেয়াদ সতর্কতা',null]]],
-                ['dispensing','Dispensing','ওষুধ বিতরণ','hand-heart',[[ 'dispense-list','Dispense List','বিতরণ তালিকা',null],['dispense-returns','Dispense Returns','বিতরণ রিটার্ন',null]]]
-            ]],
-            ['education','Education','শিক্ষা ব্যবস্থাপনা','graduation-cap',[
-                ['students','Students','শিক্ষার্থী','users',[[ 'student-list','Student List','শিক্ষার্থী তালিকা',null],['guardians','Guardians','অভিভাবক',null]]],
-                ['courses','Courses','কোর্স','book-open',[[ 'course-list','Course List','কোর্স তালিকা',null],['batches','Batches','ব্যাচ',null]]],
-                ['classes','Classes','ক্লাস','calendar',[[ 'timetable','Timetable','ক্লাস রুটিন',null],['attendance','Attendance','উপস্থিতি',null]]],
-                ['exams','Exams','পরীক্ষা','clipboard-check',[[ 'exam-schedule','Exam Schedule','পরীক্ষার সূচি',null],['results','Results','ফলাফল',null]]],
-                ['student-fees','Fees','ফি','banknote',[[ 'fee-structure','Fee Structure','ফি কাঠামো',null],['fee-collection','Fee Collection','ফি আদায়',null]]]
-            ]],
-            ['laundry','Laundry','লন্ড্রি','shirt',[
-                ['laundry-orders','Laundry Orders','লন্ড্রি অর্ডার','clipboard-list',[[ 'intake','Intake','কাপড় গ্রহণ',null],['order-tracking','Order Tracking','অর্ডার ট্র্যাকিং',null]]],
-                ['processing','Processing','প্রসেসিং','washing-machine',[[ 'wash-queue','Wash Queue','ধোয়ার তালিকা',null],['quality-check','Quality Check','মান যাচাই',null]]],
-                ['laundry-delivery','Delivery','ডেলিভারি','bike',[[ 'ready-orders','Ready Orders','প্রস্তুত অর্ডার',null],['delivered-orders','Delivered Orders','ডেলিভারি সম্পন্ন',null]]]
-            ]],
             ['hr','Human Resources','মানবসম্পদ','users-round',[
                 ['employees','Employees','কর্মী','user-round',[[ 'employee-list','Employee List','কর্মী তালিকা',null],['departments','Departments','বিভাগ',null]]],
                 ['attendance','Attendance','উপস্থিতি','calendar-check',[[ 'daily-attendance','Daily Attendance','দৈনিক উপস্থিতি',null],['rosters','Rosters','ডিউটি রোস্টার',null]]],
                 ['leave','Leave','ছুটি','calendar-off',[[ 'leave-requests','Leave Requests','ছুটির আবেদন',null],['leave-policies','Leave Policies','ছুটির নীতি',null]]],
                 ['payroll','Payroll','বেতন','wallet',[[ 'salary-structure','Salary Structure','বেতন কাঠামো',null],['payroll-runs','Payroll Runs','বেতন প্রক্রিয়া',null]]]
-            ]],
-            ['assets','Assets & Maintenance','সম্পদ ও রক্ষণাবেক্ষণ','wrench',[
-                ['fixed-assets','Fixed Assets','স্থায়ী সম্পদ','package',[[ 'asset-register','Asset Register','সম্পদ রেজিস্টার',null],['asset-assignments','Asset Assignments','সম্পদ বরাদ্দ',null]]],
-                ['maintenance','Maintenance','রক্ষণাবেক্ষণ','hammer',[[ 'maintenance-requests','Maintenance Requests','রক্ষণাবেক্ষণ আবেদন',null],['maintenance-schedule','Maintenance Schedule','রক্ষণাবেক্ষণ সূচি',null]]],
-                ['depreciation','Depreciation','অবচয়','chart-no-axes-column-decreasing',[[ 'depreciation-schedule','Depreciation Schedule','অবচয় সূচি',null]]]
             ]],
             ['support','Support','সহায়তা','life-buoy',[
                 ['tickets','Support Tickets','সাপোর্ট টিকিট','ticket',[[ 'ticket-list','Ticket List','টিকিট তালিকা',null],['new-ticket','New Ticket','নতুন টিকিট',null]]],
@@ -161,15 +139,6 @@ class ModuleMenuSeeder extends Seeder
                 'ecommerce'=>['storefront'=>'*','catalog'=>'*','online-orders'=>'*','checkout'=>'*','online-marketing'=>'*'],
                 'hr'=>['employees'=>'*','attendance'=>'*','payroll'=>'*']
             ],
-            'online'=>[
-                'sales'=>['orders'=>'*','quotations'=>'*','invoices'=>'*','returns'=>'*','customers'=>'*','discounts'=>'*','reports'=>'*'],
-                'pos'=>['counter'=>'*','registers'=>'*','shifts'=>'*'],
-                'ecommerce'=>['storefront'=>'*','catalog'=>'*','online-orders'=>'*','checkout'=>'*','online-marketing'=>'*'],
-                'inventory'=>['stock'=>'*','movements'=>'*','masters'=>'*'],
-                'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
-                'finance'=>['chart-of-accounts'=>'*','ledger'=>'*','receivables'=>'*','payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
-                'logistics'=>['shipments'=>'*','delivery'=>'*','cod'=>'*'],
-            ],
             'food'=>[
                 'sales'=>['orders'=>'*','invoices'=>'*','customers'=>'*','discounts'=>'*','reports'=>'*'],
                 'pos'=>['counter'=>'*','registers'=>'*','shifts'=>'*'],
@@ -179,19 +148,6 @@ class ModuleMenuSeeder extends Seeder
                 'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
                 'finance'=>['payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
                 'hr'=>['employees'=>'*','attendance'=>'*','payroll'=>'*']
-            ],
-            'pharmacy'=>[
-                'pharmacy'=>['medicines'=>'*','medicine-batches'=>'*','dispensing'=>'*'],
-                'sales'=>['orders'=>'*','invoices'=>'*','returns'=>'*','customers'=>'*'],
-                'pos'=>['counter'=>'*','registers'=>'*','shifts'=>'*'],
-                'inventory'=>['stock'=>'*','movements'=>'*','masters'=>'*'],
-                'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
-                'finance'=>['payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*']
-            ],
-            'education'=>[
-                'education'=>['students'=>'*','courses'=>'*','classes'=>'*','exams'=>'*','student-fees'=>'*'],
-                'finance'=>['receivables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
-                'hr'=>['employees'=>'*','attendance'=>'*','leave'=>'*','payroll'=>'*'],
             ],
         ];
 
@@ -209,8 +165,6 @@ class ModuleMenuSeeder extends Seeder
             // 'pet-shop'=>['Pet Shop','পোষাপ্রাণীর দোকান','retail'],
             // 'wholesale'=>['Wholesale','পাইকারি ব্যবসা','wholesale'],
             // 'distribution'=>['Distribution Business','ডিস্ট্রিবিউশন ব্যবসা','wholesale'],
-            'ecommerce'=>['E-Commerce','ই-কমার্স','online'],
-            'online-store'=>['Online Store','অনলাইন দোকান','online'],
             // 'restaurant'=>['Restaurant','রেস্টুরেন্ট','food'],
             // 'cafe'=>['Cafe','ক্যাফে','food'],
             // 'bakery'=>['Bakery','বেকারি','food'],
@@ -230,11 +184,6 @@ class ModuleMenuSeeder extends Seeder
             // 'dental-clinic'=>['Dental Clinic','ডেন্টাল ক্লিনিক','clinic'],
             // 'physiotherapy'=>['Physiotherapy','ফিজিওথেরাপি','clinic'],
             // 'diagnostic-center'=>['Diagnostic Center','ডায়াগনস্টিক সেন্টার','diagnostic'],
-            // 'pharmacy'=>['Pharmacy','ফার্মেসি','pharmacy'],
-            // 'school'=>['School','স্কুল','education'],
-            // 'college'=>['College','কলেজ','education'],
-            // 'coaching-center'=>['Coaching Center','কোচিং সেন্টার','education'],
-            // 'training-center'=>['Training Center','প্রশিক্ষণ কেন্দ্র','education'],
             // 'manufacturing'=>['Manufacturing','উৎপাদন শিল্প','factory'],
             // 'garments-factory'=>['Garments Factory','পোশাক কারখানা','factory'],
             // 'food-factory'=>['Food Processing Factory','খাদ্য প্রক্রিয়াজাত কারখানা','factory'],
@@ -256,8 +205,6 @@ class ModuleMenuSeeder extends Seeder
             // 'agriculture'=>['Agriculture','কৃষি ব্যবসা','agriculture'],
             // 'dairy-farm'=>['Dairy Farm','দুগ্ধ খামার','agriculture'],
             // 'livestock-farm'=>['Livestock Farm','পশুর খামার','agriculture'],
-            // 'laundry'=>['Laundry','লন্ড্রি','laundry'],
-            // 'dry-cleaning'=>['Dry Cleaning','ড্রাই ক্লিনিং','laundry'],
             // 'service'=>['Service Business','সেবা ব্যবসা','services'],
             // 'repair-service'=>['Repair Service','মেরামত সেবা','services'],
             // 'it-service'=>['IT Services','আইটি সেবা','services'],
