@@ -1,12 +1,14 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Purchase;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\{Purchase,PurchaseItem,PurchaseReturn,Variant,Payment};
+use App\Models\Purchase\PurchaseReturn;
+use App\Models\Retail\{Purchase,PurchaseItem,Variant,Payment};
 use App\Services\Retail\{Accounting,Access,Inventory,Lists};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+
 class PurchaseReturnController extends Controller {
  public function index(Request $r,Access $a){$v=$a->check($r,'purchasing','purchase-returns','purchase-return-list');$b=$v['business'];$v['records']=Lists::page(PurchaseReturn::where('business_id',$b->id),$r,['id'=>'number','purchase_id'=>'number','variant_id'=>'number','quantity'=>'number','amount'=>'number','created_at'=>'date']);$v['purchases']=Purchase::with('items.variant')->where('business_id',$b->id)->latest()->limit(100)->get();return view('public.business.admin.retail.purchase_returns.index',$v);}
  public function store(Request $r,Access $a){$v=$a->check($r,'purchasing','purchase-returns','purchase-return-list','create');$b=$v['business'];$d=$r->validate(['purchase_item_id'=>'required|integer','quantity'=>'required|numeric|gt:0|max:999999','reason'=>'nullable|string|max:255','refund_method'=>'required|in:cash,bank']);DB::transaction(function()use($b,$d){$item=PurchaseItem::where('business_id',$b->id)->lockForUpdate()->findOrFail($d['purchase_item_id']);$p=Purchase::where('business_id',$b->id)->lockForUpdate()->findOrFail($item->purchase_id);$returned=(float)PurchaseReturn::where('business_id',$b->id)->where('purchase_item_id',$item->id)->sum('quantity');$qty=round((float)$d['quantity'],3);if($qty>round((float)$item->quantity-$returned,3))throw ValidationException::withMessages(['quantity'=>'Return exceeds purchased quantity.']);$variant=Variant::where('business_id',$b->id)->lockForUpdate()->findOrFail($item->variant_id);$amount=round($qty*(float)$item->cost,2);if($amount<=0)throw ValidationException::withMessages(['quantity'=>'Return value must be positive.']);
