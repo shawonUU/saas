@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\Retail;
+namespace App\Services;
 use App\Models\Business;
 use App\Models\Retail\{Integration,Order,CourierShipment};
 use Illuminate\Support\Facades\Http;

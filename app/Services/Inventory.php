@@ -1,8 +1,9 @@
 <?php
-namespace App\Services\Retail;
+namespace App\Services;
 use App\Models\Business;
 use App\Models\Retail\{Variant,StockMovement,Warehouse,WarehouseStock};
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 class Inventory {
  public function main(Business $business):Warehouse {
   return Warehouse::firstOrCreate(['business_id'=>$business->id,'code'=>'MAIN'],['name'=>'Main Warehouse','is_default'=>true,'is_active'=>true]);

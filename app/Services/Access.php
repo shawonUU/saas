@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\Retail;
+namespace App\Services;
 use App\Models\Business;
 use App\Services\BusinessNavigation;
 use Illuminate\Http\Request;

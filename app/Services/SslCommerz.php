@@ -1,11 +1,14 @@
 <?php
-namespace App\Services\Retail;
+namespace App\Services;
+use App\Models\Accounts\GatewayPayment;
 use App\Models\Business;
-use App\Models\Retail\{Order,Integration,GatewayPayment};
-use Illuminate\Support\Facades\Http;
+use App\Models\Retail\Integration;
+use App\Models\Sales\Order;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+
 class SslCommerz {
  public function integration(Business $b):Integration {
   $i=Integration::where('business_id',$b->id)->where('provider','sslcommerz')->where('is_active',true)->first();

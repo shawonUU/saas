@@ -1,6 +1,7 @@
 <?php
-namespace App\Services\Retail;
+namespace App\Services;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 class Lists {
  public static function page($query,Request $request,array $columns) {
   $search=trim(mb_substr((string)$request->query('q',''),0,100));

@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Accounts;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\GatewayPayment;
-use App\Services\Retail\{Access,Lists,Accounting};
+use App\Models\Accounts\GatewayPayment;
+use App\Services\Access;
+use App\Services\Retail\Accounting;
+use App\Services\Retail\Lists;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;

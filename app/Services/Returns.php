@@ -1,9 +1,14 @@
 <?php
-namespace App\Services\Retail;
+namespace App\Services;
 use App\Models\Business;
-use App\Models\Retail\{Order,OrderItem,SaleReturn,ReturnItem,Variant};
+use App\Models\Configurations\Variant;
+use App\Models\Sales\Order;
+use App\Models\Sales\OrderItem;
+use App\Models\Sales\ReturnItem;
+use App\Models\Sales\SaleReturn;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+
 class Returns {
  public function create(Business $business,array $data):SaleReturn {
   return DB::transaction(function()use($business,$data){

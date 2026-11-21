@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Public\Business\Admin\AuthorizationController;
-use App\Http\Controllers\Public\Business\Admin\BusinessUserController;
+use App\Http\Controllers\Public\Business\Admin\Authorization\AuthorizationController;
+use App\Http\Controllers\Public\Business\Admin\Authorization\BusinessUserController;
 use App\Http\Controllers\Public\Business\Admin\UserController;
 use App\Http\Controllers\Public\Business\Admin\WorkspaceController;
 use Illuminate\Support\Facades\Route;

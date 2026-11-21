@@ -1,7 +1,7 @@
 <?php
-namespace App\Services\Retail;
+namespace App\Services;
 use App\Models\Business;
-use App\Models\Retail\{Account,Journal,JournalLine};
+use App\Models\Accounts\{Account,Journal,JournalLine};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 class Accounting {

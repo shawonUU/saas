@@ -1,7 +1,7 @@
 <?php
+use App\Http\Controllers\Public\Business\Admin\Configurations\ProductController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Public\Business\Admin\Retail\ProductController;
 Route::get('configurations/products',[ProductController::class,'index'])->name('products.index');
 Route::get('configurations/products/create',[ProductController::class,'create'])->name('products.create');
 Route::post('configurations/products',[ProductController::class,'store'])->name('products.store');

@@ -1,10 +1,14 @@
 <?php
-namespace App\Services\Retail;
+namespace App\Services;
 use App\Models\Business;
-use App\Models\Retail\{Variant,Order,OrderItem,Discount,Payment};
+use App\Models\Configurations\Variant;
+use App\Models\Sales\Discount;
+use App\Models\Sales\Order;
+use App\Models\Sales\OrderItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+
 class Sales {
  public function create(Business $business,array $data,string $channel='admin'):Order {
   return DB::transaction(function()use($business,$data,$channel){

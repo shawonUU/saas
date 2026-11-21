@@ -1,9 +1,12 @@
 <?php
-namespace App\Services\Retail;
+namespace App\Services;
 use App\Models\Business;
-use App\Models\Retail\{Purchase,PurchaseItem,Variant};
-use Illuminate\Support\Str;
+use App\Models\Configurations\Variant;
+use App\Models\Purchase\Purchase;
+use App\Models\Purchase\PurchaseItem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 class Purchases {
  public function create(Business $business,array $data):Purchase {
   return DB::transaction(function()use($business,$data){$total=0;$items=[];
