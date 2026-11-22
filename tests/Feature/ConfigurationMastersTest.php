@@ -2,10 +2,22 @@
 
 namespace Tests\Feature;
 
-use App\Models\{Business, BusinessCategory, BusinessCategoryMenu, BusinessCategoryModule, BusinessRole, BusinessUser, BusinessUserAccess, Menu, Module, User};
-use App\Models\Configurations\{Supplier, Customer, Category, SubCategory};
+use App\Models\Business;
+use App\Models\BusinessCategory;
+use App\Models\BusinessCategoryMenu;
+use App\Models\BusinessCategoryModule;
+use App\Models\BusinessCustomer;
+use App\Models\BusinessRole;
+use App\Models\BusinessUser;
+use App\Models\BusinessUserAccess;
+use App\Models\Configurations\Category;
+use App\Models\Configurations\Supplier;
+use App\Models\Menu;
+use App\Models\Module;
+use App\Models\User;
 use App\Services\BusinessSubscriptionService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
@@ -38,7 +50,7 @@ class ConfigurationMastersTest extends TestCase
         }
         foreach (['customers','suppliers','units','sizes','colors','brands','categories',
             'sub_categories','taxes','currencies','payment_methods','shipping_methods'] as $name) {
-            $this->assertTrue(\Illuminate\Support\Facades\Route::has('store.admin.configurations.'.$name.'.index'));
+            $this->assertTrue(Route::has('business.admin.configurations.'.$name.'.index'));
         }
     }
 
@@ -84,7 +96,7 @@ class ConfigurationMastersTest extends TestCase
 
     public function test_customer_and_supplier_use_separate_models_and_login_table_is_untouched(): void
     {
-        $this->assertSame('config_customers', (new Customer)->getTable());
+        $this->assertSame('config_customers', (new BusinessCustomer)->getTable());
         $this->assertSame('config_suppliers', (new Supplier)->getTable());
         $this->assertTrue(Schema::hasTable('business_customers'));
     }

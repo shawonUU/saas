@@ -128,7 +128,7 @@ class SubCategoryController extends Controller
             'filters' => $filters, 'search' => $search, 'sort' => $sort, 'dir' => $dir,
             'perPage' => $perPage, 'permissions' => $permissions,
             'categories' => Category::where('business_id', $tenant->id)->where('is_active', true)->orderBy('name')->get(['id', 'name']),
-            'routePrefix' => 'store.admin.configurations.'.str_replace('-', '_', self::SLUG),
+            'routePrefix' => 'business.admin.configurations.'.str_replace('-', '_', self::SLUG),
         ]);
     }
 
@@ -152,7 +152,7 @@ class SubCategoryController extends Controller
         $data = $this->validated($request, $tenant);
         SubCategory::create($data + ['business_id' => $tenant->id,
                 'approval_status' => 'Approved', 'approved_at' => now()]);
-        return redirect()->route('store.admin.configurations.'.str_replace('-', '_', self::SLUG).'.index',
+        return redirect()->route('business.admin.configurations.'.str_replace('-', '_', self::SLUG).'.index',
             ['business' => $business])->with('success', t('Created successfully.', 'সফলভাবে তৈরি হয়েছে।'));
     }
 

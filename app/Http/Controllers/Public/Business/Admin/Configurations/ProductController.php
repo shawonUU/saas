@@ -33,10 +33,10 @@ class ProductController extends Controller {
  }
  public function store(Request $r,Access $a){$v=$a->check($r,'configurations','products',null,'create');$b=$v['business'];$data=$this->rules($r,$b);
   DB::transaction(function()use($b,$data){$product=Product::create(array_merge(collect($data)->except('variants')->all(),['business_id'=>$b->id]));$this->saveVariants($b,$product,$data['variants']);});
-  return redirect()->route('store.admin.retail.products.index')->with('success',t('Product saved.','পণ্য সংরক্ষিত হয়েছে।'));}
+  return redirect()->route('business.admin.retail.products.index')->with('success',t('Product saved.','পণ্য সংরক্ষিত হয়েছে।'));}
  public function update(Request $r,int $record,Access $a){$v=$a->check($r,'configurations','products',null,'update');$b=$v['business'];$product=Product::where('business_id',$b->id)->findOrFail($record);$data=$this->rules($r,$b,$product);
   DB::transaction(function()use($b,$product,$data){$product->update(collect($data)->except('variants')->all());$this->saveVariants($b,$product,$data['variants']);});
-  return redirect()->route('store.admin.retail.products.index')->with('success',t('Product updated.','পণ্য আপডেট হয়েছে।'));}
+  return redirect()->route('business.admin.retail.products.index')->with('success',t('Product updated.','পণ্য আপডেট হয়েছে।'));}
  private function saveVariants($b,Product $product,array $rows):void {
   foreach($rows as $row){$id=$row['id']??null;$fields=['sku'=>$row['sku'],'size_id'=>$row['size_id']??null,'color_id'=>$row['color_id']??null,'price'=>$row['price'],'cost'=>$row['cost']];
    if($id){$v=Variant::where('business_id',$b->id)->where('product_id',$product->id)->findOrFail($id);if((float)$v->stock>0 && round((float)$v->cost,2)!==round((float)$fields['cost'],2))throw \Illuminate\Validation\ValidationException::withMessages(['variants'=>'Cost of existing stock is valued through receiving; post a purchase instead of directly editing its cost.']);$v->update($fields);continue;}

@@ -1,4 +1,6 @@
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 <!doctype html>
 <html lang="{{ session('portal_lang', 'en') }}" data-theme="light">
 <head>
@@ -9,15 +11,15 @@
 
     @php
         $routeBusiness = request()->route('business');
-        $store = $currentBusiness ?? $business ?? $shop ?? request()->attributes->get('business');
-        $store = is_object($store) ? $store : null;
+        $business = $currentBusiness ?? $business ?? $shop ?? request()->attributes->get('business');
+        $business = is_object($business) ? $business : null;
         $storeCode = is_object($routeBusiness) ? (data_get($routeBusiness,'slug') ?? data_get($routeBusiness,'code')) : $routeBusiness;
-        $storeCode = $storeCode ?: (data_get($store,'slug') ?? data_get($store,'code'));
-        $storeName = data_get($store,'name') ?? data_get($store,'business_name') ?? ($storeCode ? ucwords(str_replace(['-','_'],' ',$storeCode)) : 'My Store');
-        $logoPath = data_get($store,'logo') ?? data_get($store,'logo_path') ?? data_get($store,'business_logo');
+        $storeCode = $storeCode ?: (data_get($business,'slug') ?? data_get($business,'code'));
+        $storeName = data_get($business,'name') ?? data_get($business,'business_name') ?? ($storeCode ? ucwords(str_replace(['-','_'],' ',$storeCode)) : 'My Store');
+        $logoPath = data_get($business,'logo') ?? data_get($business,'logo_path') ?? data_get($business,'business_logo');
         $storeLogo = $logoPath ? (preg_match('~^https?://~i',$logoPath) ? $logoPath : (str_starts_with($logoPath,'/') ? url($logoPath) : (str_starts_with($logoPath,'storage/') || str_starts_with($logoPath,'images/') ? asset($logoPath) : asset('storage/'.$logoPath)))) : null;
         $adminUser = Auth::guard('business_admin')->user();
-        $dashboardUrl = $storeCode && Route::has('store.admin.dashboard') ? route('store.admin.dashboard',['business'=>$storeCode]) : url('/');
+        $dashboardUrl = $storeCode && Route::has('business.admin.dashboard') ? route('business.admin.dashboard',['business'=>$storeCode]) : url('/');
         $storefrontUrl = request()->getScheme().'://'.preg_replace('/^admin\./','',request()->getHttpHost());
     @endphp
     <title>{{ $title ?? t('Dashboard','ড্যাশবোর্ড') }} | {{ $storeName }}</title>
@@ -413,15 +415,15 @@
             </span>
         </a>
         <nav id="site-primary-nav" class="nav-links" aria-label="Store navigation">
-            <a class="{{ request()->routeIs('store.admin.dashboard') ? 'active' : '' }}" href="{{ $dashboardUrl }}">{{ t('Dashboard','ড্যাশবোর্ড') }}</a>
-            @if(Route::has('store.admin.products.index'))
-                <a href="{{ route('store.admin.products.index',['business'=>$storeCode]) }}">{{ t('Products','পণ্য') }}</a>
+            <a class="{{ request()->routeIs('business.admin.dashboard') ? 'active' : '' }}" href="{{ $dashboardUrl }}">{{ t('Dashboard','ড্যাশবোর্ড') }}</a>
+            @if(Route::has('business.admin.products.index'))
+                <a href="{{ route('business.admin.products.index',['business'=>$storeCode]) }}">{{ t('Products','পণ্য') }}</a>
             @endif
-            @if(Route::has('store.admin.orders.index'))
-                <a href="{{ route('store.admin.orders.index',['business'=>$storeCode]) }}">{{ t('Orders','অর্ডার') }}</a>
+            @if(Route::has('business.admin.orders.index'))
+                <a href="{{ route('business.admin.orders.index',['business'=>$storeCode]) }}">{{ t('Orders','অর্ডার') }}</a>
             @endif
-            @if(Route::has('store.admin.settings.index'))
-                <a href="{{ route('store.admin.settings.index',['business'=>$storeCode]) }}">{{ t('Settings','সেটিংস') }}</a>
+            @if(Route::has('business.admin.settings.index'))
+                <a href="{{ route('business.admin.settings.index',['business'=>$storeCode]) }}">{{ t('Settings','সেটিংস') }}</a>
             @endif
             <a href="{{ $storefrontUrl }}" target="_blank" rel="noopener noreferrer">{{ t('View Store','স্টোর দেখুন') }} ↗</a>
         </nav>
@@ -439,8 +441,8 @@
                     <span class="admin-avatar">{{ mb_strtoupper(mb_substr($adminUser->name ?? 'A',0,1)) }}</span>
                     <span><span class="admin-name" style="display:block">{{ $adminUser->name ?? 'Admin' }}</span><span class="admin-role">{{ t('Administrator','অ্যাডমিন') }}</span></span>
                 </div>
-                @if(Route::has('store.admin.logout'))
-                    <form method="POST" action="{{ route('store.admin.logout',['business'=>$storeCode]) }}">@csrf<button type="submit" class="admin-logout">{{ t('Log out','লগআউট') }}</button></form>
+                @if(Route::has('business.admin.logout'))
+                    <form method="POST" action="{{ route('business.admin.logout',['business'=>$storeCode]) }}">@csrf<button type="submit" class="admin-logout">{{ t('Log out','লগআউট') }}</button></form>
                 @endif
             @endif
         </div>

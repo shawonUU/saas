@@ -11,8 +11,8 @@ class PortalAuth
         $logins = [
             'authority' => 'authority.login',
             'saas_user' => 'saas.login',
-            'business_admin' => 'store.admin.login',
-            'business_customer' => 'store.customer.login',
+            'business_admin' => 'business.admin.login',
+            'business_customer' => 'business.customer.login',
         ];
         abort_unless(isset($logins[$guard]), 403);
         $tenantGuard = in_array($guard, ['business_admin', 'business_customer'], true);

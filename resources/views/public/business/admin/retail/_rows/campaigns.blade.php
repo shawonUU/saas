@@ -1,1 +1,1 @@
-<form method="POST" action="{{ route('store.admin.retail.marketing.toggle',$record->id) }}">@csrf<button class="ret-btn alt">{{ $record->is_active?t('Disable','বন্ধ'):t('Enable','চালু') }}</button></form>
+<form method="POST" action="{{ route('business.admin.retail.marketing.toggle',$record->id) }}">@csrf<button class="ret-btn alt">{{ $record->is_active?t('Disable','বন্ধ'):t('Enable','চালু') }}</button></form>

@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Route;
 class PortalPasswordController extends Controller
 {
     private function portal(): array
@@ -19,8 +23,8 @@ class PortalPasswordController extends Controller
         $mapping = [
             'authority' => ['authority', 'authority_users', AuthorityUser::class],
             'saas_user' => ['saas', 'saas_users', SaasUser::class],
-            'business_admin' => ['store.admin', 'business_users', BusinessUser::class],
-            'business_customer' => ['store.customer', 'business_customers', BusinessCustomer::class],
+            'business_admin' => ['business.admin', 'business_users', BusinessUser::class],
+            'business_customer' => ['business.customer', 'business_customers', BusinessCustomer::class],
         ];
         abort_unless(isset($mapping[$guard]), 404);
         if (in_array($guard, ['business_admin', 'business_customer'], true)) abort_unless(currentBusiness(), 404);

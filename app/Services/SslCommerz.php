@@ -20,7 +20,7 @@ class SslCommerz {
   if($amount<1)throw ValidationException::withMessages(['payment'=>'No payable balance or below minimum gateway amount.']);
   $tran='SAAS'.Str::upper(Str::random(22));
   $transaction=GatewayPayment::create(['business_id'=>$b->id,'order_id'=>$order->id,'tran_id'=>$tran,'status'=>'initiated','amount'=>$amount]);
-  $callback=route('store.customer.gateway.callback',['business'=>$b->domain]);
+  $callback=route('business.customer.gateway.callback',['business'=>$b->domain]);
   $response=Http::asForm()->timeout(18)->post($this->base($i).'/gwprocess/v4/api.php',[
    'store_id'=>$i->settings['store_id'],'store_passwd'=>$i->settings['store_password'],'total_amount'=>number_format($amount,2,'.',''),
    'currency'=>'BDT','tran_id'=>$tran,'success_url'=>$callback,'fail_url'=>$callback,'cancel_url'=>$callback,'ipn_url'=>$callback,

@@ -51,9 +51,9 @@ html[data-theme="dark"] .workspace-layout{--ws-panel:#1c2435;--ws-bg:#111827;--w
         }
     }
     $adminLink=function($child) use($featureParams,$businessKey){
-        if($child->route==='/dashboard')return route('store.admin.dashboard',['business'=>$businessKey]);
+        if($child->route==='/dashboard')return route('business.admin.dashboard',['business'=>$businessKey]);
         if(!isset($featureParams[$child->id]))return '#';
-        return route('store.admin.feature',$featureParams[$child->id]);
+        return route('business.admin.feature',$featureParams[$child->id]);
     };
 ?>
 

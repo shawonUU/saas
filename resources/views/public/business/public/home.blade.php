@@ -6,12 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @php
-    $store=$business ?? $currentBusiness ?? $shop ?? null;
-    $storeName=data_get($store,'name') ?? data_get($store,'business_name') ?? 'My Store';
-    $storeCode=data_get($store,'code') ?? data_get($store,'slug') ?? 'store';
-    $logoPath=data_get($store,'logo') ?? data_get($store,'logo_path') ?? data_get($store,'business_logo');
+    $business=$business ?? $currentBusiness ?? $shop ?? null;
+    $storeName=data_get($business,'name') ?? data_get($business,'business_name') ?? 'My Store';
+    $storeCode=data_get($business,'code') ?? data_get($business,'slug') ?? 'store';
+    $logoPath=data_get($business,'logo') ?? data_get($business,'logo_path') ?? data_get($business,'business_logo');
     $storeLogo=$logoPath ? (preg_match('~^https?://~i',$logoPath) ? $logoPath : (str_starts_with($logoPath,'/') ? url($logoPath) : (str_starts_with($logoPath,'storage/') || str_starts_with($logoPath,'images/') ? asset($logoPath) : asset('storage/'.$logoPath)))) : null;
-    $brandColor=data_get($store,'brand_color') ?? data_get($store,'primary_color') ?? data_get($store,'theme_color') ?? '#5145e5';
+    $brandColor=data_get($business,'brand_color') ?? data_get($business,'primary_color') ?? data_get($business,'theme_color') ?? '#5145e5';
     $brandColor=preg_match('/^#[0-9a-fA-F]{6}$/',(string)$brandColor) ? $brandColor : '#5145e5';
     $demoCollections=[
         ['id'=>'fashion','en'=>"Women's Fashion",'bn'=>'নারীদের ফ্যাশন','icon'=>'👗','products'=>[

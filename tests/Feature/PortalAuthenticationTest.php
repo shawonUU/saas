@@ -1,8 +1,15 @@
 <?php
 namespace Tests\Feature;
-use App\Models\{AuthorityUser,Business,BusinessCategory,BusinessCustomer,BusinessRole,BusinessUser,SaasUser,User};
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\BusinessCategory;
+use App\Models\User;
+use App\Models\Business;
+use App\Models\SaasUser;
+use App\Models\BusinessUser;
+use App\Models\AuthorityUser;
+use App\Models\BusinessRole;
+use App\Models\BusinessCustomer;
 class PortalAuthenticationTest extends TestCase
 {
     use RefreshDatabase;

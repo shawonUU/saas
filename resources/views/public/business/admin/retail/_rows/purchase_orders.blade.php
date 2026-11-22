@@ -1,1 +1,1 @@
-<a class="ret-btn alt" href="{{ route('store.admin.retail.purchase_orders.show',$record->id) }}">{{ t('Open','খুলুন') }}</a>
+<a class="ret-btn alt" href="{{ route('business.admin.retail.purchase_orders.show',$record->id) }}">{{ t('Open','খুলুন') }}</a>

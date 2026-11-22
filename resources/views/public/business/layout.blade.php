@@ -394,8 +394,8 @@
             @php
                 $businessCode = request()->route('business');
                 $portalDashboard = Auth::guard('authority')->check() && request()->getHost() === 'admin.'.config('saas.domain') ? route('authority.dashboard') :
-                    (Auth::guard('business_admin')->check() && $businessCode && str_starts_with(request()->getHost(),'admin.') ? route('store.admin.dashboard',['business'=>$businessCode]) :
-                    (Auth::guard('business_customer')->check() && $businessCode ? route('store.customer.dashboard',['business'=>$businessCode]) :
+                    (Auth::guard('business_admin')->check() && $businessCode && str_starts_with(request()->getHost(),'admin.') ? route('business.admin.dashboard',['business'=>$businessCode]) :
+                    (Auth::guard('business_customer')->check() && $businessCode ? route('business.customer.dashboard',['business'=>$businessCode]) :
                     (Auth::guard('saas_user')->check() ? route('saas.dashboard') : null)));
             @endphp
             @if($portalDashboard)

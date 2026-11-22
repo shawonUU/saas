@@ -45,7 +45,7 @@
         </label>
     </div>
     <nav class="ws-side-scroll" aria-label="<?php echo e(t('Business modules','ব্যবসার মডিউল')); ?>">
-        <a class="ws-nav-dashboard <?php echo e(request()->routeIs('store.admin.dashboard')?'active':''); ?>" href="<?php echo e(route('store.admin.dashboard',['business'=>$sideBusinessKey])); ?>" <?php if(request()->routeIs('store.admin.dashboard')): ?> aria-current="page" <?php endif; ?>>
+        <a class="ws-nav-dashboard <?php echo e(request()->routeIs('business.admin.dashboard')?'active':''); ?>" href="<?php echo e(route('business.admin.dashboard',['business'=>$sideBusinessKey])); ?>" <?php if(request()->routeIs('business.admin.dashboard')): ?> aria-current="page" <?php endif; ?>>
             <svg class="ws-svg" aria-hidden="true"><use href="#rs-i-grid"/></svg><span><?php echo e(t('Dashboard','ড্যাশবোর্ড')); ?></span>
         </a>
        
@@ -77,12 +77,12 @@
                                 <div class="ws-children">
                                     <?php $__currentLoopData = $menu->children; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $child): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <?php $childActive = $menuActive && $sideChild === (string)$child->slug; ?>
-                                        <a class="<?php echo e($childActive?'active':''); ?>" href="<?php echo e(route('store.admin.feature',$params+['child'=>$child->slug])); ?>" title="<?php echo e(navName($child)); ?>" <?php if($childActive): ?> aria-current="page" <?php endif; ?>><span><?php echo e(navName($child)); ?></span></a>
+                                        <a class="<?php echo e($childActive?'active':''); ?>" href="<?php echo e(route('business.admin.feature',$params+['child'=>$child->slug])); ?>" title="<?php echo e(navName($child)); ?>" <?php if($childActive): ?> aria-current="page" <?php endif; ?>><span><?php echo e(navName($child)); ?></span></a>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>
                             </details>
                         <?php else: ?>
-                            <a class="ws-menu-direct <?php echo e($menuActive?'active':''); ?>" href="<?php echo e(route('store.admin.feature',$params)); ?>" title="<?php echo e(navName($menu)); ?>" <?php if($menuActive): ?> aria-current="page" <?php endif; ?>>
+                            <a class="ws-menu-direct <?php echo e($menuActive?'active':''); ?>" href="<?php echo e(route('business.admin.feature',$params)); ?>" title="<?php echo e(navName($menu)); ?>" <?php if($menuActive): ?> aria-current="page" <?php endif; ?>>
                                 <svg class="ws-svg" aria-hidden="true"><use href="#rs-i-folder"/></svg><span class="ws-menu-text"><?php echo e(navName($menu)); ?></span>
                             </a>
                         <?php endif; ?>
@@ -98,7 +98,7 @@
         <div class="ws-side-user">
             <span class="ws-user-avatar"><?php echo e(mb_strtoupper(mb_substr($sideUser?->name ?? 'A',0,1))); ?></span>
             <span class="ws-user-text"><strong title="<?php echo e($sideUser?->name ?? 'Admin'); ?>"><?php echo e($sideUser?->name ?? 'Admin'); ?></strong><small><?php echo e(t('Store administrator','স্টোর অ্যাডমিন')); ?></small></span>
-            <form method="POST" action="<?php echo e(route('store.admin.logout',['business'=>$sideBusinessKey])); ?>"><?php echo csrf_field(); ?>
+            <form method="POST" action="<?php echo e(route('business.admin.logout',['business'=>$sideBusinessKey])); ?>"><?php echo csrf_field(); ?>
                 <button class="ws-signout" type="submit" title="<?php echo e(t('Log out','লগআউট')); ?>" aria-label="<?php echo e(t('Log out','লগআউট')); ?>"><svg class="ws-svg" aria-hidden="true"><use href="#rs-i-logout"/></svg></button>
             </form>
         </div>

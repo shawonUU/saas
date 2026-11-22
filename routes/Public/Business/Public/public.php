@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 $domain = config('saas.domain');
 
-Route::domain('{business}.'.$domain)->middleware('business.resolve')->name('store.customer.')->group(function () {
+Route::domain('{business}.'.$domain)->middleware('business.resolve')->name('business.customer.')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/shop', [\App\Http\Controllers\Public\Business\Public\ShopController::class, 'index'])->name('shop');
     Route::post('/shop/checkout', [\App\Http\Controllers\Public\Business\Public\ShopController::class, 'checkout'])->middleware('throttle:15,1')->name('shop.checkout');
@@ -23,8 +23,8 @@ Route::domain('{business}.'.$domain)->middleware('business.resolve')->name('stor
             return view('portals.dashboard', [
                 'title' => $business->name.' · Customer', 'user' => Auth::guard('business_customer')->user(),
                 'subtitle' => t('My customer account', 'আমার কাস্টমার অ্যাকাউন্ট'),
-                'logoutUrl' => route('store.customer.logout', ['business' => $business->domain]),
-                'links' => [[t('Store home', 'স্টোর হোম'), route('store.customer.home', ['business' => $business->domain])]],
+                'logoutUrl' => route('business.customer.logout', ['business' => $business->domain]),
+                'links' => [[t('Store home', 'স্টোর হোম'), route('business.customer.home', ['business' => $business->domain])]],
             ]);
         })->name('dashboard');
     });

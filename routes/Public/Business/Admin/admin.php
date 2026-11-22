@@ -11,7 +11,7 @@ $domain=config('saas.domain');
 
 Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->group(function(){
     Route::middleware(['portal.auth:business_admin', 'auth.session'])->group(function(){
-        Route::get('/dashboard',[WorkspaceController::class,'dashboard'])->name('store.admin.dashboard');
+        Route::get('/dashboard',[WorkspaceController::class,'dashboard'])->name('business.admin.dashboard');
     });
 });
 
@@ -28,7 +28,7 @@ Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->grou
         });
 
         // Independent CRUD route files; deliberately registered before the generic feature route.
-        Route::prefix('configurations')->name('store.admin.configurations.')->group(function () {
+        Route::prefix('configurations')->name('business.admin.configurations.')->group(function () {
             require __DIR__.'/configurations/customers.php';
             require __DIR__.'/configurations/suppliers.php';
             require __DIR__.'/configurations/units.php';
@@ -44,7 +44,7 @@ Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->grou
         });
 
         // Retail & e-commerce modules: explicit independent controller/route files.
-        Route::name('store.admin.retail.')->group(function(){
+        Route::name('business.admin.retail.')->group(function(){
             require __DIR__.'/retail/products.php';
             require __DIR__.'/retail/stock.php';
             require __DIR__.'/retail/orders.php';
@@ -69,7 +69,7 @@ Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->grou
             require __DIR__.'/retail/account_groups.php';
         });
 
-        Route::get('/{module}/{menu}/{child?}',[WorkspaceController::class,'feature'])->name('store.admin.feature');   
+        Route::get('/{module}/{menu}/{child?}',[WorkspaceController::class,'feature'])->name('business.admin.feature');   
 
     });
 });

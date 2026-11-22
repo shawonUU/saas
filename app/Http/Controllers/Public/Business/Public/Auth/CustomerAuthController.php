@@ -17,24 +17,24 @@ class CustomerAuthController extends Controller
     public function loginForm(Request $request){
         $business = $request->attributes->get('current_business');
         if (Auth::guard('business_customer')->check() && (int) Auth::guard('business_customer')->user()->business_id === (int) $business->id) {
-            return redirect()->route('store.customer.dashboard', ['business' => $business->domain]);
+            return redirect()->route('business.customer.dashboard', ['business' => $business->domain]);
         }
         return view('public.business.public.auth.login', [
             'title' => $business->name.' · Customer',
-            'action' => route('store.customer.login.post', ['business' => $business->domain]),
-            'registerUrl' => route('store.customer.register', ['business' => $business->domain]),
-            'forgotUrl' => route('store.customer.password.request', ['business' => $business->domain]),
+            'action' => route('business.customer.login.post', ['business' => $business->domain]),
+            'registerUrl' => route('business.customer.register', ['business' => $business->domain]),
+            'forgotUrl' => route('business.customer.password.request', ['business' => $business->domain]),
         ]);
     }
     public function registerForm(Request $request){
         $business = $request->attributes->get('current_business');
         if (Auth::guard('business_customer')->check() && (int) Auth::guard('business_customer')->user()->business_id === (int) $business->id) {
-            return redirect()->route('store.customer.dashboard', ['business' => $business->domain]);
+            return redirect()->route('business.customer.dashboard', ['business' => $business->domain]);
         }
         return view('public.business.public.auth.register', [
             'title' => $business->name.' · Register',
-            'action' => route('store.customer.register.post', ['business' => $business->domain]),
-            'loginUrl' => route('store.customer.login', ['business' => $business->domain]),
+            'action' => route('business.customer.register.post', ['business' => $business->domain]),
+            'loginUrl' => route('business.customer.login', ['business' => $business->domain]),
         ]);
     }
     public function register(Request $request){
@@ -68,7 +68,7 @@ class CustomerAuthController extends Controller
         });
         Auth::guard('business_customer')->login($customer);
         $request->session()->regenerate();
-        return redirect()->route('store.customer.dashboard', ['business' => $business->domain]);
+        return redirect()->route('business.customer.dashboard', ['business' => $business->domain]);
     }
     public function login(Request $request){
         $business = $request->attributes->get('current_business');
@@ -84,7 +84,7 @@ class CustomerAuthController extends Controller
             'is_active' => true,
         ])) {
             $request->session()->regenerate();
-            return redirect()->route('store.customer.dashboard', ['business' => $business->domain]);
+            return redirect()->route('business.customer.dashboard', ['business' => $business->domain]);
         }
         return back()->withErrors([
             'email' => 'Invalid credentials for this business.',
@@ -94,7 +94,7 @@ class CustomerAuthController extends Controller
         Auth::guard('business_customer')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('store.customer.login', [
+        return redirect()->route('business.customer.login', [
             'business' => $request->route('business'),
         ]);
     }

@@ -90,7 +90,7 @@ class BusinessRegistrationController extends Controller
             // A failed activation rolls back business, role and owner creation.
             $subscriptions->activateBasic($business);
             if (in_array($business->category?->slug, ['retail','grocery','ecommerce','online-store'], true)) {
-                app(\App\Services\Retail\Accounting::class)->ensure($business);
+                app(Accounting::class)->ensure($business);
             }
 
             return $business;

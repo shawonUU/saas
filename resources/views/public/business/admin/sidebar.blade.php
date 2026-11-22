@@ -45,7 +45,7 @@
         </label>
     </div>
     <nav class="ws-side-scroll" aria-label="{{ t('Business modules','ব্যবসার মডিউল') }}">
-        <a class="ws-nav-dashboard {{ request()->routeIs('store.admin.dashboard')?'active':'' }}" href="{{ route('store.admin.dashboard',['business'=>$sideBusinessKey]) }}" @if(request()->routeIs('store.admin.dashboard')) aria-current="page" @endif>
+        <a class="ws-nav-dashboard {{ request()->routeIs('business.admin.dashboard')?'active':'' }}" href="{{ route('business.admin.dashboard',['business'=>$sideBusinessKey]) }}" @if(request()->routeIs('business.admin.dashboard')) aria-current="page" @endif>
             <svg class="ws-svg" aria-hidden="true"><use href="#rs-i-grid"/></svg><span>{{ t('Dashboard','ড্যাশবোর্ড') }}</span>
         </a>
        
@@ -77,12 +77,12 @@
                                 <div class="ws-children">
                                     @foreach($menu->children as $child)
                                         @php $childActive = $menuActive && $sideChild === (string)$child->slug; @endphp
-                                        <a class="{{ $childActive?'active':'' }}" href="{{ route('store.admin.feature',$params+['child'=>$child->slug]) }}" title="{{ navName($child) }}" @if($childActive) aria-current="page" @endif><span>{{ navName($child) }}</span></a>
+                                        <a class="{{ $childActive?'active':'' }}" href="{{ route('business.admin.feature',$params+['child'=>$child->slug]) }}" title="{{ navName($child) }}" @if($childActive) aria-current="page" @endif><span>{{ navName($child) }}</span></a>
                                     @endforeach
                                 </div>
                             </details>
                         @else
-                            <a class="ws-menu-direct {{ $menuActive?'active':'' }}" href="{{ route('store.admin.feature',$params) }}" title="{{ navName($menu) }}" @if($menuActive) aria-current="page" @endif>
+                            <a class="ws-menu-direct {{ $menuActive?'active':'' }}" href="{{ route('business.admin.feature',$params) }}" title="{{ navName($menu) }}" @if($menuActive) aria-current="page" @endif>
                                 <svg class="ws-svg" aria-hidden="true"><use href="#rs-i-folder"/></svg><span class="ws-menu-text">{{ navName($menu) }}</span>
                             </a>
                         @endif
@@ -98,7 +98,7 @@
         <div class="ws-side-user">
             <span class="ws-user-avatar">{{ mb_strtoupper(mb_substr($sideUser?->name ?? 'A',0,1)) }}</span>
             <span class="ws-user-text"><strong title="{{ $sideUser?->name ?? 'Admin' }}">{{ $sideUser?->name ?? 'Admin' }}</strong><small>{{ t('Store administrator','স্টোর অ্যাডমিন') }}</small></span>
-            <form method="POST" action="{{ route('store.admin.logout',['business'=>$sideBusinessKey]) }}">@csrf
+            <form method="POST" action="{{ route('business.admin.logout',['business'=>$sideBusinessKey]) }}">@csrf
                 <button class="ws-signout" type="submit" title="{{ t('Log out','লগআউট') }}" aria-label="{{ t('Log out','লগআউট') }}"><svg class="ws-svg" aria-hidden="true"><use href="#rs-i-logout"/></svg></button>
             </form>
         </div>
