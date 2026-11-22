@@ -1,8 +1,12 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Retail;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\{Quotation,QuotationItem,Variant};
-use App\Services\Retail\{Access,Lists,Sales};
+use App\Models\Retail\Quotation;
+use App\Models\Retail\QuotationItem;
+use App\Models\Configurations\Variant;
+use App\Services\Access;
+use App\Services\Lists;
+use App\Services\Sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

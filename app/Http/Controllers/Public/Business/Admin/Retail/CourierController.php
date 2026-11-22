@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Retail;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\{CourierShipment,Order};
-use App\Services\Retail\{Access,Lists,Pathao};
+use App\Models\Retail\CourierShipment;
+use App\Models\Sales\Order;
+use App\Services\Access;
+use App\Services\Lists;
+use App\Services\Pathao;
 use Illuminate\Http\Request;
 class CourierController extends Controller {
  public function index(Request $r,Access $a){$v=$a->check($r,'ecommerce','online-orders','fulfillment');$v['records']=Lists::page(CourierShipment::where('business_id',$v['business']->id),$r,['id'=>'number','order_id'=>'number','provider'=>'text','consignment_id'=>'text','status'=>'text','created_at'=>'date']);$v['orders']=Order::where('business_id',$v['business']->id)->where('channel','online')->with('items')->latest()->limit(150)->get();return view('public.business.admin.retail.courier.index',$v);}

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Public\Business\Admin\Accounts;
 
 use App\Http\Controllers\Controller;
-use App\Models\Retail\Account;
-use App\Services\Retail\{Access, Lists, Accounting};
+use App\Models\Accounts\Account;
+use App\Services\Access;
+use App\Services\Lists;
+use App\Services\Accounting;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -27,7 +29,7 @@ class AccountController extends Controller
     {
         $v = $a->check($r, 'finance', 'chart-of-accounts', 'account-list', 'create');
         $d = $r->validate([
-            'code' => ['required', 'regex:/^[0-9]{4,8}$/', Rule::unique('retail_accounts')->where('business_id', $v['business']->id)],
+            'code' => ['required', 'regex:/^[0-9]{4,8}$/', Rule::unique('accounts')->where('business_id', $v['business']->id)],
             'name' => 'required|string|max:255',
             'type' => 'required|in:asset,liability,equity,income,expense',
         ]);

@@ -1,8 +1,9 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Sales;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\Variant;
-use App\Services\Retail\{Access,Sales};
+use App\Models\Configurations\Variant;
+use App\Services\Access;
+use App\Services\Sales;
 use Illuminate\Http\Request;
 class PosController extends Controller {
  public function index(Request $r,Access $a){$v=$a->check($r,'pos','counter','new-sale');$v['title']='POS Counter';$v['variants']=Variant::with('product')->where('business_id',$v['business']->id)->where('is_active',true)->get()->filter(fn($x)=>$x->product?->is_active);

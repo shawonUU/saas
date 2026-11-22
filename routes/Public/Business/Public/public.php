@@ -1,6 +1,10 @@
 <?php
 
-use App\Http\Controllers\Public\Business\Public\HomeController;
+use App\Http\Controllers\Public\Business\Public\Ecommerce\Storefront\Home\StorefrontController;
+use App\Http\Controllers\Public\Business\Public\Ecommerce\Catalog\Products\CatalogController;
+use App\Http\Controllers\Public\Business\Public\Ecommerce\Catalog\ProductDetails\ProductDetailsController;
+use App\Http\Controllers\Public\Business\Public\Ecommerce\Checkout\Cart\CartController;
+use App\Http\Controllers\Public\Business\Public\Ecommerce\Account\Wishlist\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -10,8 +14,13 @@ use Illuminate\Support\Facades\Route;
 $domain = config('saas.domain');
 
 Route::domain('{business}.'.$domain)->middleware('business.resolve')->name('business.customer.')->group(function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/shop', [\App\Http\Controllers\Public\Business\Public\ShopController::class, 'index'])->name('shop');
+    Route::get('/', [StorefrontController::class, 'index'])->name('home');
+    Route::get('/shop', [CatalogController::class,'index'])->name('shop');
+    Route::get('/product/{product}',[ProductDetailsController::class,'show'])->whereNumber('product')->name('product');
+    Route::get('/cart',[CartController::class,'index'])->name('cart');
+    Route::get('/checkout',[\App\Http\Controllers\Public\Business\Public\Ecommerce\Checkout\PlaceOrder\CheckoutController::class,'index'])->name('checkout');
+    Route::post('/checkout/quote',[\App\Http\Controllers\Public\Business\Public\Ecommerce\Checkout\PlaceOrder\QuoteController::class,'quote'])->middleware('throttle:40,1')->name('checkout.quote');
+    Route::get('/wishlist',[WishlistController::class,'index'])->name('wishlist');
     Route::post('/shop/checkout', [\App\Http\Controllers\Public\Business\Public\ShopController::class, 'checkout'])->middleware('throttle:15,1')->name('shop.checkout');
     Route::post('/shop/abandoned-cart', [\App\Http\Controllers\Public\Business\Public\ShopController::class,'saveCart'])->middleware('throttle:10,1')->name('shop.abandoned');
     Route::get('/payments/sslcommerz/{order}/pay', [\App\Http\Controllers\Public\Business\Public\GatewayController::class,'start'])->middleware(['signed','throttle:10,1'])->name('gateway.start');

@@ -25,5 +25,5 @@ class Accounting {
   foreach($filtered as [$code,$d,$c]){$account=Account::where('business_id',$business->id)->where('code',$code)->where('is_active',true)->firstOrFail();
    JournalLine::create(['business_id'=>$business->id,'journal_id'=>$journal->id,'account_id'=>$account->id,'debit'=>$d,'credit'=>$c]);}
  }
- public function lines(Business $business,$query){return $query->where('retail_journal_lines.business_id',$business->id);}
+ public function lines(Business $business,$query){return $query->where('journal_lines.business_id',$business->id);}
 }

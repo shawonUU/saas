@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Public\Business\Admin\Retail\StockController;
+use App\Http\Controllers\Public\Business\Admin\Inventory\StockController;
 Route::get('inventory/stock/stock-report',[StockController::class,'report'])->name('stock.report');
 Route::get('inventory/stock/stock-ledger',[StockController::class,'ledger'])->name('stock.ledger');
 Route::get('inventory/stock/low-stock',[StockController::class,'low'])->name('stock.low');

@@ -1,0 +1,7 @@
+@extends('public.business.public.ecommerce.layout')
+@section('title',t('Cart','কার্ট'))
+@section('content')
+<div class="sf-page-heading"><a class="sf-back" href="{{ route('business.customer.shop') }}" aria-label="Back">‹</a><h1>{{ t('Cart','কার্ট') }}</h1></div>
+<div class="sf-cart-layout"><section class="sf-cart-column"><div class="sf-cart-select-all"><label><input type="checkbox" id="sf-select-all" checked> {{ t('Select all','সবগুলো নির্বাচন করুন') }}</label><button type="button" data-cart-remove-selected title="{{ t('Remove selected','নির্বাচিত পণ্য মুছুন') }}">♲</button></div><div id="sf-cart-items" class="sf-cart-items"></div><p id="sf-cart-empty" class="sf-empty" hidden>{{ t('Your cart is empty.','আপনার কার্ট খালি।') }} <a href="{{ route('business.customer.shop') }}">{{ t('Start Shopping','কেনাকাটা করুন') }}</a></p></section>
+<aside class="sf-cart-summary sf-panel"><h2>{{ t('Cart Summary','কার্টের হিসাব') }}</h2><div class="sf-summary"><div><span>{{ t('Product Price','পণ্যের মূল্য') }}</span><b id="sf-subtotal">৳ 0.00</b></div><div><span>{{ t('Discount','ছাড়') }}</span><b id="sf-cart-discount">৳ 0.00</b></div><div class="sf-summary-total"><span>{{ t('Grand Total','মোট') }}</span><b id="sf-est-total">৳ 0.00</b></div></div><div class="sf-shipping-note">{{ t('Shipping & courier charges are calculated at checkout.','চেকআউটে ডেলিভারি চার্জ যোগ হবে।') }}</div><a href="{{ route('business.customer.checkout') }}" class="sf-btn sf-checkout-btn" id="sf-go-checkout">{{ t('Go to Checkout','চেকআউট করুন') }}</a></aside></div>
+@endsection

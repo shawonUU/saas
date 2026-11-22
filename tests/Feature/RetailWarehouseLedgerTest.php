@@ -4,8 +4,14 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use App\Models\{User,Business,BusinessCategory};
-use App\Models\Retail\{Product,Variant,Warehouse,WarehouseStock,StockMovement,JournalLine};
-use App\Services\Retail\{Accounting,Inventory};
+use App\Models\Configurations\Product;
+use App\Models\Configurations\Variant;
+use App\Models\Configurations\Warehouse;
+use App\Models\Inventory\WarehouseStock;
+use App\Models\Inventory\StockMovement;
+use App\Models\Accounts\JournalLine;
+use App\Services\Accounting;
+use App\Services\Inventory;
 use Illuminate\Validation\ValidationException;
 class RetailWarehouseLedgerTest extends TestCase {
  use RefreshDatabase;
@@ -30,9 +36,9 @@ class RetailWarehouseLedgerTest extends TestCase {
  public function test_unpaid_sale_can_be_cancelled_with_reversal():void {
   [$b,$v]=$this->setupShop();
   DB::transaction(function()use($b,$v){app(Inventory::class)->move($b,$v,5,'opening',50,'opening',$v->id);app(Accounting::class)->post($b,'opening',$v->id,'Initial Stock',['1300'=>[250,0],'3000'=>[0,250]]);});
-  $order=app(\App\Services\Retail\Sales::class)->create($b,['items'=>[['variant_id'=>$v->id,'quantity'=>2]]],'online');
+  $order=app(\App\Services\Sales::class)->create($b,['items'=>[['variant_id'=>$v->id,'quantity'=>2]]],'online');
   $this->assertEquals(3,(float)$v->fresh()->stock);
-  app(\App\Services\Retail\CancelSale::class)->cancel($b,$order);
+  app(\App\Services\CancelSale::class)->cancel($b,$order);
   $this->assertEquals('cancelled',$order->fresh()->status);
   $this->assertEquals(5,(float)$v->fresh()->stock);
   $this->assertEqualsWithDelta((float)JournalLine::where('business_id',$b->id)->sum('debit'),(float)JournalLine::where('business_id',$b->id)->sum('credit'),0.001);

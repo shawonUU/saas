@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.hidden = false;
         document.body.style.overflow = 'hidden';
         modal.querySelector('.cfg-dialog')?.scrollTo(0, 0);
+        window.NexaSearchSelect?.refresh(modal);
         modal.querySelector('.cfg-dialog-close')?.focus();
     }
     function closeModal() {
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.key === 'Escape') { e.preventDefault(); closeModal(); }
         if (e.key === 'Tab') {
             const focusable = Array.from(modal.querySelectorAll('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]'))
-                .filter(el => el.offsetParent !== null);
+                .filter(el => el.offsetParent !== null && !(el.tagName === 'SELECT' && el.closest('.nxs-select')));
             if (!focusable.length) return;
             const first = focusable[0], last = focusable[focusable.length - 1];
             if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -110,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const input = form.elements.namedItem(field);
             if (input && Object.prototype.hasOwnProperty.call(oldData, field)) input.value = String(oldData[field] ?? '');
         });
+        window.NexaSearchSelect?.refresh(modal);
     }
 });
 </script>

@@ -1,8 +1,10 @@
 <?php
-namespace App\Http\Controllers\Public\Business\Admin\Expanses;
+namespace App\Http\Controllers\Public\Business\Admin\Expanse;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\Expense;
-use App\Services\Retail\{Accounting,Access,Lists};
+use App\Models\Expanse\Expense;
+use App\Services\Accounting;
+use App\Services\Access;
+use App\Services\Lists;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 class ExpenseController extends Controller {

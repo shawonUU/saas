@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Sales;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\{SaleReturn,Order};
-use App\Services\Retail\{Access,Lists,Returns};
+use App\Models\Sales\SaleReturn;
+use App\Models\Sales\Order;
+use App\Services\Access;
+use App\Services\Lists;
+use App\Services\Returns;
 use Illuminate\Http\Request;
 class ReturnController extends Controller {
  public function index(Request $r,Access $a){$v=$a->check($r,'sales','returns','return-list');$v['title']='Sales Returns';$v['records']=Lists::page(SaleReturn::where('business_id',$v['business']->id),$r,['id'=>'number','order_id'=>'number','amount'=>'number','refunded'=>'number','reason'=>'text','created_at'=>'date']);return view('public.business.admin.retail.returns.index',$v);}

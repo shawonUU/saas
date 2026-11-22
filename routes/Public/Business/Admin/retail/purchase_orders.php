@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Public\Business\Admin\Retail\PurchaseOrderController;
+use App\Http\Controllers\Public\Business\Admin\Purchase\PurchaseOrderController;
 Route::get('purchasing/purchase-orders/po-list',[PurchaseOrderController::class,'index'])->name('purchase_orders.index');
 Route::get('purchasing/purchase-orders/new-po',[PurchaseOrderController::class,'create'])->name('purchase_orders.create');
 Route::post('purchasing/purchase-orders/new-po',[PurchaseOrderController::class,'store'])->name('purchase_orders.store');

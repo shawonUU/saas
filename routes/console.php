@@ -48,3 +48,5 @@ Artisan::command('business:employee {businessCode}', function () {
     ]);
     $this->info('Employee login created for '.$business->code.'.');
 })->purpose('Create an employee login for an existing business interactively');
+
+require_once __DIR__.'/Public/Business/Admin/Configurations/Products/DemoData/commands.php';

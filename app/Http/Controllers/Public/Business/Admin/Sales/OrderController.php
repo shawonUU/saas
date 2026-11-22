@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Sales;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\{Order,Variant};
-use App\Services\Retail\{Access,Lists,Sales};
+use App\Models\Sales\Order;
+use App\Models\Configurations\Variant;
+use App\Services\Access;
+use App\Services\Lists;
+use App\Services\Sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -17,7 +20,7 @@ class OrderController extends Controller {
     'discount'=>'nullable|numeric|min:0','coupon_code'=>'nullable|string|max:50','tax_id'=>'nullable|integer','shipping'=>'nullable|numeric|min:0',
     'pay_amount'=>'nullable|numeric|min:0','payment_method'=>'nullable|in:cash,bank','payment_reference'=>'nullable|string|max:255']);
  }
- public function show(Request $r,Access $a,?int $order=null){$v=$a->check($r,'sales','orders','order-details');$v['title']='Order Details';$v['order']=$order?Order::where('business_id',$v['business']->id)->with('items.variant')->findOrFail($order):null;
+ public function show(Request $r,Access $a,string $business,?int $order=null){$v=$a->check($r,'sales','orders','order-details');$v['title']='Order Details';$v['order']=$order?Order::where('business_id',$v['business']->id)->with('items.variant')->findOrFail($order):null;
   $v['orders']=Order::where('business_id',$v['business']->id)->latest()->limit(100)->get();return view('public.business.admin.retail.orders.show',$v);}
- public function cancel(Request $r,int $order,Access $a,\App\Services\Retail\CancelSale $service){$v=$a->check($r,'sales','orders','order-details','delete');$record=Order::where('business_id',$v['business']->id)->findOrFail($order);$service->cancel($v['business'],$record);return back()->with('success',t('Unpaid order cancelled and stock/accounts reversed.','অপরিশোধিত অর্ডার বাতিল; স্টক ও হিসাব ফেরত হয়েছে।'));}
+ public function cancel(Request $r,string $business,int $order,Access $a,\App\Services\CancelSale $service){$v=$a->check($r,'sales','orders','order-details','delete');$record=Order::where('business_id',$v['business']->id)->findOrFail($order);$service->cancel($v['business'],$record);return back()->with('success',t('Unpaid order cancelled and stock/accounts reversed.','অপরিশোধিত অর্ডার বাতিল; স্টক ও হিসাব ফেরত হয়েছে।'));}
 }

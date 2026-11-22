@@ -1,0 +1,822 @@
+{
+  "version": 1,
+  "note": "Fictional demo merchandise for test businesses only.",
+  "categories": [
+    {
+      "name": "Shoes",
+      "base_price": 1190,
+      "subcategories": [
+        {
+          "name": "Women’s Sneakers",
+          "images": [
+            "fashion-01.jpg",
+            "fashion-04.jpg"
+          ]
+        },
+        {
+          "name": "High Heels",
+          "images": [
+            "fashion-02.jpg",
+            "fashion-02.jpg"
+          ]
+        },
+        {
+          "name": "Men’s Loafers",
+          "images": [
+            "fashion-03.jpg",
+            "fashion-03.jpg"
+          ]
+        },
+        {
+          "name": "Kids Shoes",
+          "images": [
+            "fashion-04.jpg",
+            "fashion-01.jpg"
+          ]
+        },
+        {
+          "name": "Running Shoes",
+          "images": [
+            "fashion-01.jpg",
+            "fashion-04.jpg"
+          ]
+        },
+        {
+          "name": "Slip-On Shoes",
+          "images": [
+            "fashion-03.jpg",
+            "fashion-02.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bags & Wallets",
+      "base_price": 990,
+      "subcategories": [
+        {
+          "name": "Ladies Handbags",
+          "images": [
+            "fashion-05.jpg",
+            "fashion-06.jpg"
+          ]
+        },
+        {
+          "name": "Crossbody Bags",
+          "images": [
+            "fashion-06.jpg",
+            "fashion-05.jpg"
+          ]
+        },
+        {
+          "name": "Backpacks",
+          "images": [
+            "fashion-07.jpg",
+            "fashion-07.jpg"
+          ]
+        },
+        {
+          "name": "Wallets",
+          "images": [
+            "fashion-08.jpg",
+            "fashion-08.jpg"
+          ]
+        },
+        {
+          "name": "Travel Bags",
+          "images": [
+            "fashion-07.jpg",
+            "fashion-05.jpg"
+          ]
+        },
+        {
+          "name": "Office Bags",
+          "images": [
+            "fashion-06.jpg",
+            "fashion-07.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Jewelry & Watches",
+      "base_price": 790,
+      "subcategories": [
+        {
+          "name": "Necklaces",
+          "images": [
+            "fashion-09.jpg",
+            "fashion-09.jpg"
+          ]
+        },
+        {
+          "name": "Earrings",
+          "images": [
+            "fashion-10.jpg",
+            "fashion-10.jpg"
+          ]
+        },
+        {
+          "name": "Bracelets",
+          "images": [
+            "fashion-11.jpg",
+            "fashion-09.jpg"
+          ]
+        },
+        {
+          "name": "Wrist Watches",
+          "images": [
+            "fashion-12.jpg",
+            "fashion-12.jpg"
+          ]
+        },
+        {
+          "name": "Gold-Tone Jewelry",
+          "images": [
+            "fashion-10.jpg",
+            "fashion-11.jpg"
+          ]
+        },
+        {
+          "name": "Fashion Accessories",
+          "images": [
+            "fashion-11.jpg",
+            "fashion-10.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Women’s Fashion",
+      "base_price": 1290,
+      "subcategories": [
+        {
+          "name": "Casual Dresses",
+          "images": [
+            "fashion-13.jpg",
+            "fashion-15.jpg"
+          ]
+        },
+        {
+          "name": "Party Dresses",
+          "images": [
+            "fashion-13.jpg",
+            "fashion-15.jpg"
+          ]
+        },
+        {
+          "name": "Women’s Jeans",
+          "images": [
+            "fashion-16.jpg",
+            "fashion-16.jpg"
+          ]
+        },
+        {
+          "name": "Kurti & Tops",
+          "images": [
+            "fashion-13.jpg",
+            "category-06.jpg"
+          ]
+        },
+        {
+          "name": "Traditional Wear",
+          "images": [
+            "category-06.jpg",
+            "fashion-13.jpg"
+          ]
+        },
+        {
+          "name": "Summer Dresses",
+          "images": [
+            "fashion-15.jpg",
+            "fashion-13.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Men’s Fashion",
+      "base_price": 1090,
+      "subcategories": [
+        {
+          "name": "Polo Shirts",
+          "images": [
+            "fashion-14.jpg",
+            "fashion-14.jpg"
+          ]
+        },
+        {
+          "name": "Men’s Jeans",
+          "images": [
+            "fashion-16.jpg",
+            "fashion-16.jpg"
+          ]
+        },
+        {
+          "name": "Casual Shirts",
+          "images": [
+            "fashion-14.jpg",
+            "category-05.jpg"
+          ]
+        },
+        {
+          "name": "Men’s Accessories",
+          "images": [
+            "fashion-08.jpg",
+            "fashion-12.jpg"
+          ]
+        },
+        {
+          "name": "Daily Essentials",
+          "images": [
+            "category-05.jpg",
+            "fashion-14.jpg"
+          ]
+        },
+        {
+          "name": "Smart Casuals",
+          "images": [
+            "fashion-14.jpg",
+            "fashion-16.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Baby & Kids",
+      "base_price": 690,
+      "subcategories": [
+        {
+          "name": "Girls Dresses",
+          "images": [
+            "fashion-15.jpg",
+            "fashion-15.jpg"
+          ]
+        },
+        {
+          "name": "Kids Sneakers",
+          "images": [
+            "fashion-04.jpg",
+            "fashion-04.jpg"
+          ]
+        },
+        {
+          "name": "Baby Toys",
+          "images": [
+            "category-08.jpg",
+            "category-08.jpg"
+          ]
+        },
+        {
+          "name": "School Bags",
+          "images": [
+            "fashion-07.jpg",
+            "fashion-07.jpg"
+          ]
+        },
+        {
+          "name": "Kids Accessories",
+          "images": [
+            "fashion-04.jpg",
+            "category-08.jpg"
+          ]
+        },
+        {
+          "name": "Baby Gifts",
+          "images": [
+            "category-08.jpg",
+            "fashion-15.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Electronics & Gadgets",
+      "base_price": 1590,
+      "subcategories": [
+        {
+          "name": "Wireless Earbuds",
+          "images": [
+            "gadget-01.jpg",
+            "utility-01.jpg"
+          ]
+        },
+        {
+          "name": "Headphones",
+          "images": [
+            "gadget-06.jpg",
+            "gadget-06.jpg"
+          ]
+        },
+        {
+          "name": "Smart Watches",
+          "images": [
+            "gadget-02.jpg",
+            "utility-02.jpg"
+          ]
+        },
+        {
+          "name": "Bluetooth Speakers",
+          "images": [
+            "gadget-07.jpg",
+            "gadget-07.jpg"
+          ]
+        },
+        {
+          "name": "Power Banks",
+          "images": [
+            "gadget-03.jpg",
+            "utility-03.jpg"
+          ]
+        },
+        {
+          "name": "Audio Accessories",
+          "images": [
+            "utility-06.jpg",
+            "gadget-01.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mobile & Computing",
+      "base_price": 2290,
+      "subcategories": [
+        {
+          "name": "Smartphones",
+          "images": [
+            "category-01.jpg",
+            "category-01.jpg"
+          ]
+        },
+        {
+          "name": "Laptops",
+          "images": [
+            "category-02.jpg",
+            "category-02.jpg"
+          ]
+        },
+        {
+          "name": "Phone Accessories",
+          "images": [
+            "gadget-03.jpg",
+            "utility-03.jpg"
+          ]
+        },
+        {
+          "name": "Smart Devices",
+          "images": [
+            "gadget-02.jpg",
+            "category-01.jpg"
+          ]
+        },
+        {
+          "name": "Computer Accessories",
+          "images": [
+            "category-02.jpg",
+            "gadget-06.jpg"
+          ]
+        },
+        {
+          "name": "Charging Essentials",
+          "images": [
+            "gadget-03.jpg",
+            "category-01.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Home Appliances",
+      "base_price": 1390,
+      "subcategories": [
+        {
+          "name": "Air Fryers",
+          "images": [
+            "gadget-05.jpg",
+            "category-03.jpg"
+          ]
+        },
+        {
+          "name": "Blenders",
+          "images": [
+            "gadget-04.jpg",
+            "utility-04.jpg"
+          ]
+        },
+        {
+          "name": "Kitchen Appliances",
+          "images": [
+            "category-03.jpg",
+            "gadget-04.jpg"
+          ]
+        },
+        {
+          "name": "Electric Lighting",
+          "images": [
+            "gadget-08.jpg",
+            "utility-05.jpg"
+          ]
+        },
+        {
+          "name": "Small Home Gadgets",
+          "images": [
+            "category-03.jpg",
+            "gadget-05.jpg"
+          ]
+        },
+        {
+          "name": "Cooking Equipment",
+          "images": [
+            "category-04.jpg",
+            "gadget-05.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Home & Kitchen",
+      "base_price": 890,
+      "subcategories": [
+        {
+          "name": "Cookware",
+          "images": [
+            "category-04.jpg",
+            "category-04.jpg"
+          ]
+        },
+        {
+          "name": "Kitchen Organizers",
+          "images": [
+            "category-03.jpg",
+            "gadget-04.jpg"
+          ]
+        },
+        {
+          "name": "Dining Essentials",
+          "images": [
+            "category-04.jpg",
+            "gadget-04.jpg"
+          ]
+        },
+        {
+          "name": "Home Decor",
+          "images": [
+            "category-04.jpg",
+            "category-03.jpg"
+          ]
+        },
+        {
+          "name": "Storage Accessories",
+          "images": [
+            "category-03.jpg",
+            "category-04.jpg"
+          ]
+        },
+        {
+          "name": "Everyday Kitchen",
+          "images": [
+            "gadget-04.jpg",
+            "category-04.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Beauty & Personal Care",
+      "base_price": 690,
+      "subcategories": [
+        {
+          "name": "Makeup Essentials",
+          "images": [
+            "category-07.jpg",
+            "category-07.jpg"
+          ]
+        },
+        {
+          "name": "Skincare",
+          "images": [
+            "category-07.jpg",
+            "category-07.jpg"
+          ]
+        },
+        {
+          "name": "Lipsticks",
+          "images": [
+            "category-07.jpg",
+            "category-07.jpg"
+          ]
+        },
+        {
+          "name": "Hair & Beauty",
+          "images": [
+            "category-07.jpg",
+            "category-07.jpg"
+          ]
+        },
+        {
+          "name": "Fashion Beauty",
+          "images": [
+            "fashion-09.jpg",
+            "fashion-11.jpg"
+          ]
+        },
+        {
+          "name": "Beauty Gifts",
+          "images": [
+            "category-07.jpg",
+            "fashion-11.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sports & Fitness",
+      "base_price": 590,
+      "subcategories": [
+        {
+          "name": "Dumbbells",
+          "images": [
+            "category-09.jpg",
+            "category-09.jpg"
+          ]
+        },
+        {
+          "name": "Running Gear",
+          "images": [
+            "fashion-01.jpg",
+            "fashion-04.jpg"
+          ]
+        },
+        {
+          "name": "Fitness Accessories",
+          "images": [
+            "category-09.jpg",
+            "fashion-01.jpg"
+          ]
+        },
+        {
+          "name": "Outdoor Essentials",
+          "images": [
+            "category-10.jpg",
+            "category-09.jpg"
+          ]
+        },
+        {
+          "name": "Sports Shoes",
+          "images": [
+            "fashion-01.jpg",
+            "fashion-04.jpg"
+          ]
+        },
+        {
+          "name": "Home Exercise",
+          "images": [
+            "category-09.jpg",
+            "category-09.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Office & Stationery",
+      "base_price": 290,
+      "subcategories": [
+        {
+          "name": "Notebooks & Books",
+          "images": [
+            "category-11.jpg",
+            "category-11.jpg"
+          ]
+        },
+        {
+          "name": "Desk Accessories",
+          "images": [
+            "category-11.jpg",
+            "fashion-08.jpg"
+          ]
+        },
+        {
+          "name": "School Supplies",
+          "images": [
+            "category-11.jpg",
+            "fashion-07.jpg"
+          ]
+        },
+        {
+          "name": "Office Essentials",
+          "images": [
+            "category-02.jpg",
+            "category-11.jpg"
+          ]
+        },
+        {
+          "name": "Study Materials",
+          "images": [
+            "category-11.jpg",
+            "category-11.jpg"
+          ]
+        },
+        {
+          "name": "Office Bags",
+          "images": [
+            "fashion-07.jpg",
+            "fashion-06.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Toys & Games",
+      "base_price": 490,
+      "subcategories": [
+        {
+          "name": "Soft Toys",
+          "images": [
+            "category-08.jpg",
+            "category-08.jpg"
+          ]
+        },
+        {
+          "name": "Learning Toys",
+          "images": [
+            "category-08.jpg",
+            "category-11.jpg"
+          ]
+        },
+        {
+          "name": "Kids Playtime",
+          "images": [
+            "category-08.jpg",
+            "fashion-04.jpg"
+          ]
+        },
+        {
+          "name": "Gift Toys",
+          "images": [
+            "category-08.jpg",
+            "category-08.jpg"
+          ]
+        },
+        {
+          "name": "Family Games",
+          "images": [
+            "category-11.jpg",
+            "category-08.jpg"
+          ]
+        },
+        {
+          "name": "Baby Play",
+          "images": [
+            "category-08.jpg",
+            "fashion-15.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pet Care",
+      "base_price": 490,
+      "subcategories": [
+        {
+          "name": "Cat Essentials",
+          "images": [
+            "category-12.jpg",
+            "category-12.jpg"
+          ]
+        },
+        {
+          "name": "Pet Toys",
+          "images": [
+            "category-12.jpg",
+            "category-08.jpg"
+          ]
+        },
+        {
+          "name": "Pet Grooming",
+          "images": [
+            "category-12.jpg",
+            "category-12.jpg"
+          ]
+        },
+        {
+          "name": "Pet Accessories",
+          "images": [
+            "category-12.jpg",
+            "fashion-08.jpg"
+          ]
+        },
+        {
+          "name": "Pet Comfort",
+          "images": [
+            "category-12.jpg",
+            "category-08.jpg"
+          ]
+        },
+        {
+          "name": "Cat & Kitten Care",
+          "images": [
+            "category-12.jpg",
+            "category-12.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Automotive & Tools",
+      "base_price": 790,
+      "subcategories": [
+        {
+          "name": "Car Accessories",
+          "images": [
+            "category-10.jpg",
+            "category-10.jpg"
+          ]
+        },
+        {
+          "name": "Portable Flashlights",
+          "images": [
+            "category-10.jpg",
+            "category-10.jpg"
+          ]
+        },
+        {
+          "name": "Car Lighting",
+          "images": [
+            "gadget-08.jpg",
+            "utility-05.jpg"
+          ]
+        },
+        {
+          "name": "Emergency Essentials",
+          "images": [
+            "category-10.jpg",
+            "gadget-03.jpg"
+          ]
+        },
+        {
+          "name": "Travel Accessories",
+          "images": [
+            "fashion-07.jpg",
+            "category-10.jpg"
+          ]
+        },
+        {
+          "name": "Utility Tools",
+          "images": [
+            "category-10.jpg",
+            "category-09.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Grocery & Daily Needs",
+      "base_price": 250,
+      "subcategories": [
+        {
+          "name": "Daily Essentials",
+          "images": [
+            "category-04.jpg",
+            "category-04.jpg"
+          ]
+        },
+        {
+          "name": "Healthy Drinks",
+          "images": [
+            "gadget-04.jpg",
+            "utility-04.jpg"
+          ]
+        },
+        {
+          "name": "Home Supplies",
+          "images": [
+            "gadget-08.jpg",
+            "category-03.jpg"
+          ]
+        },
+        {
+          "name": "Gift Packs",
+          "images": [
+            "category-07.jpg",
+            "category-04.jpg"
+          ]
+        },
+        {
+          "name": "Food Storage",
+          "images": [
+            "category-04.jpg",
+            "gadget-04.jpg"
+          ]
+        },
+        {
+          "name": "Personal Essentials",
+          "images": [
+            "category-07.jpg",
+            "category-11.jpg"
+          ]
+        }
+      ]
+    }
+  ]
+}

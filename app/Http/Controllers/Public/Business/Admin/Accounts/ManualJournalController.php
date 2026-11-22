@@ -1,8 +1,12 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Accounts;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\{Account,ManualJournal,Journal};
-use App\Services\Retail\{Accounting,Access,Lists};
+use App\Models\Accounts\Account;
+use App\Models\Accounts\ManualJournal;
+use App\Models\Accounts\Journal;
+use App\Services\Accounting;
+use App\Services\Access;
+use App\Services\Lists;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

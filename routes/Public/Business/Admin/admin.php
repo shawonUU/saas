@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Public\Business\Admin\Authorization\AuthorizationController;
 use App\Http\Controllers\Public\Business\Admin\Authorization\BusinessUserController;
-use App\Http\Controllers\Public\Business\Admin\UserController;
+
 use App\Http\Controllers\Public\Business\Admin\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,7 +45,7 @@ Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->grou
 
         // Retail & e-commerce modules: explicit independent controller/route files.
         Route::name('business.admin.retail.')->group(function(){
-            require __DIR__.'/retail/products.php';
+            require __DIR__.'/configurations/products/manage.php';
             require __DIR__.'/retail/stock.php';
             require __DIR__.'/retail/orders.php';
             require __DIR__.'/retail/pos.php';
@@ -69,6 +69,7 @@ Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->grou
             require __DIR__.'/retail/account_groups.php';
         });
 
+        require __DIR__.'/settings/business/general_settings.php';
         Route::get('/{module}/{menu}/{child?}',[WorkspaceController::class,'feature'])->name('business.admin.feature');   
 
     });

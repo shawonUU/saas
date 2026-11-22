@@ -31,8 +31,8 @@ class Returns {
     if(round((float)$item->returned_quantity+$requested,3)<round((float)$item->quantity,3)){$allReturning=false;break;}}
    // Treat delivery charge as non-refundable; tax is allocated based on net item value.
    $tax=round((float)$order->tax*($subtotal>0?array_sum(array_map(fn($x)=>$x['qty']*(float)$x['item']->price,$returnLines))/$subtotal:0),2);
-   $previousTax=DB::table('retail_journals')->where('retail_journals.business_id',$business->id)->where('source_type','return')->whereIn('source_id',SaleReturn::where('business_id',$business->id)->where('order_id',$order->id)->pluck('id'))
-     ->join('retail_journal_lines','retail_journal_lines.journal_id','=','retail_journals.id')->join('retail_accounts','retail_accounts.id','=','retail_journal_lines.account_id')->where('retail_accounts.code','2100')->sum('retail_journal_lines.debit');
+   $previousTax=DB::table('journals')->where('journals.business_id',$business->id)->where('source_type','return')->whereIn('source_id',SaleReturn::where('business_id',$business->id)->where('order_id',$order->id)->pluck('id'))
+     ->join('journal_lines','journal_lines.journal_id','=','journals.id')->join('accounts','accounts.id','=','journal_lines.account_id')->where('accounts.code','2100')->sum('journal_lines.debit');
    if($allReturning)$tax=round((float)$order->tax-$previousTax,2);
    if($allReturning)$sales=round($invoiceNet-($previous-$previousTax),2);
    $amount=round($sales+$tax,2);

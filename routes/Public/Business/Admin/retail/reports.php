@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Public\Business\Admin\Retail\ReportController;
+use App\Http\Controllers\Public\Business\Admin\Accounts\ReportController;
 Route::get('finance/ledger/general-ledger',[ReportController::class,'ledger'])->name('reports.ledger');
 Route::get('finance/financial-reports/cash-flow',[ReportController::class,'cash'])->name('reports.cash');
 Route::get('sales/reports/sales-summary',[ReportController::class,'salesSummary'])->name('reports.sales');

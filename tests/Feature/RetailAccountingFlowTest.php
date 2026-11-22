@@ -3,8 +3,16 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\{User,Business,BusinessCategory};
-use App\Models\Retail\{Product,Variant,Order,JournalLine};
-use App\Services\Retail\{Inventory,Accounting,Sales,Purchases,Returns,Payments};
+use App\Models\Configurations\Product;
+use App\Models\Configurations\Variant;
+use App\Models\Sales\Order;
+use App\Models\Accounts\JournalLine;
+use App\Services\Inventory;
+use App\Services\Accounting;
+use App\Services\Sales;
+use App\Services\Purchases;
+use App\Services\Returns;
+use App\Services\Payments;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 class RetailAccountingFlowTest extends TestCase {

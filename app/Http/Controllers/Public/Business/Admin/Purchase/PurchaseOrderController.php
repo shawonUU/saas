@@ -1,8 +1,13 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Purchase;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\{PurchaseOrder,PurchaseOrderItem,PurchaseOrderReceipt,Variant};
-use App\Services\Retail\{Access,Lists,Purchases};
+use App\Models\Purchase\PurchaseOrder;
+use App\Models\Purchase\PurchaseOrderItem;
+use App\Models\Purchase\PurchaseOrderReceipt;
+use App\Models\Configurations\Variant;
+use App\Services\Access;
+use App\Services\Lists;
+use App\Services\Purchases;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

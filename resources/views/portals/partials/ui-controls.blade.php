@@ -44,3 +44,5 @@
   else init();
 })();
 </script>
+
+<script defer src="{{ asset('assets/saas-searchable-select.js') }}?v=20261123"></script>

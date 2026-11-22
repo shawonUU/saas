@@ -1,8 +1,9 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Retail;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\Order;
-use App\Services\Retail\{Access,Lists};
+use App\Models\Sales\Order;
+use App\Services\Access;
+use App\Services\Lists;
 use Illuminate\Http\Request;
 class DeliveryController extends Controller {
  public function index(Request $r,Access $a){$v=$a->check($r,'ecommerce','online-orders','fulfillment');$v['title']='Order Fulfillment';$v['records']=Lists::page(Order::where('business_id',$v['business']->id)->where('channel','online'),$r,['id'=>'number','order_no'=>'text','customer_name'=>'text','customer_phone'=>'text','total'=>'number','delivery_status'=>'text','tracking_number'=>'text','created_at'=>'date']);return view('public.business.admin.retail.delivery.index',$v);}

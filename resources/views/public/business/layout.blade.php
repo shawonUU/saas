@@ -9,12 +9,21 @@
     <title>{{ $title ?? 'NexaBiz - Business Management Platform' }}</title>
 
     <meta name="description" content="NexaBiz helps businesses manage operations, branches, sales, inventory and customers from one platform.">
+    @php
+      $brandBusiness = request()->attributes->get('current_business');
+      $brandService = app(\App\Services\Public\Business\Admin\Settings\Business\GeneralSettings\BrandingService::class);
+      $brandRecord = $brandService->find($brandBusiness);
+      $brandFavicon = $brandService->imageUrl($brandRecord?->favicon);
+      $brandPrimary = $brandRecord?->primary_color ?? '#5145e5';
+    @endphp
+    @if($brandFavicon)<link rel="icon" href="{{ $brandFavicon }}">@endif
+
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
 
         :root {
-            --primary: #5145e5;
+            --primary: {{ preg_match('/^#[0-9a-fA-F]{6}$/',$brandPrimary)?$brandPrimary:'#5145e5' }};
             --primary-dark: #4035c7;
             --dark: #11152b;
             --text: #414861;
@@ -366,8 +375,10 @@
     <div class="nav-inner">
 
         <a href="{{ url('/') }}" class="brand">
-            <span class="brand-mark">N</span>
-            Nexa<span>Biz</span>
+            @if($brandBusiness)
+                @if($brandBusiness->logo)<img src="{{ $brandService->imageUrl($brandBusiness->logo) }}" alt="" style="width:36px;height:36px;object-fit:contain;border-radius:8px">@else<span class="brand-mark">{{ mb_strtoupper(mb_substr($brandBusiness->name,0,1)) }}</span>@endif
+                <span>{{ $brandBusiness->name }}</span>
+            @else<span class="brand-mark">N</span>Nexa<span>Biz</span>@endif
         </a>
 
         <nav id="site-primary-nav" class="nav-links">
@@ -435,8 +446,10 @@
 
             <div>
                 <a href="{{ url('/') }}" class="brand footer-brand">
-                    <span class="brand-mark">N</span>
-                    Nexa<span>Biz</span>
+                    @if($brandBusiness)
+                        @if($brandBusiness->logo)<img src="{{ $brandService->imageUrl($brandBusiness->logo) }}" alt="" style="width:36px;height:36px;object-fit:contain">@else<span class="brand-mark">{{ mb_strtoupper(mb_substr($brandBusiness->name,0,1)) }}</span>@endif
+                        <span>{{ $brandBusiness->name }}</span>
+                    @else<span class="brand-mark">N</span>Nexa<span>Biz</span>@endif
                 </a>
 
                 <p class="footer-description">

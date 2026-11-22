@@ -2,8 +2,14 @@
 namespace App\Http\Controllers\Public\Business\Admin\Purchase;
 use App\Http\Controllers\Controller;
 use App\Models\Purchase\PurchaseReturn;
-use App\Models\Retail\{Purchase,PurchaseItem,Variant,Payment};
-use App\Services\Retail\{Accounting,Access,Inventory,Lists};
+use App\Models\Purchase\Purchase;
+use App\Models\Purchase\PurchaseItem;
+use App\Models\Configurations\Variant;
+use App\Models\Accounts\Payment;
+use App\Services\Accounting;
+use App\Services\Access;
+use App\Services\Inventory;
+use App\Services\Lists;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

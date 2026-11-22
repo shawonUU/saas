@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Accounts;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\CashTransfer;
-use App\Services\Retail\{Access,Accounting,Lists};
+use App\Models\Accounts\CashTransfer;
+use App\Services\Access;
+use App\Services\Accounting;
+use App\Services\Lists;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;

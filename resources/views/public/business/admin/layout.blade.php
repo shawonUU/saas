@@ -1,6 +1,7 @@
-
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
+@php
+    use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\Route;
+@endphp
 <!doctype html>
 <html lang="{{ session('portal_lang', 'en') }}" data-theme="light">
 <head>
@@ -18,18 +19,23 @@ use Illuminate\Support\Facades\Route;
         $storeName = data_get($business,'name') ?? data_get($business,'business_name') ?? ($storeCode ? ucwords(str_replace(['-','_'],' ',$storeCode)) : 'My Store');
         $logoPath = data_get($business,'logo') ?? data_get($business,'logo_path') ?? data_get($business,'business_logo');
         $storeLogo = $logoPath ? (preg_match('~^https?://~i',$logoPath) ? $logoPath : (str_starts_with($logoPath,'/') ? url($logoPath) : (str_starts_with($logoPath,'storage/') || str_starts_with($logoPath,'images/') ? asset($logoPath) : asset('storage/'.$logoPath)))) : null;
+        $brandingService = app(\App\Services\Public\Business\Admin\Settings\Business\GeneralSettings\BrandingService::class);
+        $brandSettings = $brandingService->find($business);
+        $faviconUrl = $brandingService->imageUrl($brandSettings?->favicon);
+        $brandColor = $brandSettings?->primary_color ?? '#5145e5';
         $adminUser = Auth::guard('business_admin')->user();
         $dashboardUrl = $storeCode && Route::has('business.admin.dashboard') ? route('business.admin.dashboard',['business'=>$storeCode]) : url('/');
         $storefrontUrl = request()->getScheme().'://'.preg_replace('/^admin\./','',request()->getHttpHost());
     @endphp
     <title>{{ $title ?? t('Dashboard','ড্যাশবোর্ড') }} | {{ $storeName }}</title>
     <meta name="description" content="{{ $storeName }} admin portal">
+    @if($faviconUrl)<link rel="icon" href="{{ $faviconUrl }}">@endif
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
 
         :root {
-            --primary: #5145e5;
+            --primary: {{ preg_match('/^#[0-9a-fA-F]{6}$/',$brandColor) ? $brandColor : '#5145e5' }};
             --primary-dark: #4035c7;
             --dark: #11152b;
             --text: #414861;
@@ -422,8 +428,8 @@ use Illuminate\Support\Facades\Route;
             @if(Route::has('business.admin.orders.index'))
                 <a href="{{ route('business.admin.orders.index',['business'=>$storeCode]) }}">{{ t('Orders','অর্ডার') }}</a>
             @endif
-            @if(Route::has('business.admin.settings.index'))
-                <a href="{{ route('business.admin.settings.index',['business'=>$storeCode]) }}">{{ t('Settings','সেটিংস') }}</a>
+            @if(Route::has('business.admin.settings.business.general-settings.index'))
+                <a href="{{ route('business.admin.settings.business.general-settings.index',['business'=>$storeCode]) }}">{{ t('Settings','সেটিংস') }}</a>
             @endif
             <a href="{{ $storefrontUrl }}" target="_blank" rel="noopener noreferrer">{{ t('View Store','স্টোর দেখুন') }} ↗</a>
         </nav>

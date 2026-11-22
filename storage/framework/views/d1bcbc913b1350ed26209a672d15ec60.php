@@ -1,0 +1,15 @@
+<header class="sf-header"><div class="sf-headrow">
+ <button type="button" class="sf-mobile-menu" data-sidebar-open aria-label="<?php echo e(t('Open categories','ক্যাটাগরি খুলুন')); ?>">☰</button>
+ <a href="<?php echo e(route('business.customer.home')); ?>" class="sf-logo" aria-label="<?php echo e($b->name); ?>">
+  <?php if($storeLogo): ?><img src="<?php echo e($storeLogo); ?>" alt="<?php echo e($b->name); ?>"><?php else: ?><span class="sf-logo-mark"><?php echo e(mb_substr($b->name,0,1)); ?></span><span class="sf-logo-text"><?php echo e($b->name); ?></span><?php endif; ?>
+ </a>
+ <form class="sf-search" action="<?php echo e(route('business.customer.shop')); ?>" method="GET"><input name="q" value="<?php echo e(request('q')); ?>" placeholder="<?php echo e(t('Search Product','পণ্য খুঁজুন')); ?>" aria-label="<?php echo e(t('Search Product','পণ্য খুঁজুন')); ?>"><button type="submit" title="<?php echo e(t('Search','খুঁজুন')); ?>" aria-label="<?php echo e(t('Search','খুঁজুন')); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.5" cy="10.5" r="7.5"/><path d="m16 16 5 5"/></svg></button></form>
+ <nav class="sf-actions" aria-label="<?php echo e(t('Shop navigation','শপ নেভিগেশন')); ?>">
+  <form method="POST" action="<?php echo e(route('language.set')); ?>"><?php echo csrf_field(); ?><input type="hidden" name="lang" value="<?php echo e(session('portal_lang','en')==='bn'?'en':'bn'); ?>"><button class="sf-header-setting" title="<?php echo e(t('Language','ভাষা')); ?>"><?php echo e(session('portal_lang','en')==='bn'?'EN':'বাং'); ?></button></form>
+  <button type="button" class="sf-header-setting" data-theme-toggle title="<?php echo e(t('Light / Dark','লাইট / ডার্ক')); ?>">◐</button>
+  <a class="sf-header-icon" href="<?php echo e(route('business.customer.cart')); ?>" title="<?php echo e(t('Cart','কার্ট')); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h2l2.7 12h12.7l2.1-9H5"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg><em data-cart-count>0</em></a>
+  <a class="sf-header-icon" href="<?php echo e(route('business.customer.wishlist')); ?>" title="<?php echo e(t('Wishlist','উইশলিস্ট')); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.5 8.8c0 5-8.5 10.5-8.5 10.5S3.5 13.8 3.5 8.8a4.8 4.8 0 0 1 8.5-3.1 4.8 4.8 0 0 1 8.5 3.1Z"/></svg><em data-wish-count>0</em></a>
+  <a class="sf-header-icon" href="<?php echo e(\Illuminate\Support\Facades\Auth::guard('business_customer')->check() ? route('business.customer.dashboard') : route('business.customer.login')); ?>" title="<?php echo e(t('My Account','আমার অ্যাকাউন্ট')); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></a>
+ </nav>
+</div></header>
+<?php /**PATH C:\laragon\www\saas-backend\resources\views/public/business/public/ecommerce/partials/header.blade.php ENDPATH**/ ?>

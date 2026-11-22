@@ -1,7 +1,10 @@
 <?php
 namespace App\Services;
 use App\Models\Business;
-use App\Models\Retail\{Variant,StockMovement,Warehouse,WarehouseStock};
+use App\Models\Configurations\Variant;
+use App\Models\Inventory\StockMovement;
+use App\Models\Configurations\Warehouse;
+use App\Models\Inventory\WarehouseStock;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 class Inventory {

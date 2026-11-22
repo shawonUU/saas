@@ -1,8 +1,12 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Admin\Inventory;
 use App\Http\Controllers\Controller;
-use App\Models\Retail\{Variant,StockMovement};
-use App\Services\Retail\{Access,Lists,Inventory,Accounting};
+use App\Models\Configurations\Variant;
+use App\Models\Inventory\StockMovement;
+use App\Services\Access;
+use App\Services\Lists;
+use App\Services\Inventory;
+use App\Services\Accounting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;

@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded',function(){
     const editSub=@json(t('Update member information without leaving this page.','এই পেজ থেকেই সদস্যের তথ্য আপডেট করুন।'));
     const optional=@json(t('Leave blank to keep the current password.','আগের পাসওয়ার্ড রাখতে ফাঁকা রাখুন।'));
     let lastFocus=null;
-    function open(){lastFocus=document.activeElement;modal.hidden=false;document.body.classList.add('um-lock');name.focus();}
+    function open(){lastFocus=document.activeElement;modal.hidden=false;document.body.classList.add('um-lock');window.NexaSearchSelect?.refresh(modal);name.focus();}
     function close(){modal.hidden=true;document.body.classList.remove('um-lock');lastFocus?.focus();}
     function reset(){form.reset();form.action=@json($storeUrl);method.disabled=true;method.value='POST';mode.value='create';memberId.value='';email.readOnly=false;email.required=true;password.required=true;required.hidden=false;help.hidden=true;phelp.textContent=@json(t('Minimum 8 characters.','কমপক্ষে ৮ অক্ষর।'));title.textContent=createTitle;sub.textContent=createSub;save.textContent=createTitle;if(document.getElementById('um-errors'))document.getElementById('um-errors').hidden=true;}
     function edit(btn){reset();form.action=btn.dataset.url;method.disabled=false;method.value='PUT';mode.value='edit';memberId.value=btn.dataset.id;name.value=btn.dataset.name;email.value=btn.dataset.email;email.readOnly=true;email.required=false;role.value=btn.dataset.role;status.value=btn.dataset.active;password.required=false;required.hidden=true;help.hidden=false;phelp.textContent=optional;title.textContent=editTitle;sub.textContent=editSub;save.textContent=@json(t('Save Changes','পরিবর্তন সংরক্ষণ'));open();}
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded',function(){
     const oldMode=@json(old('form_mode','')),oldId=@json(old('member_id',''));
     if(oldMode==='edit'){
         const btn=[...document.querySelectorAll('.um-edit')].find(el=>el.dataset.id===String(oldId));
-        if(btn){edit(btn);if(document.getElementById('um-errors'))document.getElementById('um-errors').hidden=false;name.value=@json(old('name',''));role.value=@json(old('role_id',''));status.value=@json(old('is_active','1'));}
+        if(btn){edit(btn);if(document.getElementById('um-errors'))document.getElementById('um-errors').hidden=false;name.value=@json(old('name',''));role.value=@json(old('role_id',''));status.value=@json(old('is_active','1'));window.NexaSearchSelect?.refresh(modal);}
     }else if(oldMode==='create'){reset();if(document.getElementById('um-errors'))document.getElementById('um-errors').hidden=false;name.value=@json(old('name',''));email.value=@json(old('email',''));role.value=@json(old('role_id',''));status.value=@json(old('is_active','1'));open();}
 });
 </script>
