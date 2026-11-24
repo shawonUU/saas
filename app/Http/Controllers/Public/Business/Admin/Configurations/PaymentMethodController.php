@@ -16,6 +16,7 @@ class PaymentMethodController extends Controller
     protected const TITLE = 'Payment Methods';
     protected const TITLE_BN = 'পেমেন্ট পদ্ধতি';
     protected const FIELDS = [
+        'name_bn' => ['label' => 'Bangla Name', 'label_bn' => 'বাংলা নাম', 'type' => 'text', 'required' => false, 'options' => []],
         'name' => [
             'label' => 'Method Name',
             'label_bn' => 'পদ্ধতির নাম',
@@ -139,6 +140,7 @@ class PaymentMethodController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'method_type' => 'required|in:cash,card,bank,mobile,other',
             'details' => 'nullable|string|max:2000',
             'is_active' => 'required|boolean',

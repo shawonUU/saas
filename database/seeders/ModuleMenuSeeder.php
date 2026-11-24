@@ -37,23 +37,19 @@ class ModuleMenuSeeder extends Seeder
                 ['shipping-methods','Shipping Methods','শিপিং পদ্ধতি','truck',[]],
             ]],
             ['sales','Sales','বিক্রয়','shopping-cart',[
-                ['orders','Orders','অর্ডার','receipt',[[ 'order-list','Order List','অর্ডার তালিকা',null],['new-order','New Order','নতুন অর্ডার',null],['order-details','Order Details','অর্ডার বিস্তারিত',null]]],
+                ['orders','Orders','অর্ডার','receipt',[[ 'order-list','Order List','অর্ডার তালিকা',null],['new-order','New Order','নতুন অর্ডার',null]]],
                 ['quotations','Quotations','কোটেশন','file-text',[[ 'quotation-list','Quotation List','কোটেশন তালিকা',null],['new-quotation','New Quotation','নতুন কোটেশন',null]]],
                 ['invoices','Sales Invoices','বিক্রয় ইনভয়েস','file-check',[[ 'invoice-list','Invoice List','ইনভয়েস তালিকা',null],['new-invoice','New Invoice','নতুন ইনভয়েস',null]]],
                 ['returns','Sales Returns','বিক্রয় রিটার্ন','undo-2',[[ 'return-list','Return List','রিটার্ন তালিকা',null],['new-return','New Return','নতুন রিটার্ন',null]]],
-                ['customers','Customers','কাস্টমার','users',[[ 'customer-list','Customer List','কাস্টমার তালিকা',null],['customer-groups','Customer Groups','কাস্টমার গ্রুপ',null]]],
                 ['discounts','Discounts','ডিসকাউন্ট','badge-percent',[[ 'coupons','Coupons','কুপন',null],['price-rules','Price Rules','মূল্যছাড়ের নিয়ম',null]]],
                 ['reports','Sales Reports','বিক্রয় রিপোর্ট','chart-bar',[[ 'sales-summary','Sales Summary','বিক্রয় সারাংশ',null]]]
             ]],
             ['pos','Point of Sale','পয়েন্ট অব সেল','monitor-smartphone',[
-                ['counter','POS Counter','পস কাউন্টার','scan-barcode',[[ 'new-sale','New Sale','নতুন বিক্রয়',null],['held-sales','Held Sales','স্থগিত বিক্রয়',null]]],
-                ['registers','Registers','ক্যাশ রেজিস্টার','wallet',[[ 'register-list','Register List','রেজিস্টার তালিকা',null],['cash-movements','Cash Movements','নগদ লেনদেন',null]]],
-                ['shifts','POS Shifts','পস শিফট','clock',[[ 'open-shift','Open Shift','শিফট শুরু',null],['close-shift','Close Shift','শিফট শেষ',null],['shift-history','Shift History','শিফট ইতিহাস',null]]]
+                ['counter','POS Counter','পস কাউন্টার','scan-barcode',[]],
             ]],
             ['inventory','Inventory','ইনভেন্টরি','package',[
                 ['stock','Stock','স্টক','warehouse',[[ 'stock-report','Stock Report','স্টক রিপোর্ট',null],['stock-ledger','Stock Ledger','স্টক লেজার',null],['low-stock','Low Stock','কম স্টক',null]]],
                 ['movements','Stock Movements','স্টক মুভমেন্ট','arrow-left-right',[[ 'stock-transfer','Stock Transfer','স্টক ট্রান্সফার',null],['stock-adjustment','Stock Adjustment','স্টক সমন্বয়',null],['stock-count','Stock Count','স্টক গণনা',null]]],
-                ['masters','Item Masters','আইটেম মাস্টার','layers',[[ 'units','Units','ইউনিট',null],['brands','Brands','ব্র্যান্ড',null],['barcodes','Barcodes','বারকোড',null]]]
             ]],
             ['purchasing','Purchasing','ক্রয়','shopping-bag',[
                 ['requisitions','Requisitions','রিকুইজিশন','clipboard-list',[[ 'requisition-list','Requisition List','রিকুইজিশন তালিকা',null],['new-requisition','New Requisition','নতুন রিকুইজিশন',null]]],
@@ -63,7 +59,7 @@ class ModuleMenuSeeder extends Seeder
             ]],
             ['finance','Accounts & Finance','হিসাব ও অর্থব্যবস্থা','landmark',[
                 ['chart-of-accounts','Chart of Accounts','হিসাবের খাতসমূহ','list-tree',[[ 'account-list','Account List','হিসাবের খাত তালিকা',null],['account-groups','Account Groups','হিসাবের গ্রুপ',null]]],
-                ['ledger','Ledger & Journals','লেজার ও জার্নাল','book-open',[[ 'journal-entries','Journal Entries','জার্নাল এন্ট্রি',null],['general-ledger','General Ledger','জেনারেল লেজার',null]]],
+                ['ledger','Ledger & Journals','লেজার ও জার্নাল','book-open',[[ 'journal-entries','Vouchers & Journals','ভাউচার ও জার্নাল',null],['general-ledger','General Ledger','জেনারেল লেজার',null]]],
                 ['receivables','Receivables','পাওনা হিসাব','hand-coins',[[ 'customer-dues','Customer Dues','কাস্টমারের বকেয়া',null],['collections','Collections','আদায়',null]]],
                 ['payables','Payables','দেনা হিসাব','credit-card',[[ 'vendor-bills','Vendor Bills','ভেন্ডর বিল',null],['vendor-payments','Vendor Payments','ভেন্ডর পেমেন্ট',null]]],
                 ['banking','Bank & Cash','ব্যাংক ও নগদ','wallet',[[ 'bank-accounts','Bank Accounts','ব্যাংক অ্যাকাউন্ট',null],['bank-transfers','Bank Transfers','ব্যাংক ট্রান্সফার',null],['bank-reconciliation','Bank Reconciliation','ব্যাংক রিকনসিলিয়েশন',null]]],
@@ -73,7 +69,7 @@ class ModuleMenuSeeder extends Seeder
             ['ecommerce','E-Commerce','ই-কমার্স','shopping-basket',[
                 ['storefront','Storefront','অনলাইন স্টোর','store',[[ 'pages','Pages','পেজ',null],['theme','Theme','থিম',null],['navigation','Navigation','নেভিগেশন',null]]],
                 ['catalog','Online Catalog','অনলাইন ক্যাটালগ','grid-2x2',[[ 'collections','Collections','কালেকশন',null],['featured-products','Featured Products','ফিচার্ড প্রোডাক্ট',null]]],
-                ['online-orders','Online Orders','অনলাইন অর্ডার','package-search',[[ 'online-order-list','Order List','অর্ডার তালিকা',null],['fulfillment','Fulfillment','অর্ডার পূরণ',null]]],
+                ['online-orders','Online Orders','অনলাইন অর্ডার','package-search',[[ 'online-order-list','Order List','অর্ডার তালিকা',null],['fulfillment','Fulfillment','অর্ডার পূরণ',null],['return-requests','Return Requests','রিটার্ন অনুরোধ',null]]],
                 ['checkout','Checkout','চেকআউট','credit-card',[[ 'shipping-methods','Shipping Methods','ডেলিভারি পদ্ধতি',null],['payment-methods','Payment Methods','পেমেন্ট পদ্ধতি',null]]],
                 ['online-marketing','Marketing','মার্কেটিং','megaphone',[[ 'campaigns','Campaigns','ক্যাম্পেইন',null],['abandoned-carts','Abandoned Carts','অসম্পূর্ণ কার্ট',null]]]
             ]],
@@ -131,20 +127,20 @@ class ModuleMenuSeeder extends Seeder
         ];
         $profiles=[
             'retail'=>[
-                'sales'=>['orders'=>'*','quotations'=>'*','invoices'=>'*','returns'=>'*','customers'=>'*','discounts'=>'*','reports'=>'*'],
-                'pos'=>['counter'=>'*','registers'=>'*','shifts'=>'*'],
-                'inventory'=>['stock'=>'*','movements'=>'*','masters'=>'*'],
+                'sales'=>['orders'=>'*','quotations'=>'*','invoices'=>'*','returns'=>'*','discounts'=>'*','reports'=>'*'],
+                'pos'=>['counter'=>'*'],
+                'inventory'=>['stock'=>'*','movements'=>'*'],
                 'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
                 'finance'=>['chart-of-accounts'=>'*','ledger'=>'*','receivables'=>'*','payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
                 'ecommerce'=>['storefront'=>'*','catalog'=>'*','online-orders'=>'*','checkout'=>'*','online-marketing'=>'*'],
                 'hr'=>['employees'=>'*','attendance'=>'*','payroll'=>'*']
             ],
             'food'=>[
-                'sales'=>['orders'=>'*','invoices'=>'*','customers'=>'*','discounts'=>'*','reports'=>'*'],
-                'pos'=>['counter'=>'*','registers'=>'*','shifts'=>'*'],
+                'sales'=>['orders'=>'*','invoices'=>'*','discounts'=>'*','reports'=>'*'],
+                'pos'=>['counter'=>'*'],
                 'restaurant'=>['dining'=>'*','food-menu'=>'*','kitchen-display'=>'*','table-bookings'=>'*','buffet'=>'*'],
                 'kitchen'=>['recipes'=>'*','preparation'=>'*','food-costing'=>'*'],
-                'inventory'=>['stock'=>'*','movements'=>'*','masters'=>'*'],
+                'inventory'=>['stock'=>'*','movements'=>'*'],
                 'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
                 'finance'=>['payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
                 'hr'=>['employees'=>'*','attendance'=>'*','payroll'=>'*']

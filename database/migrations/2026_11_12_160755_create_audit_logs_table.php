@@ -34,6 +34,7 @@ return new class extends Migration {
             $table->string('route_name', 191)->nullable();
             $table->string('request_path', 1024)->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();
+            $table->erpCommonColumns();
 
             $table->index(['actor_type', 'actor_id'], 'idx_actor');
             $table->index(['subject_type', 'subject_id'], 'idx_subject');

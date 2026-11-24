@@ -7,6 +7,7 @@ class CheckoutController extends Controller {
  public function index(Request $request,CatalogService $catalog){
   $business=$request->attributes->get('current_business');
   return view('public.business.public.ecommerce.checkout.place-order',[
+   'savedAddresses'=>($customer=$request->user('business_customer')) && (int)$customer->business_id===(int)$business->id ? app(\App\Services\CustomerAddressService::class)->query($request)->latest('id')->get() : collect(),
    'business'=>$business,'categories'=>$catalog->categories($business),
    'shippings'=>$catalog->shippings($business),'onlinePaymentEnabled'=>$catalog->onlinePayment($business),
   ]);

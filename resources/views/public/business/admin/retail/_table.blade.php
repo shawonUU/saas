@@ -10,7 +10,7 @@
  <th><button class="ret-btn" form="ret-filter-form" type="submit">{{ t('Apply','প্রয়োগ') }}</button></th>
  </tr></thead><tbody>
  @forelse($records as $record)<tr>
- @foreach($columns as $field=>$label)<td>{{ data_get($record,$field) }}@if($field==='sku' && $record->relationLoaded('product') && $record->product)<div class="ret-help">{{ $record->product->name }}</div>@endif @if($field==='account_id' && $record->relationLoaded('account') && $record->account)<div class="ret-help">{{ $record->account->code }} · {{ $record->account->name }}</div>@endif @if($field==='journal_id' && $record->relationLoaded('journal') && $record->journal)<div class="ret-help">{{ $record->journal->memo }}</div>@endif</td>@endforeach
+ @foreach($columns as $field=>$label)<td>{{ in_array($field,['name','description','address'],true) ? t(data_get($record,$field),data_get($record,$field.'_bn')) : data_get($record,$field) }}@if($field==='sku' && $record->relationLoaded('product') && $record->product)<div class="ret-help">{{ $record->product->name }}</div>@endif @if($field==='account_id' && $record->relationLoaded('account') && $record->account)<div class="ret-help">{{ $record->account->code }} · {{ t($record->account->name,$record->account->name_bn) }}</div>@endif @if($field==='journal_id' && $record->relationLoaded('journal') && $record->journal)<div class="ret-help">{{ $record->journal->memo }}</div>@endif</td>@endforeach
  <td>@if(!empty($rowActions))@include($rowActions)@endif</td>
  </tr>@empty<tr><td colspan="{{ count($columns)+1 }}">{{ t('No records found','কোনো তথ্য পাওয়া যায়নি') }}</td></tr>@endforelse
  </tbody></table></div><div style="margin-top:14px">{{ $records->links() }}</div>

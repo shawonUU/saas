@@ -1,0 +1,1 @@
+@if($page->hasPages())<div class="ec-pager">@if($page->previousPageUrl())<a href="{{ $page->previousPageUrl() }}">{{ t('Previous','আগের') }}</a>@else<span></span>@endif <small>{{ $page->currentPage() }} / {{ $page->lastPage() }}</small>@if($page->nextPageUrl())<a href="{{ $page->nextPageUrl() }}">{{ t('Next','পরের') }}</a>@else<span></span>@endif</div>@endif

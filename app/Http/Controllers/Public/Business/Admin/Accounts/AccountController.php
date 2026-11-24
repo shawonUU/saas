@@ -18,7 +18,7 @@ class AccountController extends Controller
         app(Accounting::class)->ensure($v['business']);
         $v['title'] = 'Chart of Accounts';
         $v['records'] = Lists::page(Account::where('business_id', $v['business']->id), $r, [
-            'id' => 'number', 'code' => 'text', 'name' => 'text',
+            'id' => 'number', 'code' => 'text', 'name' => 'text', 'name_bn' => 'text',
             'type' => 'text', 'is_system' => 'number', 'is_active' => 'number',
         ]);
 
@@ -31,6 +31,7 @@ class AccountController extends Controller
         $d = $r->validate([
             'code' => ['required', 'regex:/^[0-9]{4,8}$/', Rule::unique('accounts')->where('business_id', $v['business']->id)],
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'type' => 'required|in:asset,liability,equity,income,expense',
         ]);
 
@@ -51,6 +52,7 @@ class AccountController extends Controller
 
         $d = $r->validate([
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'is_active' => 'required|boolean',
         ]);
 

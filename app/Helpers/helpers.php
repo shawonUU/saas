@@ -82,19 +82,42 @@ if (!function_exists('approvalStatus')) {
     function approvalStatus(): array { return ['Approved', 'Pending', 'Rejected', 'Cancelled']; }
 }
 if (!function_exists('t')) {
-    function t(string $english, string $bangla): string {
-        return session('portal_lang', 'en') === 'bn' ? $bangla : $english;
+    function t(?string $english, ?string $bangla = null): string {
+        return session('portal_lang', 'en') === 'bn' && filled($bangla) ? $bangla : ($english ?? '');
     }
 }
 
 if(!function_exists('getGenerateCode')){
-    function getGenerateCode($model, $column,  $prefix, $numbers = 8,$noTrash = null){
-        $lastRecord = $model::orderBy('id', 'desc')->first();
+    function getGenerateCode($model, $column, $prefix, $numbers = 8, $noTrash = null){
+        if (is_string($model)) {
+            $query = $model::query();
+            if (in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses_recursive($model), true)) $query->withTrashed();
+        } else {
+            $query = clone $model;
+            if ($query instanceof \Illuminate\Database\Eloquent\Builder && in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses_recursive($query->getModel()), true)) $query->withTrashed();
+        }
+        $number = 0;
+        foreach ((clone $query)->where($column, 'like', $prefix.'-%')->reorder('id', 'desc')->select($column)->cursor() as $record) {
+            $value = (string) $record->{$column};
+            if (preg_match('/^'.preg_quote($prefix, '/').'-([0-9]+)$/D', $value, $matches)) {
+                $number = (int) $matches[1];
+                break;
+            }
+        }
+        do { $code = $prefix.'-'.(++$number); }
+        while ((clone $query)->where($column, $code)->exists());
+        return $code;
+    }
+}
 
-        if (!$lastRecord) {return $prefix . '-1';}
-        $lastCode = $lastRecord->{$column};
-        $number = (int) str_replace($prefix . '-', '', $lastCode);
-        return $prefix . '-' . ($number + 1);
+if (!function_exists('erpCodePrefix')) {
+    function erpCodePrefix(string $table): string {
+        return match ($table) {
+            'users' => 'USR', 'businesses' => 'BUSI', 'business_users' => 'BUSU',
+            'business_customers' => 'BCUST', 'saas_users' => 'SASUSR',
+            'business_permissions' => 'BP', 'business_user_permissions' => 'BUP',
+            default => strtoupper(str_replace('_', '-', $table)),
+        };
     }
 }
 

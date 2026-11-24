@@ -1,2 +1,0 @@
-<a class="ret-btn alt" href="<?php echo e(route('business.admin.retail.orders.show',['order'=>$record->id])); ?>"><?php echo e(t('View / Edit','দেখুন / সম্পাদনা')); ?></a>
-<?php /**PATH C:\laragon\www\saas-backend\resources\views/public/business/admin/retail/_rows/orders_show.blade.php ENDPATH**/ ?>

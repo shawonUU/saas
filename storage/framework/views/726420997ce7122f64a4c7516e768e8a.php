@@ -115,7 +115,7 @@
                         </span>
 
                         <span class="sf-rail-label">
-                            <?php echo e($category->name); ?>
+                            <?php echo e(t($category->name,$category->name_bn ?? $category->name)); ?>
 
                         </span>
                     </a>
@@ -165,7 +165,7 @@
                             class="<?php echo \Illuminate\Support\Arr::toCssClasses([
                                 'active' => (int)request('sub_category') === (int)$kid->id
                             ]); ?>">
-                                <?php echo e($kid->name); ?>
+                                <?php echo e(t($kid->name,$kid->name_bn ?? $kid->name)); ?>
 
                             </a>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

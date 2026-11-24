@@ -5,7 +5,6 @@ namespace App\Models\Concerns;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 /**
  * @mixin Model
@@ -18,7 +17,7 @@ trait ErpCrud
     protected static function bootErpCrud(): void
     {
         static::creating(function (Model $model) {
-            if (blank($model->getAttribute('code'))) $model->setAttribute('code', 'E'.Str::upper(Str::random(18)));
+            if (blank($model->getAttribute('code'))) $model->setAttribute('code', getGenerateCode(get_class($model), 'code', erpCodePrefix($model->getTable())));
             $model->created_by = Auth::id();
             $model->updated_by = Auth::id();
             $model->created_ip = request()->ip();

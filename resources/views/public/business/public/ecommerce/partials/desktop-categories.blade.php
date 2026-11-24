@@ -114,7 +114,7 @@
                         </span>
 
                         <span class="sf-rail-label">
-                            {{ $category->name }}
+                            {{ t($category->name,$category->name_bn ?? $category->name) }}
                         </span>
                     </a>
 
@@ -163,7 +163,7 @@
                             @class([
                                 'active' => (int)request('sub_category') === (int)$kid->id
                             ])>
-                                {{ $kid->name }}
+                                {{ t($kid->name,$kid->name_bn ?? $kid->name) }}
                             </a>
                         @endforeach
 

@@ -27,14 +27,6 @@ Route::domain('{business}.'.$domain)->middleware('business.resolve')->name('busi
     Route::match(['get','post'],'/payments/sslcommerz/callback', [\App\Http\Controllers\Public\Business\Public\GatewayController::class,'callback'])->middleware('throttle:30,1')->name('gateway.callback');
     Route::get('/shop/thanks/{order}', [\App\Http\Controllers\Public\Business\Public\ShopController::class, 'success'])->name('shop.success');
     Route::middleware(['portal.auth:business_customer', 'auth.session'])->group(function () {
-        Route::get('/dashboard', function (Request $request) {
-            $business = $request->attributes->get('current_business');
-            return view('portals.dashboard', [
-                'title' => $business->name.' · Customer', 'user' => Auth::guard('business_customer')->user(),
-                'subtitle' => t('My customer account', 'আমার কাস্টমার অ্যাকাউন্ট'),
-                'logoutUrl' => route('business.customer.logout', ['business' => $business->domain]),
-                'links' => [[t('Store home', 'স্টোর হোম'), route('business.customer.home', ['business' => $business->domain])]],
-            ]);
-        })->name('dashboard');
+        require __DIR__.'/Ecommerce/Account/routes.php';
     });
 });

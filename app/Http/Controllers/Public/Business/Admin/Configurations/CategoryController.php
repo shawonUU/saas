@@ -18,6 +18,7 @@ class CategoryController extends Controller
     protected const TITLE = 'Categories';
     protected const TITLE_BN = 'ক্যাটাগরি';
     protected const FIELDS = [
+        'name_bn' => ['label' => 'Bangla Name', 'label_bn' => 'বাংলা নাম', 'type' => 'text', 'required' => false, 'options' => []],
         'name' => [
             'label' => 'Category Name',
             'label_bn' => 'ক্যাটাগরির নাম',
@@ -127,6 +128,7 @@ class CategoryController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:2000',
             'is_active' => 'required|boolean',
         ]);

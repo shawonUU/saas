@@ -16,6 +16,7 @@ class CustomerController extends Controller
     protected const TITLE = 'Customers';
     protected const TITLE_BN = 'কাস্টমার';
     protected const FIELDS = [
+        'name_bn' => ['label' => 'Bangla Name', 'label_bn' => 'বাংলা নাম', 'type' => 'text', 'required' => false, 'options' => []],
         'name' => [
             'label' => 'Customer Name',
             'label_bn' => 'কাস্টমারের নাম',
@@ -43,6 +44,7 @@ class CustomerController extends Controller
 
             ],
         ],
+        'address_bn' => ['label' => 'Bangla Address', 'label_bn' => 'বাংলা ঠিকানা', 'type' => 'textarea', 'required' => false, 'options' => []],
         'address' => [
             'label' => 'Address',
             'label_bn' => 'ঠিকানা',
@@ -152,9 +154,11 @@ class CustomerController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
             'email' => 'nullable|email:rfc|max:255',
             'address' => 'nullable|string|max:2000',
+            'address_bn' => 'nullable|string|max:2000',
             'notes' => 'nullable|string|max:2000',
             'is_active' => 'required|boolean',
         ]);

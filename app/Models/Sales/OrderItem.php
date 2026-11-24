@@ -3,4 +3,4 @@ namespace App\Models\Sales;
 use App\Models\Configurations\Variant;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderItem extends Model {  protected $table='order_items'; protected $guarded=[]; public function variant(){return $this->belongsTo(Variant::class,'variant_id');} }
+class OrderItem extends Model { use \App\Models\Concerns\ErpCrud;  protected $table='order_items'; protected $guarded=[]; public function variant(){return $this->belongsTo(Variant::class,'variant_id');} }

@@ -18,6 +18,7 @@ class SubCategoryController extends Controller
     protected const TITLE = 'Sub-Categories';
     protected const TITLE_BN = 'সাব-ক্যাটাগরি';
     protected const FIELDS = [
+        'name_bn' => ['label' => 'Bangla Name', 'label_bn' => 'বাংলা নাম', 'type' => 'text', 'required' => false, 'options' => []],
         'name' => [
             'label' => 'Sub-Category Name',
             'label_bn' => 'সাব-ক্যাটাগরির নাম',
@@ -127,7 +128,7 @@ class SubCategoryController extends Controller
             'fields' => $fields, 'columns' => $columns, 'records' => $records,
             'filters' => $filters, 'search' => $search, 'sort' => $sort, 'dir' => $dir,
             'perPage' => $perPage, 'permissions' => $permissions,
-            'categories' => Category::where('business_id', $tenant->id)->where('is_active', true)->orderBy('name')->get(['id', 'name']),
+            'categories' => Category::where('business_id', $tenant->id)->where('is_active', true)->orderBy('name')->get(['id', 'name', 'name_bn']),
             'routePrefix' => 'business.admin.configurations.'.str_replace('-', '_', self::SLUG),
         ]);
     }
@@ -136,6 +137,7 @@ class SubCategoryController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'category_id' => ['required', 'integer', Rule::exists('config_categories', 'id')->where('business_id', $tenant->id)->whereNull('deleted_at')->where('is_active', true)],
             'description' => 'nullable|string|max:2000',
             'is_active' => 'required|boolean',

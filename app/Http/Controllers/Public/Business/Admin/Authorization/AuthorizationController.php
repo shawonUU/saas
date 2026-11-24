@@ -308,7 +308,6 @@ class AuthorizationController extends Controller
             $view=(bool)$entry['can_view'];
 
             $rows[]=[
-                'code'=>uniqid(),
                 'business_user_id'=>$target->id,
                 'module_id'=>$moduleId,
                 'menu_id'=>$menuId,
@@ -336,7 +335,7 @@ class AuthorizationController extends Controller
                 ->delete();
 
             if($rows){
-                BusinessUserAccess::query()->insert($rows);
+                foreach ($rows as $row) BusinessUserAccess::create($row);
             }
 
             BusinessUserPermission::query()
@@ -354,7 +353,7 @@ class AuthorizationController extends Controller
                     'updated_at'=>$now
                 ],$selectedExtras);
 
-                BusinessUserPermission::query()->insert($extraRows);
+                foreach ($extraRows as $row) BusinessUserPermission::query()->insert($row + ['code'=>getGenerateCode(BusinessUserPermission::class,'code','BUP')]);
             }
         });
 

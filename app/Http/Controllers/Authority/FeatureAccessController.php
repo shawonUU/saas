@@ -58,9 +58,9 @@ class FeatureAccessController extends Controller
                     if ($mode === 'shop') {
                         abort_unless(in_array((string)$value,['inherit','1','0'],true),422);
                         if ((string)$value === 'inherit') continue;
-                        $rows[] = [$fk => $id,$column => (int)$key,'is_enabled' => (int)$value,'code' => 'X'.\Illuminate\Support\Str::upper(\Illuminate\Support\Str::random(18)),'source' => 'Override','approval_status' => 'Approved','created_at' => now(),'updated_at' => now()];
+                        $rows[] = [$fk => $id,$column => (int)$key,'is_enabled' => (int)$value,'source' => 'Override','approval_status' => 'Approved','created_at' => now(),'updated_at' => now()];
                     } elseif ((string)$value === '1') {
-                        $rows[] = [$fk => $id,$column => (int)$key,'code' => 'X'.\Illuminate\Support\Str::upper(\Illuminate\Support\Str::random(18)),'approval_status' => 'Approved','created_at' => now(),'updated_at' => now()];
+                        $rows[] = [$fk => $id,$column => (int)$key,'approval_status' => 'Approved','created_at' => now(),'updated_at' => now()];
                     } else abort(422);
                 }
                 // Eloquent delete honors SoftDeletes; force-delete stale mapping rows so unique keys can be reused.

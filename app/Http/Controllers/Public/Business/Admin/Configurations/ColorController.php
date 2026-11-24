@@ -16,6 +16,7 @@ class ColorController extends Controller
     protected const TITLE = 'Colors';
     protected const TITLE_BN = 'রঙ';
     protected const FIELDS = [
+        'name_bn' => ['label' => 'Bangla Name', 'label_bn' => 'বাংলা নাম', 'type' => 'text', 'required' => false, 'options' => []],
         'name' => [
             'label' => 'Color Name',
             'label_bn' => 'রঙের নাম',
@@ -134,6 +135,7 @@ class ColorController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'hex_code' => ['nullable', 'regex:/^#[0-9a-fA-F]{6}$/'],
             'description' => 'nullable|string|max:2000',
             'is_active' => 'required|boolean',

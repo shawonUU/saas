@@ -15,7 +15,7 @@
     $recordPayload = $records->getCollection()->mapWithKeys(fn($r) => [
         $r->id => $r->only(array_merge(['id','is_active'],array_keys($fields)))
     ])->all();
-    $categoryNames = $categories->pluck('name', 'id');
+    $categoryNames = $categories->mapWithKeys(fn($category) => [$category->id => t($category->name, $category->name_bn)]);
 @endphp
 
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -130,7 +130,7 @@
                                             @elseif($meta['type']==='category')
                                                 @foreach($categories as $category)
                                                     <option value="{{ $category->id }}" @selected((string)($filters[$column]??'')===(string)$category->id)>
-                                                        {{ $category->name }}
+                                                        {{ t($category->name, $category->name_bn) }}
                                                     </option>
                                                 @endforeach
                                             @else
@@ -193,7 +193,7 @@
                                             {{ $record->getAttribute($column) }}
 
                                         @else
-                                            {{ $record->getAttribute($column) ?? '—' }}
+                                            {{ in_array($column, ['name','description','address'], true) ? t($record->getAttribute($column), $record->getAttribute($column.'_bn')) : ($record->getAttribute($column) ?? '—') }}
                                         @endif
                                     </td>
                                 @endforeach

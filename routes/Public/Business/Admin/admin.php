@@ -69,6 +69,8 @@ Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->grou
             require __DIR__.'/retail/account_groups.php';
         });
 
+        require __DIR__.'/ecommerce/orders.php';
+        require __DIR__.'/ecommerce/returns.php';
         require __DIR__.'/settings/business/general_settings.php';
         Route::get('/{module}/{menu}/{child?}',[WorkspaceController::class,'feature'])->name('business.admin.feature');   
 

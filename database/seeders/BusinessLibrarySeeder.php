@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 class BusinessLibrarySeeder extends Seeder {
  public function run():void {
   if(!Schema::hasTable('businesses'))return;
+  $bn=['Unbranded'=>'ব্র্যান্ডবিহীন','General'=>'সাধারণ','No Tax'=>'কর নেই','Piece'=>'পিস','Kilogram'=>'কিলোগ্রাম','Gram'=>'গ্রাম','Liter'=>'লিটার','Box'=>'বাক্স','Pack'=>'প্যাক','Small'=>'ছোট','Medium'=>'মাঝারি','Large'=>'বড়','Extra Large'=>'অতিরিক্ত বড়','Black'=>'কালো','White'=>'সাদা','Blue'=>'নীল','Red'=>'লাল','Bangladeshi Taka'=>'বাংলাদেশি টাকা','Cash on Delivery'=>'ডেলিভারির সময় নগদ পরিশোধ','Cash'=>'নগদ','Bank Transfer'=>'ব্যাংক স্থানান্তর','Standard Delivery'=>'সাধারণ ডেলিভারি'];
   $libraries=[
    'config_brands'=>[['UNBRANDED','Unbranded',[]]],
    'config_categories'=>[['GENERAL','General',[]]],
@@ -25,6 +26,10 @@ class BusinessLibrarySeeder extends Seeder {
      // Never overwrite customized merchant records.
      // Schema macro code is globally unique across businesses.
      $tenantCode='B'.$business->id.'-'.$code;
+     if(Schema::hasColumn($table,'name_bn')) {
+      $values['name_bn']=$bn[$name]??null;
+      DB::table($table)->where('business_id',$business->id)->where('code',$tenantCode)->where('name',$name)->whereNull('name_bn')->update(['name_bn'=>$values['name_bn']]);
+     }
      if(DB::table($table)->where('business_id',$business->id)->where('code',$tenantCode)->exists())continue;
      DB::table($table)->insert(array_merge(['business_id'=>$business->id,'code'=>$tenantCode,'created_at'=>now(),'updated_at'=>now()],$values));
     }

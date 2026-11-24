@@ -16,7 +16,7 @@
     $recordPayload = $records->getCollection()->mapWithKeys(fn($r) => [
         $r->id => $r->only(array_merge(['id','is_active'],array_keys($fields)))
     ])->all();
-    $categoryNames = $categories->pluck('name', 'id');
+    $categoryNames = $categories->mapWithKeys(fn($category) => [$category->id => t($category->name, $category->name_bn)]);
 @endphp
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
     <symbol id="ws-i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
@@ -71,7 +71,7 @@
                                             <option value="1" @selected((string)($filters[$column]??'')==='1')>{{ $meta['type']==='status'?t('Active','সক্রিয়'):t('Yes','হ্যাঁ') }}</option>
                                             <option value="0" @selected((string)($filters[$column]??'')==='0')>{{ $meta['type']==='status'?t('Inactive','নিষ্ক্রিয়'):t('No','না') }}</option>
                                         @elseif($meta['type']==='category')
-                                            @foreach($categories as $category)<option value="{{ $category->id }}" @selected((string)($filters[$column]??'')===(string)$category->id)>{{ $category->name }}</option>@endforeach
+                                            @foreach($categories as $category)<option value="{{ $category->id }}" @selected((string)($filters[$column]??'')===(string)$category->id)>{{ t($category->name, $category->name_bn) }}</option>@endforeach
                                         @else
                                             @foreach($meta['options'] as $value=>$text)<option value="{{ $value }}" @selected((string)($filters[$column]??'')===(string)$value)>{{ t($text, $meta['options_bn'][$value] ?? $text) }}</option>@endforeach
                                         @endif
@@ -96,7 +96,7 @@
                                     @elseif($meta['type']==='select'){{ t($meta['options'][$record->getAttribute($column)] ?? '—', $meta['options_bn'][$record->getAttribute($column)] ?? ($meta['options'][$record->getAttribute($column)] ?? '—')) }}
                                     @elseif($meta['type']==='date'){{ $record->getAttribute($column)?->format('Y-m-d H:i') ?? '—' }}
                                     @elseif($meta['type']==='hex' && $record->getAttribute($column))<span class="cfg-swatches" style="background:{{ preg_match('/^#[0-9a-fA-F]{6}$/',(string)$record->getAttribute($column))?$record->getAttribute($column):'transparent' }}"></span>{{ $record->getAttribute($column) }}
-                                    @else{{ $record->getAttribute($column) ?? '—' }}
+                                    @else{{ in_array($column, ['name','description','address'], true) ? t($record->getAttribute($column), $record->getAttribute($column.'_bn')) : ($record->getAttribute($column) ?? '—') }}
                                     @endif
                                 </td>
                             @endforeach
@@ -148,7 +148,7 @@
                     </div>
                     <div class="cfg-field">
                         <label for="cfg-category_id">{{ t('Parent Category','মূল ক্যাটাগরি') }} <span class="cfg-required">*</span></label>
-                        <select name="category_id" id="cfg-category_id" class="cfg-input" required><option value="">{{ t('Select Parent Category','মূল ক্যাটাগরি নির্বাচন করুন') }}</option>@foreach($categories as $category)<option value="{{ $category->id }}">{{ $category->name }}</option>@endforeach</select>
+                        <select name="category_id" id="cfg-category_id" class="cfg-input" required><option value="">{{ t('Select Parent Category','মূল ক্যাটাগরি নির্বাচন করুন') }}</option>@foreach($categories as $category)<option value="{{ $category->id }}">{{ t($category->name, $category->name_bn) }}</option>@endforeach</select>
                     </div>
                     <div class="cfg-field wide">
                         <label for="cfg-description">{{ t('Description','বিবরণ') }}</label>

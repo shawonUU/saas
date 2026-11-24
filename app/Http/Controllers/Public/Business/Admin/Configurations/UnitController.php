@@ -16,6 +16,7 @@ class UnitController extends Controller
     protected const TITLE = 'Units';
     protected const TITLE_BN = 'ইউনিট';
     protected const FIELDS = [
+        'name_bn' => ['label' => 'Bangla Name', 'label_bn' => 'বাংলা নাম', 'type' => 'text', 'required' => false, 'options' => []],
         'name' => [
             'label' => 'Unit Name',
             'label_bn' => 'ইউনিটের নাম',
@@ -134,6 +135,7 @@ class UnitController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'symbol' => 'required|string|max:255',
             'description' => 'nullable|string|max:2000',
             'is_active' => 'required|boolean',

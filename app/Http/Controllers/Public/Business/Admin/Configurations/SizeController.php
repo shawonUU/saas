@@ -16,6 +16,7 @@ class SizeController extends Controller
     protected const TITLE = 'Sizes';
     protected const TITLE_BN = 'সাইজ';
     protected const FIELDS = [
+        'name_bn' => ['label' => 'Bangla Name', 'label_bn' => 'বাংলা নাম', 'type' => 'text', 'required' => false, 'options' => []],
         'name' => [
             'label' => 'Size Name',
             'label_bn' => 'সাইজের নাম',
@@ -125,6 +126,7 @@ class SizeController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:2000',
             'is_active' => 'required|boolean',
         ]);

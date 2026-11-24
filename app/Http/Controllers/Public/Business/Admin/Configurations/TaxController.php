@@ -16,6 +16,7 @@ class TaxController extends Controller
     protected const TITLE = 'Taxes';
     protected const TITLE_BN = 'ট্যাক্স';
     protected const FIELDS = [
+        'name_bn' => ['label' => 'Bangla Name', 'label_bn' => 'বাংলা নাম', 'type' => 'text', 'required' => false, 'options' => []],
         'name' => [
             'label' => 'Tax Name',
             'label_bn' => 'ট্যাক্সের নাম',
@@ -145,6 +146,7 @@ class TaxController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'rate' => 'required|numeric|min:0|max:100',
             'calculation_type' => 'required|in:exclusive,inclusive',
             'description' => 'nullable|string|max:2000',

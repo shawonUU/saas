@@ -8,7 +8,7 @@ use App\Models\Sales\Discount;
 use App\Models\Sales\Order;
 use App\Models\Sales\OrderItem;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+
 use Illuminate\Validation\ValidationException;
 
 class Sales
@@ -166,7 +166,7 @@ class Sales
 
             $order = Order::create([
                 'business_id' => $business->id,
-                'order_no' => 'SO-' . Str::upper(Str::random(10)),
+                'order_no' => getGenerateCode(Order::where('business_id', $business->id), 'order_no', 'SO'),
                 'request_key' => $key ?: null,
                 'customer_id' => $data['customer_id'] ?? null,
                 'channel' => $channel,

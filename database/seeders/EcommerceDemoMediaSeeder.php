@@ -33,7 +33,7 @@ class EcommerceDemoMediaSeeder {
    }
    if($update){
     if($existing)DB::table('business_brand_settings')->where('business_id',$businessId)->update($update+['updated_at'=>now()]);
-    else DB::table('business_brand_settings')->insert($update+['business_id'=>$businessId,'primary_color'=>'#E82964','tagline'=>'Explore fresh finds every day','created_at'=>now(),'updated_at'=>now()]);
+    else DB::table('business_brand_settings')->insert($update+['code'=>getGenerateCode(DB::table('business_brand_settings'),'code','BUSINESS-BRAND-SETTINGS'),'business_id'=>$businessId,'primary_color'=>'#E82964','tagline'=>'Explore fresh finds every day','created_at'=>now(),'updated_at'=>now()]);
    }
   }
   return $base;

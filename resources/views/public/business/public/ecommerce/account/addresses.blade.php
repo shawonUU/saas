@@ -1,0 +1,8 @@
+@extends('public.business.public.ecommerce.account.shell')
+@section('title',t('Address book','ঠিকানা তালিকা'))
+@section('account_heading',t('Address book','ঠিকানা তালিকা'))
+@section('account_content')
+<div class="ec-card"><h2>{{ t('Add delivery address','ডেলিভারি ঠিকানা যোগ করুন') }}</h2><form class="ec-form" method="post" action="{{ route('business.customer.addresses.store') }}">@csrf @include('public.business.public.ecommerce.account.address-fields',['address'=>null])<button class="ec-btn">{{ t('Save address','ঠিকানা সংরক্ষণ করুন') }}</button></form></div>
+@forelse($addresses as $address)<div class="ec-card"><div class="ec-row"><div><h2>{{ $address->label }}</h2><p>{{ $address->recipient }} · {{ $address->phone }}</p><p>{{ $address->address_line }}, {{ $address->city }}, {{ $address->district }}</p></div><form method="post" action="{{ route('business.customer.addresses.destroy',['address'=>$address->id]) }}">@csrf @method('DELETE')<button class="ec-btn" type="submit">{{ t('Remove','সরান') }}</button></form></div><details><summary>{{ t('Edit address','ঠিকানা সম্পাদনা') }}</summary><form class="ec-form" method="post" action="{{ route('business.customer.addresses.update',['address'=>$address->id]) }}">@csrf @method('PUT') @include('public.business.public.ecommerce.account.address-fields',['address'=>$address])<button class="ec-btn">{{ t('Save changes','পরিবর্তন সংরক্ষণ') }}</button></form></details></div>@empty<div class="ec-card"><p>{{ t('No saved addresses yet.','এখনো কোনো ঠিকানা সংরক্ষিত নেই।') }}</p></div>@endforelse
+@include('public.business.public.ecommerce.account.pagination',['page'=>$addresses])
+@endsection

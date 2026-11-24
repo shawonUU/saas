@@ -18,6 +18,7 @@ class CurrencyController extends Controller
     protected const TITLE = 'Currencies';
     protected const TITLE_BN = 'মুদ্রা';
     protected const FIELDS = [
+        'name_bn' => ['label' => 'Bangla Name', 'label_bn' => 'বাংলা নাম', 'type' => 'text', 'required' => false, 'options' => []],
         'name' => [
             'label' => 'Currency Name',
             'label_bn' => 'মুদ্রার নাম',
@@ -154,6 +155,7 @@ class CurrencyController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'currency_code' => ['required', 'string', 'size:3', 'regex:/^[A-Z]{3}$/', Rule::unique('config_currencies', 'currency_code')->where('business_id', $tenant->id)->whereNull('deleted_at')->ignore($record?->id)],
             'symbol' => 'required|string|max:255',
             'exchange_rate' => 'required|numeric|min:0|max:999999999',

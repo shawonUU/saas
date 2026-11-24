@@ -16,6 +16,7 @@ class ShippingMethodController extends Controller
     protected const TITLE = 'Shipping Methods';
     protected const TITLE_BN = 'শিপিং পদ্ধতি';
     protected const FIELDS = [
+        'name_bn' => ['label' => 'Bangla Name', 'label_bn' => 'বাংলা নাম', 'type' => 'text', 'required' => false, 'options' => []],
         'name' => [
             'label' => 'Method Name',
             'label_bn' => 'পদ্ধতির নাম',
@@ -143,6 +144,7 @@ class ShippingMethodController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_bn' => 'nullable|string|max:255',
             'charge' => 'required|numeric|min:0|max:999999999',
             'estimated_days' => 'nullable|integer|min:0|max:1000000',
             'description' => 'nullable|string|max:2000',

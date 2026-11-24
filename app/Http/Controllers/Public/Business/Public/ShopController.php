@@ -89,6 +89,10 @@ class ShopController extends Controller
             app(\App\Services\SslCommerz::class)->integration($b);
         }
 
+        $customer = \Illuminate\Support\Facades\Auth::guard('business_customer')->user();
+        if ($customer && (int)$customer->business_id === (int)$b->id && $customer->is_active && $customer->approval_status === 'Approved') {
+            $d['customer_id'] = $customer->id;
+        }
         $order = $sales->create($b, $d, 'online');
 
         if (!empty($d['request_key'])) {
