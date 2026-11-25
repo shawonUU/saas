@@ -22,6 +22,8 @@ class ModuleMenuSeeder extends Seeder
         // Menu with [] children is directly clickable.
         $structure=[
             ['configurations','Configurations','কনফিগারেশন','settings',[
+                ['branch','Branch','শাখা','building',[]],
+                ['warehouse','Warehouse','গুদাম','warehouse',[]],
                 ['customers','Customers','কাস্টমার','user',[]],
                 ['suppliers','Suppliers','সরবরাহকারী','truck',[]],
                 ['units','Units','ইউনিট','ruler',[]],
@@ -37,23 +39,21 @@ class ModuleMenuSeeder extends Seeder
                 ['shipping-methods','Shipping Methods','শিপিং পদ্ধতি','truck',[]],
             ]],
             ['sales','Sales','বিক্রয়','shopping-cart',[
-                ['orders','Orders','অর্ডার','receipt',[[ 'order-list','Order List','অর্ডার তালিকা',null],['new-order','New Order','নতুন অর্ডার',null]]],
+                ['orders','Orders','অর্ডার','receipt',[[ 'order-list','Order List','অর্ডার তালিকা',null],['new-order','New Order','নতুন অর্ডার',null],['order-details','Order Details','অর্ডারের বিবরণ',null]]],
+                ['pos','POS','পস','pos',[]],
                 ['quotations','Quotations','কোটেশন','file-text',[[ 'quotation-list','Quotation List','কোটেশন তালিকা',null],['new-quotation','New Quotation','নতুন কোটেশন',null]]],
                 ['invoices','Sales Invoices','বিক্রয় ইনভয়েস','file-check',[[ 'invoice-list','Invoice List','ইনভয়েস তালিকা',null],['new-invoice','New Invoice','নতুন ইনভয়েস',null]]],
                 ['returns','Sales Returns','বিক্রয় রিটার্ন','undo-2',[[ 'return-list','Return List','রিটার্ন তালিকা',null],['new-return','New Return','নতুন রিটার্ন',null]]],
                 ['discounts','Discounts','ডিসকাউন্ট','badge-percent',[[ 'coupons','Coupons','কুপন',null],['price-rules','Price Rules','মূল্যছাড়ের নিয়ম',null]]],
                 ['reports','Sales Reports','বিক্রয় রিপোর্ট','chart-bar',[[ 'sales-summary','Sales Summary','বিক্রয় সারাংশ',null]]]
             ]],
-            ['pos','Point of Sale','পয়েন্ট অব সেল','monitor-smartphone',[
-                ['counter','POS Counter','পস কাউন্টার','scan-barcode',[]],
-            ]],
             ['inventory','Inventory','ইনভেন্টরি','package',[
                 ['stock','Stock','স্টক','warehouse',[[ 'stock-report','Stock Report','স্টক রিপোর্ট',null],['stock-ledger','Stock Ledger','স্টক লেজার',null],['low-stock','Low Stock','কম স্টক',null]]],
                 ['movements','Stock Movements','স্টক মুভমেন্ট','arrow-left-right',[[ 'stock-transfer','Stock Transfer','স্টক ট্রান্সফার',null],['stock-adjustment','Stock Adjustment','স্টক সমন্বয়',null],['stock-count','Stock Count','স্টক গণনা',null]]],
             ]],
-            ['purchasing','Purchasing','ক্রয়','shopping-bag',[
+            ['purchase','Purchase','ক্রয়','shopping-bag',[
                 ['requisitions','Requisitions','রিকুইজিশন','clipboard-list',[[ 'requisition-list','Requisition List','রিকুইজিশন তালিকা',null],['new-requisition','New Requisition','নতুন রিকুইজিশন',null]]],
-                ['purchase-orders','Purchase Orders','ক্রয় আদেশ','file-plus',[[ 'po-list','PO List','ক্রয় আদেশ তালিকা',null],['new-po','New PO','নতুন ক্রয় আদেশ',null]]],
+                ['purchase-orders','Purchase Orders','ক্রয় আদেশ','file-plus',[[ 'po-list','PO List','ক্রয় আদেশ তালিকা',null],['new-po','New PO','নতুন ক্রয় আদেশ',null]]],
                 ['receiving','Goods Receiving','পণ্য গ্রহণ','package-check',[[ 'grn-list','GRN List','পণ্য গ্রহণ তালিকা',null],['new-grn','New GRN','নতুন পণ্য গ্রহণ',null]]],
                 ['purchase-returns','Purchase Returns','ক্রয় রিটার্ন','rotate-ccw',[[ 'purchase-return-list','Return List','রিটার্ন তালিকা',null]]]
             ]],
@@ -73,10 +73,33 @@ class ModuleMenuSeeder extends Seeder
                 ['checkout','Checkout','চেকআউট','credit-card',[[ 'shipping-methods','Shipping Methods','ডেলিভারি পদ্ধতি',null],['payment-methods','Payment Methods','পেমেন্ট পদ্ধতি',null]]],
                 ['online-marketing','Marketing','মার্কেটিং','megaphone',[[ 'campaigns','Campaigns','ক্যাম্পেইন',null],['abandoned-carts','Abandoned Carts','অসম্পূর্ণ কার্ট',null]]]
             ]],
-            ['logistics','Logistics','লজিস্টিকস','truck',[
-                ['shipments','Shipments','শিপমেন্ট','package',[]],
-                ['delivery','Delivery','ডেলিভারি','truck',[]],
-                ['cod','Cash on Delivery','ক্যাশ অন ডেলিভারি','banknote',[]]
+            ['logistics','Delivery & Logistics','ডেলিভারি ও লজিস্টিকস','truck',[
+                ['delivery','Delivery Management','ডেলিভারি ব্যবস্থাপনা','package',[
+                    ['delivery-list','Delivery List','ডেলিভারি তালিকা',null],
+                    ['ready-to-ship','Ready to Ship','ডেলিভারির জন্য প্রস্তুত',null],
+                    ['delivery-tracking','Delivery Tracking','ডেলিভারি ট্র্যাকিং',null],
+                    ['returned-delivery','Returned Delivery','ফেরত ডেলিভারি',null]
+                ]],
+                ['courier','Courier Management','কুরিয়ার ব্যবস্থাপনা','truck',[
+                    ['courier-partners','Courier Partners','কুরিয়ার পার্টনার',null],
+                    ['courier-booking','Courier Booking','কুরিয়ার বুকিং',null]
+                ]],
+                ['cod','Cash on Delivery','ক্যাশ অন ডেলিভারি','banknote',[
+                    ['cod-collection','COD Collection','COD সংগ্রহ',null],
+                    ['cod-settlement','COD Settlement','COD সেটেলমেন্ট',null]
+                ]],
+                ['settings','Delivery Settings','ডেলিভারি সেটিংস','settings',[
+                    ['delivery-methods','Delivery Methods','ডেলিভারি পদ্ধতি',null],
+                    ['delivery-zones','Delivery Zones','ডেলিভারি এলাকা',null],
+                    ['delivery-charges','Delivery Charges','ডেলিভারি চার্জ',null],
+                    ['courier-integration','Courier Integration','কুরিয়ার ইন্টিগ্রেশন',null]
+                ]],
+                ['reports','Reports','রিপোর্ট','chart-no-axes-combined',[
+                    ['delivery-report','Delivery Report','ডেলিভারি রিপোর্ট',null],
+                    ['courier-report','Courier Report','কুরিয়ার রিপোর্ট',null],
+                    ['cod-report','COD Report','COD রিপোর্ট',null],
+                    ['return-report','Return Report','রিটার্ন রিপোর্ট',null]
+                ]]
             ]],
             ['restaurant','Restaurant Operations','রেস্টুরেন্ট পরিচালনা','utensils',[
                 ['dining','Tables & Dining','টেবিল ও ডাইনিং','layout-grid',[[ 'table-map','Table Map','টেবিল ম্যাপ',null],['dining-areas','Dining Areas','ডাইনিং এরিয়া',null]]],
@@ -117,6 +140,7 @@ class ModuleMenuSeeder extends Seeder
         // Reusable category profiles: '*' = all children of this menu; [] = direct menu only.
         $common=[
             'configurations'=>[
+                'warehouse'=>[],'branch'=>[],
                 'customers'=>[], 'suppliers'=>[], 'units'=>[], 'sizes'=>[],
                 'colors'=>[], 'brands'=>[], 'categories'=>[], 'sub-categories'=>[],'products'=>[],
                 'taxes'=>[], 'currencies'=>[], 'payment-methods'=>[], 'shipping-methods'=>[],
@@ -127,21 +151,21 @@ class ModuleMenuSeeder extends Seeder
         ];
         $profiles=[
             'retail'=>[
-                'sales'=>['orders'=>'*','quotations'=>'*','invoices'=>'*','returns'=>'*','discounts'=>'*','reports'=>'*'],
-                'pos'=>['counter'=>'*'],
+                'sales'=>['orders'=>'*','pos'=>'*','quotations'=>'*','invoices'=>'*','returns'=>'*','discounts'=>'*','reports'=>'*'],
+                'logistics'=>['delivery'=>'*','courier'=>'*','cod'=>'*','settings'=>'*','reports'=>'*'],
                 'inventory'=>['stock'=>'*','movements'=>'*'],
-                'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
+                'purchase'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
                 'finance'=>['chart-of-accounts'=>'*','ledger'=>'*','receivables'=>'*','payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
                 'ecommerce'=>['storefront'=>'*','catalog'=>'*','online-orders'=>'*','checkout'=>'*','online-marketing'=>'*'],
                 'hr'=>['employees'=>'*','attendance'=>'*','payroll'=>'*']
             ],
             'food'=>[
-                'sales'=>['orders'=>'*','invoices'=>'*','discounts'=>'*','reports'=>'*'],
-                'pos'=>['counter'=>'*'],
+                'sales'=>['orders'=>'*','pos'=>'*','invoices'=>'*','discounts'=>'*','reports'=>'*'],
+                'logistics'=>['delivery'=>'*','courier'=>'*','cod'=>'*','settings'=>'*','reports'=>'*'],
                 'restaurant'=>['dining'=>'*','food-menu'=>'*','kitchen-display'=>'*','table-bookings'=>'*','buffet'=>'*'],
                 'kitchen'=>['recipes'=>'*','preparation'=>'*','food-costing'=>'*'],
                 'inventory'=>['stock'=>'*','movements'=>'*'],
-                'purchasing'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
+                'purchase'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
                 'finance'=>['payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
                 'hr'=>['employees'=>'*','attendance'=>'*','payroll'=>'*']
             ],
@@ -187,7 +211,6 @@ class ModuleMenuSeeder extends Seeder
             // 'contractor'=>['Contractor','ঠিকাদারি প্রতিষ্ঠান','construction'],
             // 'real-estate'=>['Real Estate','রিয়েল এস্টেট','property'],
             // 'property-management'=>['Property Management','সম্পত্তি ব্যবস্থাপনা','property'],
-            // 'logistics'=>['Logistics','লজিস্টিকস','logistics'],
             // 'courier'=>['Courier Service','কুরিয়ার সেবা','logistics'],
             // 'transport'=>['Transport Service','পরিবহন সেবা','logistics'],
             // 'car-workshop'=>['Car Workshop','গাড়ির ওয়ার্কশপ','garage'],

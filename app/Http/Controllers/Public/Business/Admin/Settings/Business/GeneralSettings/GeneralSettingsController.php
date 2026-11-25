@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Public\Business\Admin\Settings\Business\GeneralSe
 use App\Http\Controllers\Controller;
 use App\Models\Public\Business\Admin\Settings\Business\GeneralSettings\BrandSetting;
 use App\Services\Public\Business\Admin\Settings\Business\GeneralSettings\BrandingService;
-use App\Services\Access;
+use App\Services\Public\Business\Admin\Authorization\AccessControl\Access;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 class GeneralSettingsController extends Controller {

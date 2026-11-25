@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Feature;
 use App\Models\{User,Business,BusinessUser,BusinessRole,BusinessCategory,Module,Menu,ChildMenu,BusinessCategoryModule,BusinessCategoryMenu,BusinessCategoryChildMenu,BusinessChildMenu,BusinessUserAccess,AuthorityUser};
-use App\Services\BusinessNavigation;
+use App\Services\Public\Business\Admin\Settings\NavigationManagement\BusinessNavigation;
 use App\Services\BusinessSubscriptionService;
 use App\Models\{BusinessSubscription, SubscriptionPlanModule, SubscriptionPlanMenu, SubscriptionPlanChildMenu, BusinessModule};
 use Illuminate\Foundation\Testing\RefreshDatabase;

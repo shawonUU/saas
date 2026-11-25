@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Authority;
 use App\Http\Controllers\Controller;
 use App\Models\{Business,BusinessCategory,Module,BusinessCategoryModule,BusinessCategoryMenu,BusinessCategoryChildMenu,BusinessModule,BusinessMenu,BusinessChildMenu};
-use App\Services\BusinessNavigation;
+use App\Services\Public\Business\Admin\Settings\NavigationManagement\BusinessNavigation;
 use App\Services\BusinessSubscriptionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

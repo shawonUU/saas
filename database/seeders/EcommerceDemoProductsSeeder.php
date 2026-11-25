@@ -3,8 +3,8 @@ namespace Database\Seeders;
 use App\Models\Business;
 use App\Models\Configurations\Product;
 use App\Models\Configurations\Variant;
-use App\Services\Inventory;
-use App\Services\Accounting;
+use App\Services\Public\Business\Admin\Inventory\Movements\Inventory;
+use App\Services\Public\Business\Admin\Finance\Ledger\JournalEntries\Accounting;
 use Illuminate\Support\Facades\DB;
 class EcommerceDemoProductsSeeder {
  public function seed(Business $business,array $catalog,array $ids,string $base):array {

@@ -422,11 +422,11 @@
         </a>
         <nav id="site-primary-nav" class="nav-links" aria-label="Store navigation">
             <a class="<?php echo e(request()->routeIs('business.admin.dashboard') ? 'active' : ''); ?>" href="<?php echo e($dashboardUrl); ?>"><?php echo e(t('Dashboard','ড্যাশবোর্ড')); ?></a>
-            <?php if(Route::has('business.admin.products.index')): ?>
-                <a href="<?php echo e(route('business.admin.products.index',['business'=>$storeCode])); ?>"><?php echo e(t('Products','পণ্য')); ?></a>
+            <?php if(Route::has('business.admin.configurations.products.index')): ?>
+                <a href="<?php echo e(route('business.admin.configurations.products.index',['business'=>$storeCode])); ?>"><?php echo e(t('Products','পণ্য')); ?></a>
             <?php endif; ?>
-            <?php if(Route::has('business.admin.orders.index')): ?>
-                <a href="<?php echo e(route('business.admin.orders.index',['business'=>$storeCode])); ?>"><?php echo e(t('Orders','অর্ডার')); ?></a>
+            <?php if(Route::has('business.admin.sales.orders.order-list.index')): ?>
+                <a href="<?php echo e(route('business.admin.sales.orders.order-list.index',['business'=>$storeCode])); ?>"><?php echo e(t('Orders','অর্ডার')); ?></a>
             <?php endif; ?>
             <?php if(Route::has('business.admin.settings.business.general-settings.index')): ?>
                 <a href="<?php echo e(route('business.admin.settings.business.general-settings.index',['business'=>$storeCode])); ?>"><?php echo e(t('Settings','সেটিংস')); ?></a>

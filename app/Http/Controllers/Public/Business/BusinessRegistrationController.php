@@ -8,7 +8,7 @@ use App\Models\Business;
 use App\Models\BusinessCategory;
 use App\Models\BusinessRole;
 use App\Models\BusinessUser;
-use App\Services\Accounting;
+use App\Services\Public\Business\Admin\Finance\Ledger\JournalEntries\Accounting;
 use App\Services\BusinessSubscriptionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

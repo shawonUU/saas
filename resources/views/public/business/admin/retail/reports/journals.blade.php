@@ -4,8 +4,8 @@
 @include('public.business.admin.retail._styles')
 @include('public.business.admin.sidebar')
 <div class="ws-sidebar-overlay" data-ws-sidebar-overlay></div><main class="workspace-content">
-<div class="ret-title"><div><button type="button" class="ret-btn alt ret-mobile-nav" data-ws-sidebar-toggle>☰</button><h1>{{ t('All Vouchers','সকল ভাউচার') }}</h1><p>{{ t('Automatic and manual posted transactions','স্বয়ংক্রিয় ও ম্যানুয়াল পোস্টকৃত লেনদেন') }}</p></div><div class="ret-actions"><a class="ret-btn" href="{{ route('business.admin.retail.manual_journals.index') }}">+ {{ t('Manual Voucher','ম্যানুয়াল ভাউচার') }}</a></div></div>
-@php $url=route('business.admin.retail.reports.journals'); $number=fn($j)=>$j->voucher_type.'-'.str_pad((string)$j->id,8,'0',STR_PAD_LEFT); @endphp
+<div class="ret-title"><div><button type="button" class="ret-btn alt ret-mobile-nav" data-ws-sidebar-toggle>☰</button><h1>{{ t('All Vouchers','সকল ভাউচার') }}</h1><p>{{ t('Automatic and manual posted transactions','স্বয়ংক্রিয় ও ম্যানুয়াল পোস্টকৃত লেনদেন') }}</p></div><div class="ret-actions"><a class="ret-btn" href="{{ route('business.admin.finance.ledger.journal-entries.manual.index') }}">+ {{ t('Manual Voucher','ম্যানুয়াল ভাউচার') }}</a></div></div>
+@php $url=route('business.admin.finance.ledger.journal-entries.index'); $number=fn($j)=>$j->voucher_type.'-'.str_pad((string)$j->id,8,'0',STR_PAD_LEFT); @endphp
 @if(isset($voucher))
 <div class="ret-toolbar"><a class="ret-btn alt" href="{{ $url }}">{{ t('Back to vouchers','ভাউচার তালিকায় ফিরুন') }}</a><button class="ret-btn" onclick="window.print()">{{ t('Print / Save PDF','প্রিন্ট / পিডিএফ সংরক্ষণ') }}</button></div>
 <div class="ret-card" id="voucher-print"><h2>{{ $business->name }}</h2><h3>{{ t(...($types[$voucher->voucher_type]??$types['JV'])) }} — {{ $number($voucher) }}</h3><p>{{ t('Posted date','পোস্টের তারিখ') }}: {{ $voucher->posted_at }} | {{ t('Source reference','উৎস রেফারেন্স') }}: {{ $voucher->source_id }}</p><p>{{ $voucher->memo }}</p>@if($voucher->manual_reference)<p>{{ t('Manual reference','ম্যানুয়াল রেফারেন্স') }}: {{ $voucher->manual_reference }}</p>@endif

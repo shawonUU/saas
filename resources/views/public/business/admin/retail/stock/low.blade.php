@@ -8,7 +8,7 @@
 @if(session('success'))<div class="ret-toast">{{ session('success') }}</div>@endif
 @if($errors->any())<div class="ret-error">{{ $errors->first() }}</div>@endif
 @php $columns=['sku'=>'SKU','stock'=>'Stock']; @endphp
-<div class="ret-toolbar"><a class="ret-btn" href="{{ route('business.admin.retail.stock.adjustment') }}">+ {{ t('Open / New','খুলুন / নতুন') }}</a></div>
+<div class="ret-toolbar"><a class="ret-btn" href="{{ route('business.admin.inventory.movements.stock-adjustment.index') }}">+ {{ t('Open / New','খুলুন / নতুন') }}</a></div>
 @include('public.business.admin.retail._table')
 </main></div>
 @endsection

@@ -8,7 +8,7 @@
 @if(session('success'))<div class="ret-toast">{{ session('success') }}</div>@endif
 @if($errors->any())<div class="ret-error">{{ $errors->first() }}</div>@endif
 @php $columns=['order_no'=>'Order','customer_name'=>'Customer','customer_phone'=>'Phone','total'=>'Total','paid'=>'Paid','delivery_status'=>'Delivery','created_at'=>'Date']; @endphp
-<div class="ret-toolbar"><a class="ret-btn" href="{{ route('business.admin.retail.delivery.index') }}">+ {{ t('Open / New','খুলুন / নতুন') }}</a></div>
+<div class="ret-toolbar"><a class="ret-btn" href="{{ route('business.admin.ecommerce.online-orders.fulfillment.index') }}">+ {{ t('Open / New','খুলুন / নতুন') }}</a></div>
 @php $rowActions='public.business.admin.retail._rows.orders_show'; @endphp
 @include('public.business.admin.retail._table')
 </main></div>

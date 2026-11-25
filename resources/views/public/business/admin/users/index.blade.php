@@ -113,8 +113,8 @@ body.um-lock{overflow:hidden}
 @section('content')
 @php
     $businessKey=(string)$business->domain;
-    $indexUrl=route('authorization.users.index',['business'=>$businessKey]);
-    $storeUrl=route('authorization.users.store',['business'=>$businessKey]);
+    $indexUrl=route('business.admin.authorization.users.index',['business'=>$businessKey]);
+    $storeUrl=route('business.admin.authorization.users.store',['business'=>$businessKey]);
 @endphp
 <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
     <symbol id="ws-i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
@@ -186,7 +186,7 @@ body.um-lock{overflow:hidden}
                             @if(!$locked)
                                 <button type="button" class="um-icon-button um-edit" title="{{ t('Edit user','ইউজার এডিট') }}" aria-label="{{ t('Edit','এডিট') }} {{ $member->name }}"
                                     data-id="{{ $member->id }}" data-name="{{ $member->name }}" data-email="{{ $member->email }}" data-role="{{ $member->role_id }}" data-active="{{ $member->is_active?1:0 }}"
-                                    data-url="{{ route('authorization.users.update',['business'=>$businessKey,'memberId'=>$member->id]) }}"><svg class="ws-svg"><use href="#ws-i-edit"/></svg></button>
+                                    data-url="{{ route('business.admin.authorization.users.update',['business'=>$businessKey,'memberId'=>$member->id]) }}"><svg class="ws-svg"><use href="#ws-i-edit"/></svg></button>
                             @else<span class="um-locked">{{ t('Protected','সুরক্ষিত') }}</span>@endif
                         </div></td>
                     </tr>

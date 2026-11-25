@@ -78,8 +78,8 @@ html[data-theme="dark"] .workspace-layout{--ws-panel:#1c2435;--ws-bg:#111827;--w
 document.addEventListener('DOMContentLoaded',function(){
     const members=@json($members);
     const strings=@json($acStrings);
-    const getUrl=@json(route('authorization.access-control'));
-    const saveUrl=@json(route('authorization.access-control.store'));
+    const getUrl=@json(route('business.admin.authorization.access-control.index'));
+    const saveUrl=@json(route('business.admin.authorization.access-control.store'));
     const csrf=document.querySelector('meta[name="csrf-token"]')?.content||@json(csrf_token());
     const $=id=>document.getElementById(id);
     const fields=['can_view','can_create','can_update','can_delete'];

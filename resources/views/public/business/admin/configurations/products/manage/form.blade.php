@@ -7,7 +7,7 @@
 <div class="ret-title"><div><button type="button" class="ret-btn alt ret-mobile-nav" data-ws-sidebar-toggle>☰</button><h1>{{ $record ? t('Edit Product','পণ্য সম্পাদনা') : t('New Product','নতুন পণ্য') }}</h1><p>{{ t('Business workspace','বিজনেস ওয়ার্কস্পেস') }}</p></div><div class="ret-actions"><a class="ret-btn alt" href="{{ route('business.admin.dashboard') }}">{{ t('Dashboard','ড্যাশবোর্ড') }}</a></div></div>
 @if(session('success'))<div class="ret-toast">{{ session('success') }}</div>@endif
 @if($errors->any())<div class="ret-error">{{ $errors->first() }}</div>@endif
-<form method="POST" action="{{ $record ? route('business.admin.retail.products.update',['record'=>$record->id]) : route('business.admin.retail.products.store') }}" class="ret-card" enctype="multipart/form-data">@csrf @if($record)@method('PUT')@endif
+<form method="POST" action="{{ $record ? route('business.admin.configurations.products.update',['record'=>$record->id]) : route('business.admin.configurations.products.store') }}" class="ret-card" enctype="multipart/form-data">@csrf @if($record)@method('PUT')@endif
 <div class="ret-grid">
 <div class="ret-field"><label>{{ t('Product Name','পণ্যের নাম') }} *</label><input class="ret-input" name="name" value="{{ old('name',$record?->name) }}" required></div>
 <div class="ret-field"><label>SKU *</label><input class="ret-input" name="sku" value="{{ old('sku',$record?->sku) }}" required></div>
@@ -26,7 +26,7 @@
 <div class="ret-field" style="grid-column:1/-1"><label>{{ t('Specifications (one per line: Attribute | Value)','পণ্যের বৈশিষ্ট্য (প্রতিটি লাইনে: নাম | তথ্য)') }}</label><textarea name="specification_lines" class="ret-input" rows="6" placeholder="Material | Cotton&#10;Country of origin | Bangladesh">{{ old('specification_lines',$existingSpecs) }}</textarea><small>{{ t('Shown as rows under Product Details. Up to 80 attributes.','Product Details-এ টেবিল আকারে দেখাবে। সর্বোচ্চ ৮০টি বৈশিষ্ট্য।') }}</small></div>
 </div><hr class="ret-divider"><h3>{{ t('Product Variants','পণ্যের ভ্যারিয়েন্ট') }}</h3><p class="ret-help">{{ t('Size and color are optional. Each SKU has its own price, cost and stock. Existing stock can only be changed through stock movement.','সাইজ ও রং ঐচ্ছিক। প্রতিটি SKU-এর আলাদা মূল্য, ক্রয়মূল্য ও স্টক থাকবে। পুরোনো স্টক পরিবর্তন করতে স্টক মুভমেন্ট ব্যবহার করুন।') }}</p>
 <div class="ret-table-wrap"><table class="ret-table"><thead><tr><th>SKU</th><th>{{ t('Size','সাইজ') }}</th><th>{{ t('Color','রং') }}</th><th>{{ t('Price','মূল্য') }}</th><th>{{ t('Cost','ক্রয়মূল্য') }}</th><th>{{ t('Opening Stock','প্রারম্ভিক স্টক') }}</th><th>{{ t('Image','ছবি') }}</th><th></th></tr></thead><tbody id="variant-rows"></tbody></table></div><button type="button" class="ret-btn alt" id="add-variant">+ {{ t('Add Variant','ভ্যারিয়েন্ট যোগ') }}</button>
-<div style="margin-top:22px;display:flex;gap:10px"><button class="ret-btn" type="submit">{{ t('Save Product','পণ্য সংরক্ষণ') }}</button><a class="ret-btn alt" href="{{ route('business.admin.retail.products.index') }}">{{ t('Cancel','বাতিল') }}</a></div></form>
+<div style="margin-top:22px;display:flex;gap:10px"><button class="ret-btn" type="submit">{{ t('Save Product','পণ্য সংরক্ষণ') }}</button><a class="ret-btn alt" href="{{ route('business.admin.configurations.products.index') }}">{{ t('Cancel','বাতিল') }}</a></div></form>
 @php
  $sizeOptions=$sizes->map(fn($x)=>['id'=>$x->id,'name'=>$x->name])->values()->all();
  $colorOptions=$colors->map(fn($x)=>['id'=>$x->id,'name'=>$x->name])->values()->all();

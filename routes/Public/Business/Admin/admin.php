@@ -1,78 +1,104 @@
 <?php
-
-use App\Http\Controllers\Public\Business\Admin\Authorization\AuthorizationController;
-use App\Http\Controllers\Public\Business\Admin\Authorization\BusinessUserController;
-
 use App\Http\Controllers\Public\Business\Admin\WorkspaceController;
 use Illuminate\Support\Facades\Route;
-
 
 $domain=config('saas.domain');
 
 Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->group(function(){
-    Route::middleware(['portal.auth:business_admin', 'auth.session'])->group(function(){
+    Route::middleware(['portal.auth:business_admin','auth.session'])->group(function(){
+
         Route::get('/dashboard',[WorkspaceController::class,'dashboard'])->name('business.admin.dashboard');
-    });
-});
 
-Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->group(function(){
-    Route::middleware(['portal.auth:business_admin', 'auth.session'])->group(function(){
-        Route::prefix('authorization')->name('authorization.')->group(function(){
-            Route::get('/access-control',[AuthorizationController::class,'index'])->name('access-control');
-            Route::get('/access-control/{memberId}',[AuthorizationController::class,'show'])->name('access-control.show');
-            Route::post('/access-control/store',[AuthorizationController::class,'store'])->name('access-control.store');
-            Route::get('/users',[BusinessUserController::class,'index'])->name('users.index');
-            Route::post('/users',[BusinessUserController::class,'store'])->name('users.store');
-            Route::put('/users/{memberId}',[BusinessUserController::class,'update'])->name('users.update');
-            Route::delete('/users/{memberId}',[BusinessUserController::class,'destroy'])->name('users.destroy');
+        // Module groups own the URL and name prefix; included files use relative routes.
+        Route::prefix('configurations')->name('business.admin.configurations.')->group(function(){
+            require __DIR__.'/Configurations/Customers/routes.php';
+            require __DIR__.'/Configurations/Suppliers/routes.php';
+            require __DIR__.'/Configurations/Units/routes.php';
+            require __DIR__.'/Configurations/Sizes/routes.php';
+            require __DIR__.'/Configurations/Colors/routes.php';
+            require __DIR__.'/Configurations/Brands/routes.php';
+            require __DIR__.'/Configurations/Categories/routes.php';
+            require __DIR__.'/Configurations/SubCategories/routes.php';
+            require __DIR__.'/Configurations/Products/routes.php';
+            require __DIR__.'/Configurations/Taxes/routes.php';
+            require __DIR__.'/Configurations/Currencies/routes.php';
+            require __DIR__.'/Configurations/PaymentMethods/routes.php';
+            require __DIR__.'/Configurations/ShippingMethods/routes.php';
         });
 
-        // Independent CRUD route files; deliberately registered before the generic feature route.
-        Route::prefix('configurations')->name('business.admin.configurations.')->group(function () {
-            require __DIR__.'/configurations/customers.php';
-            require __DIR__.'/configurations/suppliers.php';
-            require __DIR__.'/configurations/units.php';
-            require __DIR__.'/configurations/sizes.php';
-            require __DIR__.'/configurations/colors.php';
-            require __DIR__.'/configurations/brands.php';
-            require __DIR__.'/configurations/categories.php';
-            require __DIR__.'/configurations/sub_categories.php';
-            require __DIR__.'/configurations/taxes.php';
-            require __DIR__.'/configurations/currencies.php';
-            require __DIR__.'/configurations/payment_methods.php';
-            require __DIR__.'/configurations/shipping_methods.php';
+        Route::prefix('sales')->name('business.admin.sales.')->group(function(){
+            require __DIR__.'/Sales/Orders/OrderList/routes.php';
+            require __DIR__.'/Sales/Orders/NewOrder/routes.php';
+            require __DIR__.'/Sales/Orders/OrderDetails/routes.php';
+            require __DIR__.'/Sales/Pos/routes.php';
+            require __DIR__.'/Sales/Quotations/QuotationList/routes.php';
+            require __DIR__.'/Sales/Quotations/NewQuotation/routes.php';
+            require __DIR__.'/Sales/Returns/ReturnList/routes.php';
+            require __DIR__.'/Sales/Returns/NewReturn/routes.php';
+            require __DIR__.'/Sales/Discounts/Coupons/routes.php';
+            require __DIR__.'/Sales/Reports/SalesSummary/routes.php';
         });
 
-        // Retail & e-commerce modules: explicit independent controller/route files.
-        Route::name('business.admin.retail.')->group(function(){
-            require __DIR__.'/configurations/products/manage.php';
-            require __DIR__.'/retail/stock.php';
-            require __DIR__.'/retail/orders.php';
-            require __DIR__.'/retail/pos.php';
-            require __DIR__.'/retail/purchases.php';
-            require __DIR__.'/retail/returns.php';
-            require __DIR__.'/retail/payments.php';
-            require __DIR__.'/retail/delivery.php';
-            require __DIR__.'/retail/discounts.php';
-            require __DIR__.'/retail/accounts.php';
-            require __DIR__.'/retail/reports.php';
-            require __DIR__.'/retail/purchase_orders.php';
-            require __DIR__.'/retail/warehouses.php';
-            require __DIR__.'/retail/manual_journals.php';
-            require __DIR__.'/retail/expenses.php';
-            require __DIR__.'/retail/purchase_returns.php';
-            require __DIR__.'/retail/quotations.php';
-            require __DIR__.'/retail/marketing.php';
-            require __DIR__.'/retail/integrations.php';
-            require __DIR__.'/retail/courier.php';
-            require __DIR__.'/retail/bank_transfers.php';
-            require __DIR__.'/retail/account_groups.php';
+        Route::prefix('inventory')->name('business.admin.inventory.')->group(function(){
+            require __DIR__.'/Inventory/Stock/StockReport/routes.php';
+            require __DIR__.'/Inventory/Stock/StockLedger/routes.php';
+            require __DIR__.'/Inventory/Stock/LowStock/routes.php';
+            require __DIR__.'/Inventory/Movements/StockTransfer/routes.php';
+            require __DIR__.'/Inventory/Movements/StockAdjustment/routes.php';
         });
 
-        require __DIR__.'/ecommerce/orders.php';
-        require __DIR__.'/ecommerce/returns.php';
-        require __DIR__.'/settings/business/general_settings.php';
-        Route::get('/{module}/{menu}/{child?}',[WorkspaceController::class,'feature'])->name('business.admin.feature');   
+        Route::prefix('purchase')->name('business.admin.purchase.')->group(function(){
+            require __DIR__.'/Purchase/PurchaseOrders/PoList/routes.php';
+            require __DIR__.'/Purchase/PurchaseOrders/NewPo/routes.php';
+            require __DIR__.'/Purchase/Receiving/GrnList/routes.php';
+            require __DIR__.'/Purchase/Receiving/NewGrn/routes.php';
+            require __DIR__.'/Purchase/PurchaseReturns/PurchaseReturnList/routes.php';
+        });
 
+        Route::prefix('finance')->name('business.admin.finance.')->group(function(){
+            require __DIR__.'/Finance/ChartOfAccounts/AccountList/routes.php';
+            require __DIR__.'/Finance/ChartOfAccounts/AccountGroups/routes.php';
+            require __DIR__.'/Finance/Ledger/JournalEntries/routes.php';
+            require __DIR__.'/Finance/Ledger/GeneralLedger/routes.php';
+            require __DIR__.'/Finance/Receivables/CustomerDues/routes.php';
+            require __DIR__.'/Finance/Receivables/Collections/routes.php';
+            require __DIR__.'/Finance/Payables/VendorBills/routes.php';
+            require __DIR__.'/Finance/Payables/VendorPayments/routes.php';
+            require __DIR__.'/Finance/Banking/BankTransfers/routes.php';
+            require __DIR__.'/Finance/Banking/BankReconciliation/routes.php';
+            require __DIR__.'/Finance/Expenses/ExpenseList/routes.php';
+            require __DIR__.'/Finance/Expenses/NewExpense/routes.php';
+            require __DIR__.'/Finance/FinancialReports/TrialBalance/routes.php';
+            require __DIR__.'/Finance/FinancialReports/ProfitLoss/routes.php';
+            require __DIR__.'/Finance/FinancialReports/BalanceSheet/routes.php';
+            require __DIR__.'/Finance/FinancialReports/CashFlow/routes.php';
+        });
+
+        Route::prefix('ecommerce')->name('business.admin.ecommerce.')->group(function(){
+            require __DIR__.'/Ecommerce/OnlineOrders/OnlineOrderList/routes.php';
+            require __DIR__.'/Ecommerce/OnlineOrders/Fulfillment/routes.php';
+            require __DIR__.'/Ecommerce/OnlineOrders/ReturnRequests/routes.php';
+            require __DIR__.'/Ecommerce/OnlineMarketing/Campaigns/routes.php';
+            require __DIR__.'/Ecommerce/OnlineMarketing/AbandonedCarts/routes.php';
+        });
+
+        Route::prefix('logistics')->name('business.admin.logistics.')->group(function(){
+            require __DIR__.'/Logistics/Delivery/DeliveryList/routes.php';
+            require __DIR__.'/Logistics/Courier/CourierBooking/routes.php';
+        });
+
+        Route::prefix('authorization')->name('business.admin.authorization.')->group(function(){
+            require __DIR__.'/Authorization/Users/routes.php';
+            require __DIR__.'/Authorization/AccessControl/routes.php';
+        });
+
+        Route::prefix('settings')->name('business.admin.settings.')->group(function(){
+            require __DIR__.'/Settings/Business/GeneralSettings/routes.php';
+            require __DIR__.'/Settings/Business/Branding/routes.php';
+            require __DIR__.'/Settings/Locations/Warehouses/routes.php';
+            require __DIR__.'/Settings/Integrations/ApiKeys/routes.php';
+        });
+
+        Route::get('/{module}/{menu}/{child?}',[WorkspaceController::class,'feature'])->name('business.admin.feature');
     });
 });

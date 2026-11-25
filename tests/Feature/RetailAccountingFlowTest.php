@@ -7,12 +7,12 @@ use App\Models\Configurations\Product;
 use App\Models\Configurations\Variant;
 use App\Models\Sales\Order;
 use App\Models\Accounts\JournalLine;
-use App\Services\Inventory;
-use App\Services\Accounting;
-use App\Services\Sales;
-use App\Services\Purchases;
-use App\Services\Returns;
-use App\Services\Payments;
+use App\Services\Public\Business\Admin\Inventory\Movements\Inventory;
+use App\Services\Public\Business\Admin\Finance\Ledger\JournalEntries\Accounting;
+use App\Services\Public\Business\Admin\Sales\Orders\NewOrder\Sales;
+use App\Services\Public\Business\Admin\Purchase\Receiving\NewGrn\Purchases;
+use App\Services\Public\Business\Admin\Sales\Returns\NewReturn\Returns;
+use App\Services\Public\Business\Admin\Finance\Payments;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 class RetailAccountingFlowTest extends TestCase {

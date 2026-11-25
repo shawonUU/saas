@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Public\Business\Public;
 use App\Http\Controllers\Controller;
 use App\Models\Configurations\Product;
 use App\Models\Configurations\Variant;
-use App\Services\Sales;
+use App\Services\Public\Business\Admin\Sales\Orders\NewOrder\Sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

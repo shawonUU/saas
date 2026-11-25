@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\Public\Business\Public\Ecommerce\Account\Dashboard;
 use App\Http\Controllers\Controller;
-use App\Services\OnlineOrderService;
+use App\Services\Public\Business\Admin\Ecommerce\OnlineOrders\OnlineOrderList\OnlineOrderService;
 use Illuminate\Http\Request;
 class DashboardController extends Controller {
  public function index(Request $r,OnlineOrderService $service){

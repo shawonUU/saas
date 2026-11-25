@@ -422,11 +422,11 @@
         </a>
         <nav id="site-primary-nav" class="nav-links" aria-label="Store navigation">
             <a class="{{ request()->routeIs('business.admin.dashboard') ? 'active' : '' }}" href="{{ $dashboardUrl }}">{{ t('Dashboard','ড্যাশবোর্ড') }}</a>
-            @if(Route::has('business.admin.products.index'))
-                <a href="{{ route('business.admin.products.index',['business'=>$storeCode]) }}">{{ t('Products','পণ্য') }}</a>
+            @if(Route::has('business.admin.configurations.products.index'))
+                <a href="{{ route('business.admin.configurations.products.index',['business'=>$storeCode]) }}">{{ t('Products','পণ্য') }}</a>
             @endif
-            @if(Route::has('business.admin.orders.index'))
-                <a href="{{ route('business.admin.orders.index',['business'=>$storeCode]) }}">{{ t('Orders','অর্ডার') }}</a>
+            @if(Route::has('business.admin.sales.orders.order-list.index'))
+                <a href="{{ route('business.admin.sales.orders.order-list.index',['business'=>$storeCode]) }}">{{ t('Orders','অর্ডার') }}</a>
             @endif
             @if(Route::has('business.admin.settings.business.general-settings.index'))
                 <a href="{{ route('business.admin.settings.business.general-settings.index',['business'=>$storeCode]) }}">{{ t('Settings','সেটিংস') }}</a>

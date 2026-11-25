@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Public\Business\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ChildMenu;
-use App\Services\BusinessNavigation;
+use App\Services\Public\Business\Admin\Settings\NavigationManagement\BusinessNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

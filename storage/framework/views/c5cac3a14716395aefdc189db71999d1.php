@@ -1,2 +1,0 @@
-
-<?php echo $__env->make('public.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\saas-backend\resources\views/layouts/portal.blade.php ENDPATH**/ ?>
