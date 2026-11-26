@@ -85,7 +85,7 @@ class ProductController extends Controller
             'brand_id' => ['nullable', Rule::exists('config_brands', 'id')->where('business_id', $b)],
             'unit_id' => ['nullable', Rule::exists('config_units', 'id')->where('business_id', $b)],
             'track_stock' => 'required|boolean', 'is_active' => 'required|boolean',
-            'variants' => 'required|array|min:1|max:80', 'variants.*.id' => 'nullable|integer', 'variants.*.sku' => 'required|string|max:100', 'variants.*.barcode' => 'nullable|string|max:100',
+            'variants' => 'required|array|min:1|max:80', 'variants.*.id' => 'nullable|integer', 'variants.*.sku' => 'nullable|string|max:100', 'variants.*.barcode' => 'nullable|string|max:100',
             'variants.*.size_id' => ['nullable', Rule::exists('config_sizes', 'id')->where('business_id', $b)],
             'variants.*.color_id' => ['nullable', Rule::exists('config_colors', 'id')->where('business_id', $b)],
             'variants.*.price' => 'required|numeric|min:0', 'variants.*.cost' => 'required|numeric|min:0',
@@ -157,7 +157,7 @@ class ProductController extends Controller
     {
         foreach ($rows as $row) {
             $id = $row['id'] ?? null;
-            $fields = ['sku' => $row['sku'], 'size_id' => $row['size_id'] ?? null, 'color_id' => $row['color_id'] ?? null, 'price' => $row['price'], 'cost' => $row['cost']];
+            $fields = ['size_id' => $row['size_id'] ?? null, 'color_id' => $row['color_id'] ?? null, 'price' => $row['price'], 'cost' => $row['cost']];
             if (array_key_exists('barcode', $row)) {
                 $fields['barcode'] = $row['barcode'];
                 if ($row['barcode'] !== null && Variant::where('business_id', $b->id)->where('barcode', $row['barcode'])->when($id, fn ($q) => $q->where('id', '!=', $id))->exists()) {
@@ -174,10 +174,11 @@ class ProductController extends Controller
 
                 continue;
             }
-            $duplicate = Variant::where('business_id', $b->id)->where('sku', $row['sku'])->exists();
-            if ($duplicate) {
-                throw ValidationException::withMessages(['variants' => 'Duplicate variant SKU: '.$row['sku']]);
-            }
+            $prefix = mb_substr($product->sku, 0, 80).'-V';
+            $number = 1;
+            do {
+                $fields['sku'] = $prefix.str_pad((string) $number++, 3, '0', STR_PAD_LEFT);
+            } while (Variant::where('business_id', $b->id)->where('sku', $fields['sku'])->exists());
             $v = Variant::create(array_merge($fields, ['business_id' => $b->id, 'product_id' => $product->id, 'stock' => 0]));
             $opening = (float) ($row['opening_stock'] ?? 0);
             if ($opening > 0 && $product->track_stock) {

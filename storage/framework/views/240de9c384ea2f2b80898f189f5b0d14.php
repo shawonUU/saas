@@ -1,0 +1,4 @@
+<a class="ret-btn alt" href="<?php echo e(route('business.admin.configurations.products.edit',['record'=>$record->id])); ?>"><?php echo e(t('View / Edit','দেখুন / সম্পাদনা')); ?></a>
+
+<?php if($record->is_active): ?><form method="POST" action="<?php echo e(route('business.admin.configurations.products.destroy',['record'=>$record->id])); ?>" data-confirm="<?php echo e(t('Deactivate this product?','পণ্যটি নিষ্ক্রিয় করবেন?')); ?>" onsubmit="return confirm(this.dataset.confirm)" style="display:inline"><?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?><button class="ret-btn alt" type="submit"><?php echo e(t('Deactivate','নিষ্ক্রিয়')); ?></button></form><?php endif; ?>
+<?php /**PATH C:\laragon\www\saas-backend\resources\views/public/business/admin/retail/_rows/products_edit.blade.php ENDPATH**/ ?>
