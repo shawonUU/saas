@@ -9,7 +9,7 @@ $sold = (int)($soldCounts[$product->id] ?? 0);
 $detailUrl = route('business.customer.product', ['product'=>$product->id]);
 ?>
 
-<?php if (! $__env->hasRenderedOnce('330e394d-0a85-4e87-9aea-b4fc94dbb815')): $__env->markAsRenderedOnce('330e394d-0a85-4e87-9aea-b4fc94dbb815'); ?>
+<?php if (! $__env->hasRenderedOnce('d1ffdee7-06bb-4328-9baf-b1f942a277da')): $__env->markAsRenderedOnce('d1ffdee7-06bb-4328-9baf-b1f942a277da'); ?>
 <style>
 /* PRODUCT GRID: MAXIMUM 6 COLUMNS */
 .sf-products-grid {

@@ -1,22 +1,47 @@
 <?php
+
 namespace App\Http\Controllers\Public\Business\Admin\Finance;
+
 use App\Http\Controllers\Controller;
 use App\Models\Accounts\Payment;
 use App\Models\Purchase\Purchase;
 use App\Models\Sales\Order;
 use App\Services\Public\Business\Admin\Authorization\AccessControl\Access;
-use App\Services\Public\Business\Admin\Shared\Lists;
 use App\Services\Public\Business\Admin\Finance\Payments;
+use App\Services\Public\Business\Admin\Shared\Lists;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class PaymentController extends Controller {
- public function index(Request $r,Access $a){$kind=(string)$r->route('kind','customer');$params=$kind==='supplier'?['finance','payables','vendor-payments']:['finance','receivables','collections'];$v=$a->check($r,...$params);$v['title']=$kind==='supplier'?'Supplier Payments':'Customer Collections';$v['kind']=$kind;
-  $v['records']=Lists::page(Payment::where('business_id',$v['business']->id)->where('reference_type',$kind==='supplier'?'purchase':'order'),$r,['id'=>'number','reference_id'=>'number','method'=>'text','direction'=>'text','amount'=>'number','reference_no'=>'text','created_at'=>'date']);
-  $v['docs']=$kind==='supplier'?Purchase::where('business_id',$v['business']->id)->whereColumn('paid','<','total')->latest()->limit(150)->get():Order::where('business_id',$v['business']->id)->whereRaw('paid + credited < total')->latest()->limit(150)->get();
-  return view('public.business.admin.retail.payments.index',$v);}
- public function store(Request $r,Access $a,Payments $payments){$kind=(string)$r->route('kind','customer');$p=$kind==='supplier'?['finance','payables','vendor-payments']:['finance','receivables','collections'];$v=$a->check($r,...[...$p,'create']);$b=$v['business'];$d=$r->validate(['document_id'=>'required|integer','amount'=>'required|numeric|gt:0','method'=>'required|in:cash,bank','reference_no'=>'nullable|string|max:255']);
-  DB::transaction(function()use($b,$d,$payments,$kind){if($kind==='supplier')$payments->payPurchase($b,Purchase::where('business_id',$b->id)->findOrFail($d['document_id']),(float)$d['amount'],$d['method'],$d['reference_no']??'');
-   else $payments->payOrder($b,Order::where('business_id',$b->id)->findOrFail($d['document_id']),(float)$d['amount'],$d['method'],$d['reference_no']??'');});
-  return back()->with('success',t('Payment posted.','পেমেন্ট পোস্ট হয়েছে।'));}
+class PaymentController extends Controller
+{
+    public function index(Request $r, Access $a)
+    {
+        $kind = (string) $r->route('kind', 'customer');
+        $params = $kind === 'supplier' ? ['finance', 'payables', 'vendor-payments'] : ['finance', 'receivables', 'collections'];
+        $v = $a->check($r, ...$params);
+        $v['title'] = $kind === 'supplier' ? 'Supplier Payments' : 'Customer Collections';
+        $v['kind'] = $kind;
+        $v['records'] = Lists::page(Payment::where('business_id', $v['business']->id)->where('reference_type', $kind === 'supplier' ? 'purchase' : 'order'), $r, ['id' => 'number', 'reference_id' => 'number', 'method' => 'text', 'direction' => 'text', 'amount' => 'number', 'reference_no' => 'text', 'created_at' => 'date']);
+        $v['docs'] = $kind === 'supplier' ? Purchase::where('business_id', $v['business']->id)->whereColumn('paid', '<', 'total')->latest()->limit(150)->get() : Order::where('business_id', $v['business']->id)->whereIn('status', ['confirmed', 'returned'])->whereRaw('paid + credited < total')->latest()->limit(150)->get();
+
+        return view('public.business.admin.retail.payments.index', $v);
+    }
+
+    public function store(Request $r, Access $a, Payments $payments)
+    {
+        $kind = (string) $r->route('kind', 'customer');
+        $p = $kind === 'supplier' ? ['finance', 'payables', 'vendor-payments'] : ['finance', 'receivables', 'collections'];
+        $v = $a->check($r, ...[...$p, 'create']);
+        $b = $v['business'];
+        $d = $r->validate(['document_id' => 'required|integer', 'amount' => 'required|numeric|gt:0', 'method' => 'required|in:cash,bank', 'reference_no' => 'nullable|string|max:255']);
+        DB::transaction(function () use ($b, $d, $payments, $kind) {
+            if ($kind === 'supplier') {
+                $payments->payPurchase($b, Purchase::where('business_id', $b->id)->findOrFail($d['document_id']), (float) $d['amount'], $d['method'], $d['reference_no'] ?? '');
+            } else {
+                $payments->payOrder($b, Order::where('business_id', $b->id)->whereIn('status', ['confirmed', 'returned'])->findOrFail($d['document_id']), (float) $d['amount'], $d['method'], $d['reference_no'] ?? '');
+            }
+        });
+
+        return back()->with('success', t('Payment posted.', 'পেমেন্ট পোস্ট হয়েছে।'));
+    }
 }

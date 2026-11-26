@@ -1,61 +1,147 @@
 <?php
+
 namespace Tests\Feature;
-use App\Models\{User,Business,BusinessUser,BusinessRole,BusinessCategory,Module,Menu,ChildMenu,BusinessCategoryModule,BusinessCategoryMenu,BusinessCategoryChildMenu,BusinessChildMenu,BusinessUserAccess,AuthorityUser};
-use App\Services\Public\Business\Admin\Settings\NavigationManagement\BusinessNavigation;
+
+use App\Models\AuthorityUser;
+use App\Models\Business;
+use App\Models\BusinessCategory;
+use App\Models\BusinessCategoryChildMenu;
+use App\Models\BusinessCategoryMenu;
+use App\Models\BusinessCategoryModule;
+use App\Models\BusinessChildMenu;
+use App\Models\BusinessModule;
+use App\Models\BusinessRole;
+use App\Models\BusinessSubscription;
+use App\Models\BusinessUser;
+use App\Models\BusinessUserAccess;
+use App\Models\ChildMenu;
+use App\Models\Menu;
+use App\Models\Module;
+use App\Models\SubscriptionPlan;
+use App\Models\SubscriptionPlanChildMenu;
+use App\Models\User;
 use App\Services\BusinessSubscriptionService;
-use App\Models\{BusinessSubscription, SubscriptionPlanModule, SubscriptionPlanMenu, SubscriptionPlanChildMenu, BusinessModule};
+use App\Services\Public\Business\Admin\Settings\NavigationManagement\BusinessNavigation;
+use Database\Seeders\ModuleMenuSeeder;
+use Database\Seeders\SubscriptionPlanSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
+
 class BusinessNavigationTest extends TestCase
 {
     use RefreshDatabase;
+
     private function setupBusiness(): array
     {
-        $owner = User::create(['name' => 'Owner','email' => 'owner@test.local','approval_status' => 'Approved']);
-        $category = BusinessCategory::create(['name' => 'Retail','slug' => 'retail-test','approval_status' => 'Approved']);
-        $business = Business::create(['name' => 'Shop A','domain'=>'shopa','code' => 'shopa','owner_id' => $owner->id,'category_id' => $category->id,'approval_status' => 'Approved']);
-        $role = BusinessRole::create(['name' => 'Owner','business_id' => $business->id,'is_owner' => true,'approval_status' => 'Approved']);
-        $admin = BusinessUser::create(['name' => 'Owner','business_id' => $business->id,'user_id' => $owner->id,'role_id' => $role->id,'email' => 'owner@test.local','password' => '123456789','approval_status' => 'Approved']);
-        $module = Module::create(['name' => 'Inventory','slug' => 'inventory-test','approval_status' => 'Approved']);
-        $menu = Menu::create(['name' => 'Products','slug' => 'products-test','module_id' => $module->id,'approval_status' => 'Approved']);
-        $child = ChildMenu::create(['name' => 'Product List','slug' => 'product-list-test','menu_id' => $menu->id,'approval_status' => 'Approved']);
-        foreach ([[BusinessCategoryModule::class,'module_id',$module->id],[BusinessCategoryMenu::class,'menu_id',$menu->id],[BusinessCategoryChildMenu::class,'child_menu_id',$child->id]] as [$model,$column,$id]) {
-            $model::create(['business_category_id' => $category->id,$column => $id]);
+        $owner = User::create(['name' => 'Owner', 'email' => 'owner@test.local', 'approval_status' => 'Approved']);
+        $category = BusinessCategory::create(['name' => 'Retail', 'slug' => 'retail-test', 'approval_status' => 'Approved']);
+        $business = Business::create(['name' => 'Shop A', 'domain' => 'shopa', 'code' => 'shopa', 'owner_id' => $owner->id, 'category_id' => $category->id, 'approval_status' => 'Approved']);
+        $role = BusinessRole::create(['name' => 'Owner', 'business_id' => $business->id, 'is_owner' => true, 'approval_status' => 'Approved']);
+        $admin = BusinessUser::create(['name' => 'Owner', 'business_id' => $business->id, 'user_id' => $owner->id, 'role_id' => $role->id, 'email' => 'owner@test.local', 'password' => '123456789', 'approval_status' => 'Approved']);
+        $module = Module::create(['name' => 'Inventory', 'slug' => 'inventory-test', 'approval_status' => 'Approved']);
+        $menu = Menu::create(['name' => 'Products', 'slug' => 'products-test', 'module_id' => $module->id, 'approval_status' => 'Approved']);
+        $child = ChildMenu::create(['name' => 'Product List', 'slug' => 'product-list-test', 'menu_id' => $menu->id, 'approval_status' => 'Approved']);
+        foreach ([[BusinessCategoryModule::class, 'module_id', $module->id], [BusinessCategoryMenu::class, 'menu_id', $menu->id], [BusinessCategoryChildMenu::class, 'child_menu_id', $child->id]] as [$model,$column,$id]) {
+            $model::create(['business_category_id' => $category->id, $column => $id]);
         }
         app(BusinessSubscriptionService::class)->activateBasic($business);
-        return compact('business','admin','module','menu','child');
+
+        return compact('business', 'admin', 'module', 'menu', 'child');
     }
+
     public function test_owner_automatically_gets_category_access_and_override_blocks_it(): void
     {
         extract($this->setupBusiness());
         $service = app(BusinessNavigation::class);
-        $this->assertTrue($service->canView($business,$admin,$child->id));
+        $this->assertTrue($service->canView($business, $admin, $child->id));
         BusinessChildMenu::where('business_id', $business->id)->where('child_menu_id', $child->id)->update(['source' => 'Override', 'is_enabled' => false]);
-        $this->assertFalse($service->canView($business,$admin,$child->id));
+        $this->assertFalse($service->canView($business, $admin, $child->id));
     }
+
     public function test_employee_does_not_inherit_owner_permission(): void
     {
         extract($this->setupBusiness());
-        $role = BusinessRole::create(['name'=>'Staff','business_id'=>$business->id,'approval_status'=>'Approved']);
-        $employeeGlobal = User::create(['name'=>'Staff','email'=>'staff@test.local','approval_status'=>'Approved']);
-        $employee = BusinessUser::create(['user_id'=>$employeeGlobal->id,'name'=>'Staff','business_id'=>$business->id,'role_id'=>$role->id,'email'=>'staff@test.local','password'=>'123456789','approval_status'=>'Approved']);
+        $role = BusinessRole::create(['name' => 'Staff', 'business_id' => $business->id, 'approval_status' => 'Approved']);
+        $employeeGlobal = User::create(['name' => 'Staff', 'email' => 'staff@test.local', 'approval_status' => 'Approved']);
+        $employee = BusinessUser::create(['user_id' => $employeeGlobal->id, 'name' => 'Staff', 'business_id' => $business->id, 'role_id' => $role->id, 'email' => 'staff@test.local', 'password' => '123456789', 'approval_status' => 'Approved']);
         $service = app(BusinessNavigation::class);
-        $this->assertFalse($service->canView($business,$employee,$child->id));
-        BusinessUserAccess::create(['business_user_id'=>$employee->id,'module_id'=>$module->id,'menu_id'=>$menu->id,'child_menu_id'=>$child->id,'can_view'=>true]);
-        $this->assertTrue($service->canView($business,$employee,$child->id));
-        $this->actingAs($employee->refresh(),'business_admin')->get('http://admin.shopa.saas.test/'.$module->slug.'/'.$menu->slug.'/'.$child->slug)->assertOk();
-        BusinessChildMenu::where('business_id',$business->id)->where('child_menu_id',$child->id)->update(['source'=>'Override','is_enabled'=>false]);
+        $this->assertFalse($service->canView($business, $employee, $child->id));
+        BusinessUserAccess::create(['business_user_id' => $employee->id, 'module_id' => $module->id, 'menu_id' => $menu->id, 'child_menu_id' => $child->id, 'can_view' => true, 'is_active' => true, 'approval_status' => 'Approved']);
+        $this->assertTrue($service->canView($business, $employee, $child->id));
+        $this->actingAs($employee->refresh(), 'business_admin')->get('http://admin.shopa.saas.test/'.$module->slug.'/'.$menu->slug.'/'.$child->slug)->assertOk();
+        BusinessChildMenu::where('business_id', $business->id)->where('child_menu_id', $child->id)->update(['source' => 'Override', 'is_enabled' => false]);
         $this->get('http://admin.shopa.saas.test/'.$module->slug.'/'.$menu->slug.'/'.$child->slug)->assertNotFound();
     }
+
+    public function test_pending_or_inactive_staff_grants_cannot_open_a_feature(): void
+    {
+        ['business' => $business, 'module' => $module, 'menu' => $menu, 'child' => $child] = $this->setupBusiness();
+        $role = BusinessRole::create(['name' => 'Staff', 'business_id' => $business->id, 'approval_status' => 'Approved']);
+        $global = User::create(['name' => 'Staff', 'email' => 'restricted@test.local', 'approval_status' => 'Approved']);
+        $staff = BusinessUser::create(['user_id' => $global->id, 'name' => 'Staff', 'business_id' => $business->id,
+            'role_id' => $role->id, 'email' => 'restricted@test.local', 'password' => 'test-password-123', 'approval_status' => 'Approved']);
+        $grant = BusinessUserAccess::create(['business_user_id' => $staff->id, 'module_id' => $module->id,
+            'menu_id' => $menu->id, 'child_menu_id' => $child->id, 'can_view' => true, 'is_active' => true, 'approval_status' => 'Pending']);
+        $url = 'http://admin.shopa.saas.test/'.$module->slug.'/'.$menu->slug.'/'.$child->slug;
+        $navigation = app(BusinessNavigation::class);
+
+        $this->assertFalse($navigation->canView($business, $staff, $child->id));
+        $this->actingAs($staff, 'business_admin')->get($url)->assertNotFound();
+        $grant->update(['approval_status' => 'Approved', 'is_active' => false]);
+        $this->assertFalse($navigation->canView($business, $staff, $child->id));
+        $this->get($url)->assertNotFound();
+        $grant->update(['is_active' => true]);
+        $this->assertTrue($navigation->canView($business, $staff, $child->id));
+        $this->get($url)->assertOk();
+    }
+
+    public function test_owner_saving_access_explicitly_approves_the_new_staff_grants(): void
+    {
+        ['business' => $business, 'admin' => $owner, 'module' => $module, 'menu' => $menu, 'child' => $child] = $this->setupBusiness();
+        $authorization = Module::create(['name' => 'Authorization', 'slug' => 'authorization', 'approval_status' => 'Approved']);
+        $accessMenu = Menu::create(['module_id' => $authorization->id, 'name' => 'Access control', 'slug' => 'access-control', 'approval_status' => 'Approved']);
+        BusinessCategoryModule::create(['business_category_id' => $business->category_id, 'module_id' => $authorization->id]);
+        BusinessCategoryMenu::create(['business_category_id' => $business->category_id, 'menu_id' => $accessMenu->id]);
+        app(BusinessSubscriptionService::class)->activateBasic($business);
+        $role = BusinessRole::create(['name' => 'Staff', 'business_id' => $business->id, 'approval_status' => 'Approved']);
+        $global = User::create(['name' => 'Staff', 'email' => 'newstaff@test.local', 'approval_status' => 'Approved']);
+        $staff = BusinessUser::create(['user_id' => $global->id, 'name' => 'Staff', 'business_id' => $business->id,
+            'role_id' => $role->id, 'email' => 'newstaff@test.local', 'password' => 'test-password-123', 'approval_status' => 'Approved']);
+        BusinessUserAccess::create(['business_user_id' => $staff->id, 'module_id' => $module->id,
+            'menu_id' => $menu->id, 'child_menu_id' => $child->id, 'can_view' => true, 'approval_status' => 'Pending']);
+        $this->assertFalse(app(BusinessNavigation::class)->canView($business, $staff, $child->id));
+
+        $this->actingAs($owner, 'business_admin')->postJson('http://admin.shopa.saas.test/authorization/access-control/store', [
+            'member_id' => $staff->id,
+            'permissions' => [
+                ['module_id' => $module->id, 'menu_id' => $menu->id, 'child_menu_id' => $child->id,
+                    'can_view' => true, 'can_create' => true, 'can_update' => false, 'can_delete' => false],
+                ['module_id' => $authorization->id, 'menu_id' => $accessMenu->id, 'child_menu_id' => null,
+                    'can_view' => false, 'can_create' => false, 'can_update' => false, 'can_delete' => false],
+            ],
+        ])->assertOk();
+
+        $grant = BusinessUserAccess::where('business_user_id', $staff->id)->where('child_menu_id', $child->id)->sole();
+        $this->assertSame('Approved', $grant->approval_status);
+        $this->assertTrue((bool) $grant->is_active);
+        $this->assertNotNull($grant->approved_at);
+        $this->assertEquals($owner->id, $grant->approved_by);
+        $this->assertTrue((bool) $grant->can_create);
+        $this->assertTrue(app(BusinessNavigation::class)->canView($business, $staff, $child->id));
+        $this->flushSession();
+        $this->actingAs($staff, 'business_admin')->get('http://admin.shopa.saas.test/'.$module->slug.'/'.$menu->slug.'/'.$child->slug)->assertOk();
+    }
+
     public function test_only_authority_can_edit_category_access(): void
     {
         extract($this->setupBusiness());
         $this->get('http://admin.saas.test/access')->assertRedirect('http://admin.saas.test/login');
-        $globalAuthority = User::create(['name'=>'HQ','email'=>'hq-global@test.local','approval_status'=>'Approved']);
-        $authority = AuthorityUser::create(['user_id'=>$globalAuthority->id,'name'=>'HQ','email'=>'hq@test.local','password'=>'123456789','approval_status'=>'Approved']);
-        $this->actingAs($authority->refresh(),'authority')->get('http://admin.saas.test/access')->assertOk();
-        $this->put('http://admin.saas.test/access/category/'.$business->category_id,['access'=>['module'=>[$module->id=>'1'],'menu'=>[$menu->id=>'1'],'child'=>[]]])->assertRedirect();
-        $this->assertFalse(app(BusinessNavigation::class)->canView($business,$admin,$child->id));
+        $globalAuthority = User::create(['name' => 'HQ', 'email' => 'hq-global@test.local', 'approval_status' => 'Approved']);
+        $authority = AuthorityUser::create(['user_id' => $globalAuthority->id, 'name' => 'HQ', 'email' => 'hq@test.local', 'password' => '123456789', 'approval_status' => 'Approved']);
+        $this->actingAs($authority->refresh(), 'authority')->get('http://admin.saas.test/access')->assertOk();
+        $this->put('http://admin.saas.test/access/category/'.$business->category_id, ['access' => ['module' => [$module->id => '1'], 'menu' => [$menu->id => '1'], 'child' => []]])->assertRedirect();
+        $this->assertFalse(app(BusinessNavigation::class)->canView($business, $admin, $child->id));
     }
 
     public function test_basic_activation_is_free_non_expiring_and_idempotent(): void
@@ -64,7 +150,7 @@ class BusinessNavigationTest extends TestCase
         $subscription = BusinessSubscription::where('business_id', $business->id)->firstOrFail();
         $this->assertEquals('active', $subscription->subscription_status);
         $this->assertNull($subscription->ends_at);
-        $this->assertEquals(0, (float)$subscription->plan->price);
+        $this->assertEquals(0, (float) $subscription->plan->price);
         $this->assertEquals($business->category_id, $subscription->plan->business_category_id);
         $this->assertDatabaseHas('subscription_plan_modules', [
             'subscription_plan_id' => $subscription->plan_id, 'module_id' => $module->id, 'is_enabled' => true,
@@ -144,8 +230,8 @@ class BusinessNavigationTest extends TestCase
 
     public function test_configuration_module_is_assigned_to_categories_by_seeder(): void
     {
-        $this->seed(\Database\Seeders\ModuleMenuSeeder::class);
-        $this->seed(\Database\Seeders\SubscriptionPlanSeeder::class);
+        $this->seed(ModuleMenuSeeder::class);
+        $this->seed(SubscriptionPlanSeeder::class);
         $configurations = Module::where('slug', 'configurations')->firstOrFail();
         $categories = BusinessCategory::where('approval_status', 'Approved')->get();
         $this->assertGreaterThan(0, $categories->count());
@@ -153,8 +239,8 @@ class BusinessNavigationTest extends TestCase
             $this->assertDatabaseHas('business_category_modules', [
                 'business_category_id' => $category->id, 'module_id' => $configurations->id,
             ]);
-            $plan = \App\Models\SubscriptionPlan::where('slug', $category->slug . '-basic')->firstOrFail();
-            $this->assertEquals(0, (float)$plan->price);
+            $plan = SubscriptionPlan::where('slug', $category->slug.'-basic')->firstOrFail();
+            $this->assertEquals(0, (float) $plan->price);
             $this->assertDatabaseHas('subscription_plan_modules', [
                 'subscription_plan_id' => $plan->id,
                 'business_category_id' => $category->id,
@@ -166,10 +252,9 @@ class BusinessNavigationTest extends TestCase
     public function test_navigation_does_not_require_business_feature_snapshots(): void
     {
         extract($this->setupBusiness());
-        $this->assertFalse(\Illuminate\Support\Facades\Schema::hasTable('business_subscription_features'));
+        $this->assertFalse(Schema::hasTable('business_subscription_features'));
         $this->assertTrue(app(BusinessNavigation::class)->canView($business, $admin, $child->id));
     }
-
 
     public function test_basic_plan_copies_only_the_existing_category_mapping(): void
     {
@@ -195,15 +280,14 @@ class BusinessNavigationTest extends TestCase
 
     public function test_basic_plan_seeder_creates_one_plan_per_category_without_new_mappings(): void
     {
-        $first = BusinessCategory::create(['name'=>'First','slug'=>'first-only','approval_status'=>'Approved']);
-        $second = BusinessCategory::create(['name'=>'Second','slug'=>'second-only','approval_status'=>'Approved']);
-        $module = Module::create(['name'=>'Independent','slug'=>'independent','approval_status'=>'Approved']);
+        $first = BusinessCategory::create(['name' => 'First', 'slug' => 'first-only', 'approval_status' => 'Approved']);
+        $second = BusinessCategory::create(['name' => 'Second', 'slug' => 'second-only', 'approval_status' => 'Approved']);
+        $module = Module::create(['name' => 'Independent', 'slug' => 'independent', 'approval_status' => 'Approved']);
         BusinessCategoryModule::create(['business_category_id' => $first->id, 'module_id' => $module->id]);
-        $this->seed(\Database\Seeders\SubscriptionPlanSeeder::class);
+        $this->seed(SubscriptionPlanSeeder::class);
         $this->assertDatabaseCount('subscription_plans', 2);
-        $this->assertDatabaseHas('subscription_plan_modules', ['business_category_id'=>$first->id, 'module_id'=>$module->id]);
-        $this->assertDatabaseMissing('subscription_plan_modules', ['business_category_id'=>$second->id, 'module_id'=>$module->id]);
-        $this->assertDatabaseMissing('business_category_modules', ['business_category_id'=>$second->id, 'module_id'=>$module->id]);
+        $this->assertDatabaseHas('subscription_plan_modules', ['business_category_id' => $first->id, 'module_id' => $module->id]);
+        $this->assertDatabaseMissing('subscription_plan_modules', ['business_category_id' => $second->id, 'module_id' => $module->id]);
+        $this->assertDatabaseMissing('business_category_modules', ['business_category_id' => $second->id, 'module_id' => $module->id]);
     }
-
 }

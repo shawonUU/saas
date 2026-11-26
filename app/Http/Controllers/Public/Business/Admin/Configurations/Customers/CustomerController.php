@@ -9,12 +9,17 @@ use App\Models\BusinessUser;
 use App\Services\Public\Business\Admin\Settings\NavigationManagement\BusinessNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class CustomerController extends Controller
 {
     protected const SLUG = 'customers';
+
     protected const TITLE = 'Customers';
+
     protected const TITLE_BN = 'কাস্টমার';
+
     protected const FIELDS = [
         'name_bn' => ['label' => 'Bangla Name', 'label_bn' => 'বাংলা নাম', 'type' => 'text', 'required' => false, 'options' => []],
         'name' => [
@@ -79,15 +84,15 @@ class CustomerController extends Controller
 
         $owner = $user->isOwnerOf($tenant);
         $permissions = ['create' => $owner, 'update' => $owner, 'delete' => $owner];
-        if (!$owner) {
+        if (! $owner) {
             $accesses = $user->accesses()->where('module_id', $module->id)
                 ->where('menu_id', $menu->id)->whereNull('child_menu_id')
                 ->where('is_active', true)->where('approval_status', 'Approved')->get();
             foreach (array_keys($permissions) as $action) {
-                $permissions[$action] = $accesses->contains(fn ($access) =>
-                    $access->can_view && $access->{'can_'.$action});
+                $permissions[$action] = $accesses->contains(fn ($access) => $access->can_view && $access->{'can_'.$action});
             }
         }
+
         return [$tenant, $user, $modules, $permissions];
     }
 
@@ -107,36 +112,58 @@ class CustomerController extends Controller
                 $field['type'], ['text', 'phone', 'email', 'textarea', 'currency', 'hex'], true)));
             $query->where(function ($q) use ($search, $searchable) {
                 $q->where('code', 'like', '%'.$search.'%');
-                foreach ($searchable as $column) $q->orWhere($column, 'like', '%'.$search.'%');
+                foreach ($searchable as $column) {
+                    $q->orWhere($column, 'like', '%'.$search.'%');
+                }
             });
         }
         $filters = $request->query('f', []);
-        if (!is_array($filters)) $filters = [];
+        if (! is_array($filters)) {
+            $filters = [];
+        }
         $filters = array_intersect_key($filters, $columns);
         foreach ($filters as $column => $value) {
-            if (!is_scalar($value)) continue;
+            if (! is_scalar($value)) {
+                continue;
+            }
             $value = trim(mb_substr((string) $value, 0, 120));
-            if ($value === '') continue;
+            if ($value === '') {
+                continue;
+            }
             $type = $columns[$column]['type'];
             if (in_array($type, ['status', 'boolean'], true)) {
-                if (in_array($value, ['0', '1'], true)) $query->where($column, (int) $value);
+                if (in_array($value, ['0', '1'], true)) {
+                    $query->where($column, (int) $value);
+                }
             } elseif (in_array($type, ['integer', 'category'], true)) {
-                if (ctype_digit($value)) $query->where($column, (int) $value);
+                if (ctype_digit($value)) {
+                    $query->where($column, (int) $value);
+                }
             } elseif ($type === 'decimal') {
-                if (is_numeric($value)) $query->where($column, (float) $value);
+                if (is_numeric($value)) {
+                    $query->where($column, (float) $value);
+                }
             } elseif ($type === 'date') {
-                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) $query->whereDate($column, $value);
+                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+                    $query->whereDate($column, $value);
+                }
             } elseif ($type === 'select') {
-                if (isset($columns[$column]['options'][$value])) $query->where($column, $value);
+                if (isset($columns[$column]['options'][$value])) {
+                    $query->where($column, $value);
+                }
             } else {
                 $query->where($column, 'like', '%'.$value.'%');
             }
         }
         $sort = (string) $request->query('sort', 'id');
-        if (!isset($columns[$sort])) $sort = 'id';
+        if (! isset($columns[$sort])) {
+            $sort = 'id';
+        }
         $dir = strtolower((string) $request->query('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
         $perPage = (int) $request->query('per_page', 15);
-        if (!in_array($perPage, [10, 15, 25, 50, 100], true)) $perPage = 15;
+        if (! in_array($perPage, [10, 15, 25, 50, 100], true)) {
+            $perPage = 15;
+        }
         $records = $query->orderBy($sort, $dir)->paginate($perPage)->withQueryString();
 
         return view('public.business.admin.configurations.'.self::SLUG.'.index', [
@@ -152,11 +179,12 @@ class CustomerController extends Controller
 
     private function validated(Request $request, Business $tenant, ?BusinessCustomer $record = null): array
     {
+        $request->merge(['email' => $request->filled('email') ? mb_strtolower(trim((string) $request->input('email'))) : null]);
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'name_bn' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
-            'email' => 'nullable|email:rfc|max:255',
+            'email' => ['nullable', 'email:rfc', 'max:255', Rule::unique('business_customers', 'email')->where('business_id', $tenant->id)->ignore($record?->id)],
             'address' => 'nullable|string|max:2000',
             'address_bn' => 'nullable|string|max:2000',
             'notes' => 'nullable|string|max:2000',
@@ -172,8 +200,12 @@ class CustomerController extends Controller
         [$tenant, , , $permissions] = $this->context($request);
         abort_unless($permissions['create'], 403);
         $data = $this->validated($request, $tenant);
-        BusinessCustomer::create($data + ['business_id' => $tenant->id,
-                'approval_status' => 'Approved', 'approved_at' => now()]);
+        DB::transaction(function () use ($data, $tenant): void {
+            Business::whereKey($tenant->id)->lockForUpdate()->firstOrFail();
+            BusinessCustomer::create($data + ['business_id' => $tenant->id,
+                'user_id' => null, 'approval_status' => 'Approved', 'approved_at' => now()]);
+        });
+
         return redirect()->route('business.admin.configurations.'.self::SLUG.'.index',
             ['business' => $business])->with('success', t('Created successfully.', 'সফলভাবে তৈরি হয়েছে।'));
     }
@@ -185,6 +217,7 @@ class CustomerController extends Controller
         $row = BusinessCustomer::where('business_id', $tenant->id)->findOrFail($record);
         $data = $this->validated($request, $tenant, $row);
         $row->update($data);
+
         return back()->with('success', t('Updated successfully.', 'সফলভাবে হালনাগাদ হয়েছে।'));
     }
 
@@ -194,6 +227,7 @@ class CustomerController extends Controller
         abort_unless($permissions['delete'], 403);
         $row = BusinessCustomer::where('business_id', $tenant->id)->findOrFail($record);
         $row->delete();
+
         return back()->with('success', t('Deleted successfully.', 'সফলভাবে মুছে ফেলা হয়েছে।'));
     }
 }

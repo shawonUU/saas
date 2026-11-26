@@ -16,10 +16,6 @@ class ModuleMenuSeeder extends Seeder
 {
     public function run():void
     {
-        // [slug, English, বাংলা, icon, menus]
-        // Menu: [slug, English, বাংলা, icon, children]
-        // Child: [slug, English, বাংলা, route]
-        // Menu with [] children is directly clickable.
         $structure=[
             ['configurations','Configurations','কনফিগারেশন','settings',[
                 ['branch','Branch','শাখা','building',[]],
@@ -37,19 +33,27 @@ class ModuleMenuSeeder extends Seeder
                 ['currencies','Currencies','মুদ্রা','currency-bdt',[]],
                 ['payment-methods','Payment Methods','পেমেন্ট পদ্ধতি','credit-card',[]],
                 ['shipping-methods','Shipping Methods','শিপিং পদ্ধতি','truck',[]],
+                ['ingredients','Ingredients','উপকরণ','package',[]],
+                ['recipes','Recipes','রেসিপি','book-open',[]],
+                ['modifiers','Modifiers & Add-ons','অপশন ও অ্যাডঅন','list-plus',[]],
+                ['dining-areas','Dining Areas','ডাইনিং এরিয়া','layout-grid',[]],
+                ['tables','Tables','টেবিল','grid-2x2',[]],
+                ['kitchen-stations','Kitchen Stations','কিচেন স্টেশন','chef-hat',[]],
             ]],
             ['sales','Sales','বিক্রয়','shopping-cart',[
                 ['orders','Orders','অর্ডার','receipt',[[ 'order-list','Order List','অর্ডার তালিকা',null],['new-order','New Order','নতুন অর্ডার',null],['order-details','Order Details','অর্ডারের বিবরণ',null]]],
-                ['pos','POS','পস','pos',[]],
+                ['retail-pos','POS','পস','pos',[]],
+                ['restaurant-pos','POS','পস','pos',[]],
                 ['quotations','Quotations','কোটেশন','file-text',[[ 'quotation-list','Quotation List','কোটেশন তালিকা',null],['new-quotation','New Quotation','নতুন কোটেশন',null]]],
-                ['invoices','Sales Invoices','বিক্রয় ইনভয়েস','file-check',[[ 'invoice-list','Invoice List','ইনভয়েস তালিকা',null],['new-invoice','New Invoice','নতুন ইনভয়েস',null]]],
-                ['returns','Sales Returns','বিক্রয় রিটার্ন','undo-2',[[ 'return-list','Return List','রিটার্ন তালিকা',null],['new-return','New Return','নতুন রিটার্ন',null]]],
-                ['discounts','Discounts','ডিসকাউন্ট','badge-percent',[[ 'coupons','Coupons','কুপন',null],['price-rules','Price Rules','মূল্যছাড়ের নিয়ম',null]]],
-                ['reports','Sales Reports','বিক্রয় রিপোর্ট','chart-bar',[[ 'sales-summary','Sales Summary','বিক্রয় সারাংশ',null]]]
+                ['invoices','Sales Invoices','বিক্রয় ইনভয়েস','file-check',[[ 'invoice-list','Invoice List','ইনভয়েস তালিকা',null],['new-invoice','New Invoice','নতুন ইনভয়েস',null]]],
+                ['returns','Sales Returns','বিক্রয় রিটার্ন','undo-2',[[ 'return-list','Return List','রিটার্ন তালিকা',null],['new-return','New Return','নতুন রিটার্ন',null]]],
+                ['discounts','Discounts','ডিসকাউন্ট','badge-percent',[[ 'coupons','Coupons','কুপন',null],['price-rules','Price Rules','মূল্যছাড়ের নিয়ম',null]]],
+                ['reports','Sales Reports','বিক্রয় রিপোর্ট','chart-bar',[[ 'sales-summary','Sales Summary','বিক্রয় সারাংশ',null]]],
+                ['settings','Settings','সেটিংস','settings',[[ 'general-settings','General Settings','সাধারণ সেটিংস',null], [ 'pos-settings','POS Settings','পস সেটিংস',null]]]
             ]],
             ['inventory','Inventory','ইনভেন্টরি','package',[
                 ['stock','Stock','স্টক','warehouse',[[ 'stock-report','Stock Report','স্টক রিপোর্ট',null],['stock-ledger','Stock Ledger','স্টক লেজার',null],['low-stock','Low Stock','কম স্টক',null]]],
-                ['movements','Stock Movements','স্টক মুভমেন্ট','arrow-left-right',[[ 'stock-transfer','Stock Transfer','স্টক ট্রান্সফার',null],['stock-adjustment','Stock Adjustment','স্টক সমন্বয়',null],['stock-count','Stock Count','স্টক গণনা',null]]],
+                ['movements','Stock Movements','স্টক মুভমেন্ট','arrow-left-right',[[ 'stock-transfer','Stock Transfer','স্টক ট্রান্সফার',null],['stock-adjustment','Stock Adjustment','স্টক সমন্বয়',null],['stock-count','Stock Count','স্টক গণনা',null],['ingredient-consumption','Ingredient Consumption','উপকরণ ব্যবহার',null],['wastage','Wastage','অপচয়',null]]],
             ]],
             ['purchase','Purchase','ক্রয়','shopping-bag',[
                 ['requisitions','Requisitions','রিকুইজিশন','clipboard-list',[[ 'requisition-list','Requisition List','রিকুইজিশন তালিকা',null],['new-requisition','New Requisition','নতুন রিকুইজিশন',null]]],
@@ -102,11 +106,17 @@ class ModuleMenuSeeder extends Seeder
                 ]]
             ]],
             ['restaurant','Restaurant Operations','রেস্টুরেন্ট পরিচালনা','utensils',[
-                ['dining','Tables & Dining','টেবিল ও ডাইনিং','layout-grid',[[ 'table-map','Table Map','টেবিল ম্যাপ',null],['dining-areas','Dining Areas','ডাইনিং এরিয়া',null]]],
-                ['food-menu','Food Menu','খাবারের মেনু','book-open',[[ 'menu-items','Menu Items','মেনু আইটেম',null],['combos','Combos','কম্বো',null],['modifiers','Modifiers','অপশন ও অ্যাডঅন',null]]],
-                ['kitchen-display','Kitchen Display','কিচেন ডিসপ্লে','chef-hat',[[ 'kitchen-tickets','Kitchen Tickets','কিচেন টিকিট',null],['kitchen-stations','Kitchen Stations','কিচেন স্টেশন',null]]],
-                ['table-bookings','Table Reservations','টেবিল রিজার্ভেশন','calendar-days',[[ 'reservation-list','Reservation List','রিজার্ভেশন তালিকা',null],['new-reservation','New Reservation','নতুন রিজার্ভেশন',null]]],
-                ['buffet','Buffet','বুফে','salad',[[ 'buffet-sessions','Buffet Sessions','বুফে সেশন',null],['buffet-production','Buffet Production','বুফে প্রোডাকশন',null]]]
+                ['dining','Dining Operations','ডাইনিং কার্যক্রম','layout-grid',[
+                    ['table-map','Table Map','টেবিল ম্যাপ',null],
+                    ['reservations','Reservations','রিজার্ভেশন',null]
+                ]],
+                ['kitchen-display','Kitchen Display','কিচেন ডিসপ্লে','chef-hat',[
+                    ['kitchen-tickets','Kitchen Tickets (KOT)','কিচেন টিকিট',null]
+                ]],
+                ['production','Kitchen Production','কিচেন উৎপাদন','cooking-pot',[]],
+                ['reports','Restaurant Reports','রেস্টুরেন্ট রিপোর্ট','chart-bar',[
+                    ['food-cost-report','Food Cost Report','খাবারের ব্যয় রিপোর্ট',null]
+                ]]
             ]],
             ['hr','Human Resources','মানবসম্পদ','users-round',[
                 ['employees','Employees','কর্মী','user-round',[[ 'employee-list','Employee List','কর্মী তালিকা',null],['departments','Departments','বিভাগ',null]]],
@@ -151,89 +161,31 @@ class ModuleMenuSeeder extends Seeder
         ];
         $profiles=[
             'retail'=>[
-                'sales'=>['orders'=>'*','pos'=>'*','quotations'=>'*','invoices'=>'*','returns'=>'*','discounts'=>'*','reports'=>'*'],
+                'sales'=>['orders'=>'*','retail-pos'=>'*','quotations'=>'*','invoices'=>'*','returns'=>'*','discounts'=>'*','reports'=>'*', 'settings'=>'*'],
                 'logistics'=>['delivery'=>'*','courier'=>'*','cod'=>'*','settings'=>'*','reports'=>'*'],
-                'inventory'=>['stock'=>'*','movements'=>'*'],
+                'inventory'=>['stock'=>'*','movements'=>['stock-transfer','stock-adjustment','stock-count']],
                 'purchase'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
                 'finance'=>['chart-of-accounts'=>'*','ledger'=>'*','receivables'=>'*','payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
                 'ecommerce'=>['storefront'=>'*','catalog'=>'*','online-orders'=>'*','checkout'=>'*','online-marketing'=>'*'],
                 'hr'=>['employees'=>'*','attendance'=>'*','payroll'=>'*']
             ],
-            'food'=>[
-                'sales'=>['orders'=>'*','pos'=>'*','invoices'=>'*','discounts'=>'*','reports'=>'*'],
-                'logistics'=>['delivery'=>'*','courier'=>'*','cod'=>'*','settings'=>'*','reports'=>'*'],
-                'restaurant'=>['dining'=>'*','food-menu'=>'*','kitchen-display'=>'*','table-bookings'=>'*','buffet'=>'*'],
-                'kitchen'=>['recipes'=>'*','preparation'=>'*','food-costing'=>'*'],
+            'restaurant'=>[
+                'configurations'=>['ingredients'=>[],'recipes'=>[],'modifiers'=>[],'dining-areas'=>[],'tables'=>[],'kitchen-stations'=>[]],
+                'sales'=>['orders'=>'*','restaurant-pos'=>'*','invoices'=>'*','returns'=>'*','discounts'=>'*','reports'=>'*', 'settings'=>'*'],
+                'restaurant'=>['dining'=>'*','kitchen-display'=>'*','production'=>[],'reports'=>'*'],
                 'inventory'=>['stock'=>'*','movements'=>'*'],
-                'purchase'=>['purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
-                'finance'=>['payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
-                'hr'=>['employees'=>'*','attendance'=>'*','payroll'=>'*']
+                'purchase'=>['requisitions'=>'*','purchase-orders'=>'*','receiving'=>'*','purchase-returns'=>'*'],
+                'finance'=>['chart-of-accounts'=>'*','ledger'=>'*','receivables'=>'*','payables'=>'*','banking'=>'*','expenses'=>'*','financial-reports'=>'*'],
+                'ecommerce'=>['storefront'=>'*','catalog'=>'*','online-orders'=>'*','checkout'=>'*','online-marketing'=>'*'],
+                'logistics'=>['delivery'=>'*','courier'=>'*','cod'=>'*','settings'=>'*','reports'=>'*'],
+                'hr'=>['employees'=>'*','attendance'=>'*','leave'=>'*','payroll'=>'*']
             ],
         ];
 
         // Category slug => [English, বাংলা, profile]. Add new categories here.
         $categories=[
             'retail'=>['Retail Shop','খুচরা দোকান','retail'],
-            'grocery'=>['Grocery','মুদি দোকান','retail'],
-            // 'supermarket'=>['Supermarket','সুপারশপ','retail'],
-            // 'fashion'=>['Fashion & Clothing','ফ্যাশন ও পোশাক','retail'],
-            // 'electronics'=>['Electronics','ইলেকট্রনিকস','retail'],
-            // 'hardware'=>['Hardware Store','হার্ডওয়্যার দোকান','retail'],
-            // 'furniture'=>['Furniture Store','আসবাবপত্রের দোকান','retail'],
-            // 'bookstore'=>['Bookstore','বইয়ের দোকান','retail'],
-            // 'jewelry'=>['Jewelry Store','গয়নার দোকান','retail'],
-            // 'pet-shop'=>['Pet Shop','পোষাপ্রাণীর দোকান','retail'],
-            // 'wholesale'=>['Wholesale','পাইকারি ব্যবসা','wholesale'],
-            // 'distribution'=>['Distribution Business','ডিস্ট্রিবিউশন ব্যবসা','wholesale'],
-            // 'restaurant'=>['Restaurant','রেস্টুরেন্ট','food'],
-            // 'cafe'=>['Cafe','ক্যাফে','food'],
-            // 'bakery'=>['Bakery','বেকারি','food'],
-            // 'fast-food'=>['Fast Food','ফাস্ট ফুড','food'],
-            // 'catering'=>['Catering','ক্যাটারিং','food'],
-            // 'cloud-kitchen'=>['Cloud Kitchen','ক্লাউড কিচেন','cloud-food'],
-            // 'hotel'=>['Hotel','হোটেল','hospitality'],
-            // 'resort'=>['Resort','রিসোর্ট','hospitality'],
-            // 'guesthouse'=>['Guesthouse','গেস্টহাউস','hospitality'],
-            // 'salon'=>['Beauty Salon','বিউটি সেলুন','beauty'],
-            // 'barbershop'=>['Barbershop','বারবার শপ','beauty'],
-            // 'spa'=>['Spa & Wellness','স্পা ও ওয়েলনেস','beauty'],
-            // 'gym'=>['Gym','জিম','fitness'],
-            // 'fitness-center'=>['Fitness Center','ফিটনেস সেন্টার','fitness'],
-            // 'yoga-studio'=>['Yoga Studio','যোগব্যায়াম স্টুডিও','fitness'],
-            // 'clinic'=>['Clinic','ক্লিনিক','clinic'],
-            // 'dental-clinic'=>['Dental Clinic','ডেন্টাল ক্লিনিক','clinic'],
-            // 'physiotherapy'=>['Physiotherapy','ফিজিওথেরাপি','clinic'],
-            // 'diagnostic-center'=>['Diagnostic Center','ডায়াগনস্টিক সেন্টার','diagnostic'],
-            // 'manufacturing'=>['Manufacturing','উৎপাদন শিল্প','factory'],
-            // 'garments-factory'=>['Garments Factory','পোশাক কারখানা','factory'],
-            // 'food-factory'=>['Food Processing Factory','খাদ্য প্রক্রিয়াজাত কারখানা','factory'],
-            // 'construction'=>['Construction Company','নির্মাণ প্রতিষ্ঠান','construction'],
-            // 'contractor'=>['Contractor','ঠিকাদারি প্রতিষ্ঠান','construction'],
-            // 'real-estate'=>['Real Estate','রিয়েল এস্টেট','property'],
-            // 'property-management'=>['Property Management','সম্পত্তি ব্যবস্থাপনা','property'],
-            // 'courier'=>['Courier Service','কুরিয়ার সেবা','logistics'],
-            // 'transport'=>['Transport Service','পরিবহন সেবা','logistics'],
-            // 'car-workshop'=>['Car Workshop','গাড়ির ওয়ার্কশপ','garage'],
-            // 'auto-dealership'=>['Auto Dealership','গাড়ি বিক্রয় কেন্দ্র','vehicle-sales'],
-            // 'vehicle-rental'=>['Vehicle Rental','যানবাহন ভাড়া','rental'],
-            // 'equipment-rental'=>['Equipment Rental','যন্ত্রপাতি ভাড়া','rental'],
-            // 'event-management'=>['Event Management','ইভেন্ট ম্যানেজমেন্ট','events'],
-            // 'event-venue'=>['Event Venue','ইভেন্ট ভেন্যু','events'],
-            // 'travel-agency'=>['Travel Agency','ট্রাভেল এজেন্সি','travel'],
-            // 'tour-operator'=>['Tour Operator','ট্যুর অপারেটর','travel'],
-            // 'agriculture'=>['Agriculture','কৃষি ব্যবসা','agriculture'],
-            // 'dairy-farm'=>['Dairy Farm','দুগ্ধ খামার','agriculture'],
-            // 'livestock-farm'=>['Livestock Farm','পশুর খামার','agriculture'],
-            // 'service'=>['Service Business','সেবা ব্যবসা','services'],
-            // 'repair-service'=>['Repair Service','মেরামত সেবা','services'],
-            // 'it-service'=>['IT Services','আইটি সেবা','services'],
-            // 'consulting'=>['Consulting','পরামর্শ সেবা','services'],
-            // 'marketing-agency'=>['Marketing Agency','মার্কেটিং এজেন্সি','services'],
-            // 'law-firm'=>['Law Firm','আইন সেবা প্রতিষ্ঠান','services'],
-            // 'subscription-business'=>['Subscription Business','সাবস্ক্রিপশন ব্যবসা','subscriptions'],
-            // 'saas'=>['SaaS Business','সাস ব্যবসা','subscriptions'],
-            // 'nonprofit'=>['Nonprofit Organization','অলাভজনক সংস্থা','nonprofit'],
-            // 'ngo'=>['NGO','এনজিও','nonprofit']
+            'restaurant'=>['Restaurant','রেস্টুরেন্ট','restaurant'],
         ];
 
         DB::transaction(function() use($structure,$profiles,$common,$categories){
@@ -265,6 +217,9 @@ class ModuleMenuSeeder extends Seeder
                 $allowed=$common;
                 foreach($profiles[$profile] as $moduleSlug=>$menus){
                     $allowed[$moduleSlug]=array_replace($allowed[$moduleSlug]??[],$menus);
+                }
+                if($profile==='restaurant'){
+                    unset($allowed['configurations']['colors'],$allowed['configurations']['brands']);
                 }
                 $moduleIds=[];$menuIds=[];$childIds=[];
                 foreach($allowed as $moduleSlug=>$allowedMenus){

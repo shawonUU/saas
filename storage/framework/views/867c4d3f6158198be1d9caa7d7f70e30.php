@@ -1,0 +1,2 @@
+
+<?php echo $__env->make('public.business.admin.configurations.restaurant-master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\saas-backend\resources\views/public/business/admin/configurations/dining-areas/index.blade.php ENDPATH**/ ?>
