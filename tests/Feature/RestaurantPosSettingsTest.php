@@ -13,6 +13,7 @@ use App\Models\BusinessUserAccess;
 use App\Models\ChildMenu;
 use App\Models\Menu;
 use App\Models\Module;
+use App\Models\Public\Business\Admin\Settings\Business\GeneralSettings\BrandSetting;
 use App\Models\User;
 use App\Services\BusinessSubscriptionService;
 use App\Services\Public\Business\Admin\Sales\RestaurantPos\RestaurantWorkflow;
@@ -82,10 +83,12 @@ class RestaurantPosSettingsTest extends TestCase
         $settings = ['kitchen_mode' => 'required', 'auto_send_to_kitchen' => true, 'default_service' => 'dine_in'];
         app(PosSettingsService::class)->save($business, $settings);
 
+        BrandSetting::create(['business_id' => $business->id, 'primary_color' => '#5145e5', 'about' => 'Original about']);
         $this->actingAs($owner, 'business_admin')->get($this->generalSettingsUrl($business))
-            ->assertOk()->assertDontSee('name="restaurant_pos[kitchen_mode]"', false);
+            ->assertOk()->assertDontSee('name="restaurant_pos[kitchen_mode]"', false)
+            ->assertDontSee('name="primary_color"', false);
         $this->put($this->generalSettingsUrl($business), [
-            'name' => 'Updated restaurant', 'primary_color' => '#5145e5',
+            'name' => 'Updated restaurant', 'about' => 'Updated about', 'primary_color' => '#ff0000',
             'restaurant_pos' => ['kitchen_mode' => 'off', 'auto_send_to_kitchen' => false, 'default_service' => 'delivery'],
         ])
             ->assertRedirect()->assertSessionHasNoErrors();
@@ -93,7 +96,8 @@ class RestaurantPosSettingsTest extends TestCase
         $business->refresh();
         $this->assertSame('Updated restaurant', $business->name);
         $this->assertDatabaseHas('restaurant_pos_settings', ['business_id' => $business->id] + $settings);
-        $this->assertDatabaseHas('business_brand_settings', ['business_id' => $business->id, 'primary_color' => '#5145e5']);
+        $this->assertDatabaseHas('business_brand_settings', ['business_id' => $business->id,
+            'primary_color' => '#5145e5', 'about' => 'Updated about']);
         $this->assertNull($business->restaurant_pos_settings);
     }
 

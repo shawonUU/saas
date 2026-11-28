@@ -137,6 +137,7 @@ class ModuleMenuSeeder extends Seeder
             ['settings','Settings','সেটিংস','settings',[
                 ['navigation-management','Navigation Management','নেভিগেশন ব্যবস্থাপনা','network',[]],
                 ['business','Business','বিজনেস','store',[[ 'general-settings','General Settings','সাধারণ সেটিংস',null],['branding','Branding','ব্র্যান্ডিং',null]]],
+                ['ecommerce','E-commerce','ই-কমার্স','store',[[ 'general-settings','General Settings','সাধারণ সেটিংস',null]]],
                 ['team','Team & Permissions','টিম ও পারমিশন','shield-check',[[ 'user-permissions','Users & Permissions','ইউজার ও পারমিশন',null],['user-list','User List','ইউজার তালিকা',null]]],
                 ['locations','Branches & Warehouses','শাখা ও গুদাম','building-2',[[ 'branches','Branches','শাখা',null],['warehouses','Warehouses','গুদাম',null]]],
                 ['taxes','Tax Settings','ট্যাক্স সেটিংস','percent',[[ 'tax-rates','Tax Rates','ট্যাক্স রেট',null],['tax-groups','Tax Groups','ট্যাক্স গ্রুপ',null]]],
@@ -156,7 +157,7 @@ class ModuleMenuSeeder extends Seeder
                 'taxes'=>[], 'currencies'=>[], 'payment-methods'=>[], 'shipping-methods'=>[],
             ],
             'authorization'=>['users'=>'*','roles'=>'*','permissions'=>'*','access-control'=>'*'],
-            'settings'=>['navigation-management'=>'*','business'=>'*','team'=>'*','locations'=>'*','taxes'=>'*','integrations'=>'*','notifications'=>'*','security'=>'*','audit'=>'*'],
+            'settings'=>['navigation-management'=>'*','business'=>'*', 'ecommerce'=>'*', 'team'=>'*','locations'=>'*','taxes'=>'*','integrations'=>'*','notifications'=>'*','security'=>'*','audit'=>'*'],
             'support'=>['tickets'=>'*','feedback'=>'*'],
         ];
         $profiles=[

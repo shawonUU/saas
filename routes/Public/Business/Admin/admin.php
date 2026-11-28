@@ -118,6 +118,7 @@ Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->grou
             require __DIR__.'/Settings/Business/Profile/routes.php';
             require __DIR__.'/Settings/Business/Notifications/routes.php';
             require __DIR__.'/Settings/Business/Branding/routes.php';
+            require __DIR__.'/Settings/Ecommerce/GeneralSettings/routes.php';
             require __DIR__.'/Settings/Locations/Warehouses/routes.php';
             require __DIR__.'/Settings/Integrations/ApiKeys/routes.php';
         });
