@@ -72,6 +72,7 @@ if (!function_exists('appContext')) {
             ] : null,
             'user' => $globalUser ? ['id' => $globalUser->id, 'name' => $globalUser->name, 'email' => $globalUser->email] : null,
             'business' => $business ? ['id' => $business->id, 'name' => $business->name, 'code' => $business->code, 'domain' => $business->domain] : null,
+            'business_date' => $request->attributes->get('current_business_date'),
             'request' => ['method' => $request->method(), 'url' => $request->fullUrl(), 'path' => $request->path(), 'host' => $request->getHost(), 'ip' => $request->ip(), 'route_name' => $route?->getName(), 'route_parameters' => $params],
         ];
         $request->attributes->set('app_context_cache', $result);
@@ -131,4 +132,8 @@ if (!function_exists('navName')) {
 
 if (!function_exists('currentBusiness')) {
     function currentBusiness(): ?Business { return request()->attributes->get('current_business'); }
+}
+
+if (!function_exists('currentBusinessDate')) {
+    function currentBusinessDate(): ?string { return request()->attributes->get('current_business_date'); }
 }

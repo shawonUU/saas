@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 $domain = config('saas.domain');
 
-Route::domain('{business}.'.$domain)->middleware('business.resolve')->name('business.customer.')->group(function () {
+Route::domain('{business}.'.$domain)->middleware(['business.resolve', 'business.audit.context'])->name('business.customer.')->group(function () {
     Route::get('/forgot-password', [\App\Http\Controllers\Auth\PortalPasswordController::class, 'forgotForm'])->name('password.request');
     Route::post('/forgot-password', [\App\Http\Controllers\Auth\PortalPasswordController::class, 'sendLink'])->middleware('throttle:3,1')->name('password.email');
     Route::get('/reset-password/{token}', [\App\Http\Controllers\Auth\PortalPasswordController::class, 'resetForm'])->name('password.reset');

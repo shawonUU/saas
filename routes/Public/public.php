@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 $domain = config('saas.domain');
 
-Route::domain($domain)->group(function () {
+Route::domain($domain)->middleware('business.audit.context')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('saas.home');
     Route::name('saas.')->group(function () {
         Route::middleware(['portal.auth:saas_user', 'auth.session'])->group(function () {

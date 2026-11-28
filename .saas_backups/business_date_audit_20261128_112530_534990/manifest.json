@@ -1,0 +1,354 @@
+{
+    "patch": "saas-business-date-audit-2026-11-28",
+    "created_at": "2026-11-28T11:25:30+00:00",
+    "files": [
+        {
+            "path": "app/Console/Commands/SyncBusinessAudit.php",
+            "mode": "created",
+            "before": null,
+            "after": "ef475ab73ce6ceb479d4c6755c3615ca97edcd0d61477ad6d65324426238ba34"
+        },
+        {
+            "path": "app/Console/Commands/VerifyBusinessAudit.php",
+            "mode": "created",
+            "before": null,
+            "after": "0c662174352a312d2e24a4d87a6ca4afec0744a352e4952c28d44e3bd486d0cd"
+        },
+        {
+            "path": "app/Helpers/helpers.php",
+            "mode": "modified",
+            "before": "f95c70c2bdc359b248521cb78f1557a0e33fd408d7d755d9e3310264f777f9b5",
+            "after": "812d8c66c9c9ade929701d2eb11747849d5c7d183ea4d53488bc9e256573ef39"
+        },
+        {
+            "path": "app/Http/Controllers/Authority/Settings/Audit/ActivityLogs/ActivityLogController.php",
+            "mode": "created",
+            "before": null,
+            "after": "0f5c492cb5685d9deb4ec150a86f51f1bc5dd7992414f87872eeacc317c405d9"
+        },
+        {
+            "path": "app/Http/Controllers/Public/Business/Admin/Settings/Audit/ActivityLogs/ActivityLogController.php",
+            "mode": "created",
+            "before": null,
+            "after": "97f7f9a41ad117096448e8b17a17ff4c5aa35ab45f4b564e2d629e7508fecfa0"
+        },
+        {
+            "path": "app/Http/Controllers/Public/Business/Admin/Settings/Business/BusinessDate/BusinessDateController.php",
+            "mode": "created",
+            "before": null,
+            "after": "bff2688f9c8f2da10355c9d6664ce910ad320b40e86142a2a145dba12932a9b1"
+        },
+        {
+            "path": "app/Http/Middleware/BusinessAuditContext.php",
+            "mode": "created",
+            "before": null,
+            "after": "cf9e245fd9d2be187e4973260ec74502a4f4b046378623c5e5b0b660c8ac0ef6"
+        },
+        {
+            "path": "app/Models/Public/Business/Admin/Settings/Business/BusinessDate/BusinessDayClosure.php",
+            "mode": "created",
+            "before": null,
+            "after": "a08f31038aea4afb9dee8364b956eafc32f1a1bd150ab68144167b55ebf1d67e"
+        },
+        {
+            "path": "app/Models/Public/Business/Admin/Settings/Business/BusinessDate/BusinessDaySetting.php",
+            "mode": "created",
+            "before": null,
+            "after": "1ebea61fcbfe08ee2d0c7fb63580b82d30b80e86815d85c0387f493e7b24ca0d"
+        },
+        {
+            "path": "app/Services/Public/Business/Admin/Settings/Audit/ActivityLogs/AuditSchemaService.php",
+            "mode": "created",
+            "before": null,
+            "after": "b648a9cc4ef576271c75c2a665c5c65a6274878240dcc31bf48ec3f9a91371dd"
+        },
+        {
+            "path": "app/Services/Public/Business/Admin/Settings/Audit/ActivityLogs/AuditTableResolver.php",
+            "mode": "created",
+            "before": null,
+            "after": "279a46b43be81c326f313c90dc743b841a2b99ea087b5cf5fbe25dc7070ec291"
+        },
+        {
+            "path": "app/Services/Public/Business/Admin/Settings/Business/BusinessDate/BusinessDateService.php",
+            "mode": "created",
+            "before": null,
+            "after": "b83dc8dafdb05cd3acc35f001b4eb29cfac5280a862dc2d182c3f8a37ad3b04a"
+        },
+        {
+            "path": "bootstrap/app.php",
+            "mode": "modified",
+            "before": "43298833ec53fc361b6fd85a99379e4b913be276dd9e236e4116bdf17592135b",
+            "after": "d1cf96a4324fb8f112876217d95bf74d93daf30adc41687329704ba849c02c71"
+        },
+        {
+            "path": "database/migrations/2026_11_28_173000_create_business_day_settings.php",
+            "mode": "created",
+            "before": null,
+            "after": "e732df0d43cd6fafea35c9dc384f29df11f3b7fd5bb277d6489090151130da67"
+        },
+        {
+            "path": "database/migrations/2026_11_28_173100_enable_complete_row_audit.php",
+            "mode": "created",
+            "before": null,
+            "after": "930a55c62b2df8cb6cf975e07240b0fe61d988bd69ac76152a501104e05cf727"
+        },
+        {
+            "path": "database/migrations/2026_11_28_173200_register_business_date_child_menu.php",
+            "mode": "created",
+            "before": null,
+            "after": "91d265d097b1b51ac30b1d74a2d71f097aa900e740661a9549f64e7af07e513f"
+        },
+        {
+            "path": "resources/views/authority/settings/audit/activity-logs/index.blade.php",
+            "mode": "created",
+            "before": null,
+            "after": "eaf04d4a7b8786f0e23b3e85304a97de504eb9a9ca668010b3272d23d08041ad"
+        },
+        {
+            "path": "resources/views/public/business/admin/authorization/permissions/index.blade.php",
+            "mode": "modified",
+            "before": "e151fce243f980da2b8a829677733289b542c79396b1a2bbfc9466e9b2d051d7",
+            "after": "b15608cd9edefb19705cbb3d966cb224e6f3fa829a29ee84d85f82dde7891f84"
+        },
+        {
+            "path": "resources/views/public/business/admin/authorization/roles/index.blade.php",
+            "mode": "modified",
+            "before": "0b0577bfcf59c4a9f11f620f329780891f724c9562ae42e44f866bd4004ab1c8",
+            "after": "74cb17296b1ae8cc61df087276cc752a9e283c9768d26a38228b0cb17fc1a9b2"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/brands/index.blade.php",
+            "mode": "modified",
+            "before": "69ea2085a5f51d9830dbb6f4df29e4279418e4ced78abb7d0ecadcb63022ee94",
+            "after": "8ee8114f2ed40005aedc5af4201798656cb3f67c2382fa314ad7d9426caf89c1"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/categories/index.blade.php",
+            "mode": "modified",
+            "before": "2e0b814ac14ceafdc21bf93755c4e0c6aa9b2a39bdd8fa3cd419c27625a8d13e",
+            "after": "0b78f309a13a44fe2ef96575bc4a53ee3bbe78b426e8d05dfa290620c2295965"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/colors/index.blade.php",
+            "mode": "modified",
+            "before": "ccda95ae1cb5f15fd7688bcf0bc9dec2c6a9d2434265f60716e1d79cfaf91f15",
+            "after": "ea9349c925268128c76a724b16173fa9ebf8c0ed69bf7d567957fc2d13dd9483"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/currencies/index.blade.php",
+            "mode": "modified",
+            "before": "5d866fe21f85c90c9331c54072da210c610589f570b47cd8042a571976203b4e",
+            "after": "5fc06e8357ef072aa745fe9d42651513e6fba8a33b96faaa49f70f840fd68150"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/customers/index.blade.php",
+            "mode": "modified",
+            "before": "e3beba325e567a5af407011b1c24f8c19c0b502f137d188b19e94c8541d14b0b",
+            "after": "b96d41f1b78a13bea622b3fd8a865bbe7747a78a2863b17ff4694870427210a4"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/ingredients/index.blade.php",
+            "mode": "modified",
+            "before": "132573a63f823688728d6e35a049f37ee1d360ec31b8291fabb293f7106d39a9",
+            "after": "8993094acbf527e4dc3e0f6f36689311478f4bd4973f1d54625f826159521fba"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/modifiers/index.blade.php",
+            "mode": "modified",
+            "before": "4a456531a7f126f6ae05d964f8bd1e2ab327f9bfd35e056bc7ea569c8b7acae0",
+            "after": "f888f318a4a8ee42d4105943d9d63b40c11084c1c40932244d86668c497b3298"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/payment-methods/index.blade.php",
+            "mode": "modified",
+            "before": "f241a21bd809d085ae1194f2c134a915320e1bb50349d45606befc3ce5714e57",
+            "after": "a03aec530db93b1b1c46e04786d0e2d596903d6e4519b0f89b8acad3ffe59946"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/recipes/index.blade.php",
+            "mode": "modified",
+            "before": "0630e20cb4c349003b8e58ac96559cc7df96d7bb12f03aeb26415c68b44ba219",
+            "after": "14a5cd3d764e012a43245f5a58c00f51021af431e7c6a282103106625c6dc38b"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/restaurant-master.blade.php",
+            "mode": "modified",
+            "before": "46e6e9c195f65e09b2ab22518f8a057f7054e2fb7a7ac8eb35fd21b88a55f1d0",
+            "after": "29d1d508960ac66ac6dee544df67a774ad1292ac644316f70266c04a0f3fcd00"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/shipping-methods/index.blade.php",
+            "mode": "modified",
+            "before": "2a180920be031abb0ca03136e5c904f08a339be6febaeff7d320f0d3330c09ed",
+            "after": "bdbf1c2fafa6bb96f299a1ca968aac3fe53801f24c133e19515f98a010e1db4e"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/sizes/index.blade.php",
+            "mode": "modified",
+            "before": "ca269d0bb7b4c48585d1860372d95cb21799f931e8b1fcb88cbab61ee1d5d49a",
+            "after": "5062264bd2b51740a816a9cf8a2406252d5179ed8e01f74d83a3a798d860e6aa"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/sub-categories/index.blade.php",
+            "mode": "modified",
+            "before": "4fbc4ec584fc3bbe777b350c20efa0f83a5ea8fcc7a2b49adfc844d1d24e189f",
+            "after": "ac5bc80960f3cb0e385e30427af74c2e4e9baa2b0e94e69daa8a5ee9229d194b"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/suppliers/index.blade.php",
+            "mode": "modified",
+            "before": "a00a9fae6dc70f090544bbee7b7134c1806764b87e2332161d4f919093150aa2",
+            "after": "23728ead7494e0a1f45fc768127ee9b7e2362241cbfb0c841c3fe87ee6d4de5f"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/taxes/index.blade.php",
+            "mode": "modified",
+            "before": "171371781bba2571cfd13264a8515e6cbdf9b20fddc13fb7e042211bdc594cdc",
+            "after": "4fcccdf3c2999df969bf9e2682662a361aa7051597de7b124195170753a9dd34"
+        },
+        {
+            "path": "resources/views/public/business/admin/configurations/units/index.blade.php",
+            "mode": "modified",
+            "before": "7b78d51e01bd39f17d642d70927702b98efaa4f39951d8dea85d4046b5aeeac7",
+            "after": "260041f4140fd0e247f8c0aafc6b93f95b6fae00fcc73bfae8099d4d7ca855c3"
+        },
+        {
+            "path": "resources/views/public/business/admin/ecommerce/online-orders/index.blade.php",
+            "mode": "modified",
+            "before": "ed1e5cc7d239741c7194d70198c16029448bb7ca999fb5c758219be62c124a1e",
+            "after": "4c3ffc82a3ee3b6b48b94f4986a7dfdaf2c312bedd600e340217e24c86865195"
+        },
+        {
+            "path": "resources/views/public/business/admin/inventory/movements/ingredient-consumption/index.blade.php",
+            "mode": "modified",
+            "before": "be65b853b14bbfe5de063c1e13aa1fe918fc5f10cab396b00ce8b99648a0cc18",
+            "after": "91235ff2ee23ceca69af6df0bb3df438841a7213634baf7fac3e62a45efb9d8e"
+        },
+        {
+            "path": "resources/views/public/business/admin/inventory/movements/wastage/index.blade.php",
+            "mode": "modified",
+            "before": "b3d6373b8a253c8b4a643b252cbc7873987a2896a2d1c4b584b5e2ebd8f78c47",
+            "after": "be14c7de45fcba912e5ddc4eb9d4e7b7770ce694eb3d693dd28c608419bf59bd"
+        },
+        {
+            "path": "resources/views/public/business/admin/layout.blade.php",
+            "mode": "modified",
+            "before": "34bd25220cdafed5df068b0951fa8f24cf8f31a4be21d68a2572a764e618d0fc",
+            "after": "c578f7596a02909cb37cc6e1f89c5ad0205da12833bc7498f61b1326405ccf62"
+        },
+        {
+            "path": "resources/views/public/business/admin/restaurant/dining/reservations/index.blade.php",
+            "mode": "modified",
+            "before": "b06927d6c5753f3f13b72622f09b58574f17c3c6b452c7331c7bfc0eb2eadccd",
+            "after": "d6466779f88879762712aa77948916dabccaab8ee52d638e748043acd3ae6cf1"
+        },
+        {
+            "path": "resources/views/public/business/admin/restaurant/production/index.blade.php",
+            "mode": "modified",
+            "before": "3360c89b64f07278605209921bfb5732d1102e01495b2cf423adff8a22eda8e0",
+            "after": "b3100e9c64fa8dccdcd6f7aaf520e042db0b99e952e820b346d0ec3030324626"
+        },
+        {
+            "path": "resources/views/public/business/admin/retail/_table.blade.php",
+            "mode": "modified",
+            "before": "7f72fe367cfdbde323f0a3747d66abf34639bcdd348b0f37f0bd39468edccd4b",
+            "after": "1f3f56cdd75d92529761ed344b1fc077ad275d5e04e49e16957b8b9f32e5d884"
+        },
+        {
+            "path": "resources/views/public/business/admin/retail/orders/show.blade.php",
+            "mode": "modified",
+            "before": "91beab18886cf99cce30a72a548d69df83a21c7bedf7ba5ae74c705e424b3707",
+            "after": "8292c90b11ac76970db64755c407a74ea18eb01d8a32be90912381bb03131fc4"
+        },
+        {
+            "path": "resources/views/public/business/admin/settings/audit/activity-logs/index.blade.php",
+            "mode": "created",
+            "before": null,
+            "after": "4dd37b0da2ba127cb7c04f09c508ac1e7934936766c371cfdafae83c10c08ef0"
+        },
+        {
+            "path": "resources/views/public/business/admin/settings/audit/activity-logs/partials/widget.blade.php",
+            "mode": "created",
+            "before": null,
+            "after": "8dae2aa74d42144993831176f4d4261fc758c8a11ef475b100baa38b2195746d"
+        },
+        {
+            "path": "resources/views/public/business/admin/settings/business/business-date/index.blade.php",
+            "mode": "created",
+            "before": null,
+            "after": "6da6987aad22dfca32f47ac431b9071ee759e3ace832a9ca9159d19f1523aca0"
+        },
+        {
+            "path": "resources/views/public/business/admin/settings/business/business-date/partials/alert.blade.php",
+            "mode": "created",
+            "before": null,
+            "after": "c0caad790f5cebc2d96adc9bf5c71bd5858973c22fa2ad7db2c0d411d9a83aff"
+        },
+        {
+            "path": "resources/views/public/business/admin/users/index.blade.php",
+            "mode": "modified",
+            "before": "5da56c4738740a58f949c76580385a13ab41260571aec29f15b06cad87688c9b",
+            "after": "48c02c6e24714b5fbfd8664cb1759e2ca1176b00a6e451c61657e683bc3e3d60"
+        },
+        {
+            "path": "routes/Authority/Admin/admin.php",
+            "mode": "modified",
+            "before": "9d5bd28fdde9a518c21ce2955b71a6debdf93749dab8d306b7c485b807d186c2",
+            "after": "1989e57a44b7308d7442fc302f1ee261688b3713bf69da83eef596ba286a1dd9"
+        },
+        {
+            "path": "routes/Authority/Auth/auth.php",
+            "mode": "modified",
+            "before": "0f45763d6d845edb1c4af8dfd343a1e75d3a6b40f1916f83c67f7ff1dc375395",
+            "after": "0147b29df22fc97d0c3eb2b257e492c16c9e6ef32ee5508a756225ade232fa75"
+        },
+        {
+            "path": "routes/Public/Business/Admin/Settings/Audit/ActivityLogs/routes.php",
+            "mode": "created",
+            "before": null,
+            "after": "de41ba0c59c8e426d0ab6be081bf0b60d3fcb281e4a35c1a61ed609a134673bf"
+        },
+        {
+            "path": "routes/Public/Business/Admin/Settings/Business/BusinessDate/routes.php",
+            "mode": "created",
+            "before": null,
+            "after": "8020ae50b9d65c94db07dd7faaeb1da82686f653063ef9ed30c89ecf1654e07b"
+        },
+        {
+            "path": "routes/Public/Business/Admin/admin.php",
+            "mode": "modified",
+            "before": "791d8e0828ab3520b9b07b211a7453db4b37acad72faf631f4d49d390b848460",
+            "after": "055704a595b25b5e6a8dd45e4264af9b8665123d35a77ec1c7ce8d3183213a3e"
+        },
+        {
+            "path": "routes/Public/Business/Auth/auth.php",
+            "mode": "modified",
+            "before": "3e777c04cc95ff1d3ccb8aff7a73f5bbd2f574153b6a4746c7395858865b62d2",
+            "after": "47ccfe27301488bdbc75457fba276f62c69962460ce14cb9f918b8ae0e260738"
+        },
+        {
+            "path": "routes/Public/Business/Public/Auth/auth.php",
+            "mode": "modified",
+            "before": "8fca7eaf4aa2bc52e4b3193f16f5f40c1831b1b31471972a418567be42746ef3",
+            "after": "fbe81774bf777145caf91e4039fd8b77fec7d9e743df09362685430a63b87c6e"
+        },
+        {
+            "path": "routes/Public/public.php",
+            "mode": "modified",
+            "before": "670827fb958257716741911139e2fffa669d374cbf7873d9ef5320e3c171178e",
+            "after": "1db8a8684da5cc6e904b9bc548736768237282c6303913af616107ce099342a9"
+        },
+        {
+            "path": "tests/Unit/AuditSchemaPrivacyTest.php",
+            "mode": "created",
+            "before": null,
+            "after": "d26493ea60d09086685a61428d85958affcb6c8716888fcc705e0aa64fab48bf"
+        },
+        {
+            "path": "tests/Unit/BusinessDateRulesTest.php",
+            "mode": "created",
+            "before": null,
+            "after": "fb7b6e8cd37314dbf5a91773d041d3d6dd7e0a15d9403950816e816a3dd71779"
+        }
+    ]
+}

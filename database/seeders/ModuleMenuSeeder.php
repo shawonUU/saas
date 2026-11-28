@@ -136,7 +136,7 @@ class ModuleMenuSeeder extends Seeder
             ]],
             ['settings','Settings','সেটিংস','settings',[
                 ['navigation-management','Navigation Management','নেভিগেশন ব্যবস্থাপনা','network',[]],
-                ['business','Business','বিজনেস','store',[[ 'general-settings','General Settings','সাধারণ সেটিংস',null],['branding','Branding','ব্র্যান্ডিং',null]]],
+                ['business','Business','বিজনেস','store',[[ 'general-settings','General Settings','সাধারণ সেটিংস',null],['branding','Branding','ব্র্যান্ডিং',null], ['business-date','Business Date','বিজনেস তারিখ',null]]],
                 ['ecommerce','E-commerce','ই-কমার্স','store',[[ 'general-settings','General Settings','সাধারণ সেটিংস',null]]],
                 ['team','Team & Permissions','টিম ও পারমিশন','shield-check',[[ 'user-permissions','Users & Permissions','ইউজার ও পারমিশন',null],['user-list','User List','ইউজার তালিকা',null]]],
                 ['locations','Branches & Warehouses','শাখা ও গুদাম','building-2',[[ 'branches','Branches','শাখা',null],['warehouses','Warehouses','গুদাম',null]]],

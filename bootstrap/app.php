@@ -1,4 +1,5 @@
 <?php
+use App\Http\Middleware\BusinessAuditContext;
 use App\Http\Middleware\PortalAuth;
 use App\Http\Middleware\ResolveBusiness;
 use Illuminate\Foundation\Application;
@@ -12,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias(['business.resolve' => ResolveBusiness::class, 'portal.auth' => PortalAuth::class]);
+        $middleware->alias(['business.resolve' => ResolveBusiness::class, 'business.audit.context' => BusinessAuditContext::class, 'portal.auth' => PortalAuth::class]);
         $middleware->validateCsrfTokens(except: ['payments/sslcommerz/callback']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

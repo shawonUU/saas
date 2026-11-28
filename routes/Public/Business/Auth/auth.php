@@ -10,7 +10,7 @@ $domain = config('saas.domain');
 // Reserve admin.saas.test for platform authority before resolving business domains.
 
 // Business admin portals and the wildcard customer storefront are kept independent.
-Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->name('business.admin.')->group(function () {
+Route::domain('admin.{business}.'.$domain)->middleware(['business.resolve', 'business.audit.context'])->name('business.admin.')->group(function () {
     Route::get('/', fn (Request $request) => redirect()->route('business.admin.login', ['business' => $request->route('business')]))->name('home');
     Route::get('/forgot-password', [PortalPasswordController::class, 'forgotForm'])->name('password.request');
     Route::post('/forgot-password', [PortalPasswordController::class, 'sendLink'])->middleware('throttle:3,1')->name('password.email');

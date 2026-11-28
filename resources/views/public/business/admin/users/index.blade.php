@@ -167,7 +167,7 @@ body.um-lock{overflow:hidden}
                         $locked=(bool)$member->role?->is_owner || $member->isOwnerOf($business) || (!$isOwner && $memberRole==='admin') || (int)$member->id===(int)$user->id;
                         $memberActive=$member->is_active && $member->approval_status==='Approved';
                     @endphp
-                    <tr>
+                    <tr data-audit-table="business_users" data-audit-id="{{ $member->id }}">
                         <td><div class="um-person"><span class="um-avatar">{{ mb_strtoupper(mb_substr($member->name,0,1)) }}</span><div><b>{{ $member->name }}</b><small>{{ $member->email }}</small></div></div></td>
                         <td><span class="um-code">{{ $member->code ?? '#'.$member->id }}</span><small class="um-code" style="display:block;margin-top:4px">ID: {{ $member->id }} · Global: {{ $member->user_id }}</small></td>
                         <td><span class="um-tag">{{ $member->role?->name ?? t('No role','রোল নেই') }}</span></td>

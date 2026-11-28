@@ -409,6 +409,7 @@
 <body>
 
 <?php echo $__env->make('public.business.admin.settings.business.profile.partials.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php echo $__env->make('public.business.admin.settings.business.business-date.partials.alert', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 <?php if(session('success')): ?>
     <div class="container">
@@ -423,6 +424,7 @@
 <?php endif; ?>
 
 <main class="admin-main"><?php echo $__env->yieldContent('content'); ?></main>
+<?php echo $__env->make('public.business.admin.settings.audit.activity-logs.partials.widget', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 <?php echo $__env->make('portals.partials.ui-controls', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <?php echo $__env->make('public.business.admin.settings.business.profile.partials.header-script', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>

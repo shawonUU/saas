@@ -244,7 +244,7 @@
 
                         @forelse($records as $record)
 
-                            <tr>
+                            <tr data-audit-table="{{ $record->getTable() }}" data-audit-id="{{ $record->id }}">
 
                                 @foreach($columns as $column => $meta)
 

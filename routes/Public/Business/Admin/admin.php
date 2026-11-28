@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 $domain = config('saas.domain');
 
-Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->group(function () {
+Route::domain('admin.{business}.'.$domain)->middleware(['business.resolve', 'business.audit.context'])->group(function () {
     Route::middleware(['portal.auth:business_admin', 'auth.session'])->group(function () {
 
         Route::get('/dashboard', [WorkspaceController::class, 'dashboard'])->name('business.admin.dashboard');
@@ -115,12 +115,14 @@ Route::domain('admin.{business}.'.$domain)->middleware('business.resolve')->grou
 
         Route::prefix('settings')->name('business.admin.settings.')->group(function () {
             require __DIR__.'/Settings/Business/GeneralSettings/routes.php';
+            require __DIR__.'/Settings/Business/BusinessDate/routes.php';
             require __DIR__.'/Settings/Business/Profile/routes.php';
             require __DIR__.'/Settings/Business/Notifications/routes.php';
             require __DIR__.'/Settings/Business/Branding/routes.php';
             require __DIR__.'/Settings/Ecommerce/GeneralSettings/routes.php';
             require __DIR__.'/Settings/Locations/Warehouses/routes.php';
             require __DIR__.'/Settings/Integrations/ApiKeys/routes.php';
+            require __DIR__.'/Settings/Audit/ActivityLogs/routes.php';
         });
 
         Route::get('/{module}/{menu}/{child?}', [WorkspaceController::class, 'feature'])->name('business.admin.feature');

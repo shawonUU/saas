@@ -409,6 +409,7 @@
 <body>
 
 @include('public.business.admin.settings.business.profile.partials.header')
+@include('public.business.admin.settings.business.business-date.partials.alert')
 
 @if(session('success'))
     <div class="container">
@@ -423,6 +424,7 @@
 @endif
 
 <main class="admin-main">@yield('content')</main>
+@include('public.business.admin.settings.audit.activity-logs.partials.widget')
 
 @include('portals.partials.ui-controls')
 @include('public.business.admin.settings.business.profile.partials.header-script')
