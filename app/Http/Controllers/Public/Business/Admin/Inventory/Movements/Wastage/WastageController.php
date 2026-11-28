@@ -27,10 +27,10 @@ class WastageController extends Controller
             throw ValidationException::withMessages(['to' => t('The end date must be on or after the start date.', 'শেষ তারিখ শুরুর তারিখের সমান বা পরে হতে হবে।')]);
         }
         $context['permissions'] = $access->permissions($context, 'inventory', 'movements', 'wastage');
-        $context['records'] = Wastage::where('business_id', $tenant->id)->with(['variant.product', 'variant.size', 'warehouse'])
+        $context['records'] = \App\Services\Public\Business\Admin\Shared\ListPage::page(Wastage::where('business_id', $tenant->id)->with(['variant.product', 'variant.size', 'warehouse'])
             ->when($context['from'], fn ($query, $from) => $query->where('posted_at', '>=', Carbon::parse($from)->startOfDay()))
             ->when($context['to'], fn ($query, $to) => $query->where('posted_at', '<=', Carbon::parse($to)->endOfDay()))
-            ->orderByDesc('posted_at')->paginate(20)->withQueryString();
+            ->orderByDesc('posted_at'), $request, ['id'=>'number','variant_id'=>'number','warehouse_id'=>'number','quantity'=>'number','reason'=>'text','posted_at'=>'date','unit_cost'=>'number'], 'Wastage History');
         $context['variants'] = Variant::where('business_id', $tenant->id)->where('is_active', true)
             ->whereHas('product', fn ($query) => $query->where('business_id', $tenant->id)->where('is_active', true)->where('track_stock', true))
             ->with(['product', 'size'])->orderBy('sku')->get();

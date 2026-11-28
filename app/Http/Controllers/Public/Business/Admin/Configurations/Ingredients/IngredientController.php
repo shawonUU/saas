@@ -18,7 +18,7 @@ class IngredientController extends Controller
         $v = $a->check($r, 'configurations', 'ingredients');
         $v['permissions'] = $a->permissions($v, 'configurations', 'ingredients');
         $b = $v['business'];
-        $v['records'] = Product::where('business_id', $b->id)->where('is_ingredient', true)->with('variants')->when($r->filled('search'), fn ($q) => $q->where(fn ($x) => $x->where('name', 'like', '%'.$r->search.'%')->orWhere('sku', 'like', '%'.$r->search.'%')))->orderBy('name')->paginate(20)->withQueryString();
+        $v['records'] = \App\Services\Public\Business\Admin\Shared\ListPage::page(Product::where('business_id', $b->id)->where('is_ingredient', true)->with('variants')->when($r->filled('search'), fn ($q) => $q->where(fn ($x) => $x->where('name', 'like', '%'.$r->search.'%')->orWhere('sku', 'like', '%'.$r->search.'%')))->orderBy('name'), $r, ['id'=>'number','name'=>'text','sku'=>'text'], 'Ingredients');
         $v['available'] = Product::where('business_id', $b->id)->where('is_active', true)->where('track_stock', true)->where('is_ingredient', false)->whereHas('variants')->orderBy('name')->get();
 
         return view('public.business.admin.configurations.ingredients.index', $v);

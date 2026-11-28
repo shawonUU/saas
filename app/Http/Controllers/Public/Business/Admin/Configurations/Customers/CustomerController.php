@@ -7,6 +7,7 @@ use App\Models\Business;
 use App\Models\BusinessCustomer;
 use App\Models\BusinessUser;
 use App\Services\Public\Business\Admin\Settings\NavigationManagement\BusinessNavigation;
+use App\Services\Public\Business\Admin\Configurations\Customers\CustomerExportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -96,9 +97,8 @@ class CustomerController extends Controller
         return [$tenant, $user, $modules, $permissions];
     }
 
-    public function index(Request $request, string $business)
+    private function listing(Request $request, Business $tenant): array
     {
-        [$tenant, $user, $modules, $permissions] = $this->context($request);
         $fields = self::FIELDS;
         $columns = ['id' => ['label' => 'ID', 'label_bn' => 'আইডি', 'type' => 'integer'],
             'code' => ['label' => 'Code', 'label_bn' => 'কোড', 'type' => 'text']]
@@ -164,7 +164,24 @@ class CustomerController extends Controller
         if (! in_array($perPage, [10, 15, 25, 50, 100], true)) {
             $perPage = 15;
         }
-        $records = $query->orderBy($sort, $dir)->paginate($perPage)->withQueryString();
+        $query->orderBy($sort, $dir)->orderBy('id', 'asc');
+
+        return compact('query', 'fields', 'columns', 'search', 'filters', 'sort', 'dir', 'perPage');
+    }
+
+    public function index(Request $request, string $business)
+    {
+        [$tenant, $user, $modules, $permissions] = $this->context($request);
+        $listing = $this->listing($request, $tenant);
+        $query = $listing['query'];
+        $fields = $listing['fields'];
+        $columns = $listing['columns'];
+        $search = $listing['search'];
+        $filters = $listing['filters'];
+        $sort = $listing['sort'];
+        $dir = $listing['dir'];
+        $perPage = $listing['perPage'];
+        $records = $query->paginate($perPage)->withQueryString();
 
         return view('public.business.admin.configurations.'.self::SLUG.'.index', [
             'business' => $tenant, 'user' => $user, 'modules' => $modules,
@@ -175,6 +192,17 @@ class CustomerController extends Controller
             'categories' => collect(),
             'routePrefix' => 'business.admin.configurations.'.self::SLUG,
         ]);
+    }
+
+    public function export(Request $request, string $business, string $format, CustomerExportService $exporter)
+    {
+        abort_unless(in_array($format, ['excel', 'pdf'], true), 404);
+        [$tenant] = $this->context($request);
+        $listing = $this->listing($request, $tenant);
+
+        return $format === 'excel'
+            ? $exporter->excel($listing['query'], $listing['columns'])
+            : $exporter->pdf($listing['query'], $tenant);
     }
 
     private function validated(Request $request, Business $tenant, ?BusinessCustomer $record = null): array

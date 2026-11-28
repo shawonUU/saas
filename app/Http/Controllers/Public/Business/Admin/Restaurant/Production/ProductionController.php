@@ -28,10 +28,10 @@ class ProductionController extends Controller
             throw ValidationException::withMessages(['to' => t('The end date must be on or after the start date.', 'শেষ তারিখ শুরুর তারিখের সমান বা পরে হতে হবে।')]);
         }
         $context['permissions'] = $access->permissions($context, 'restaurant', 'production');
-        $context['records'] = Production::where('business_id', $tenant->id)->with(['food.product', 'food.size', 'warehouse'])
+        $context['records'] = \App\Services\Public\Business\Admin\Shared\ListPage::page(Production::where('business_id', $tenant->id)->with(['food.product', 'food.size', 'warehouse'])
             ->when($context['from'], fn ($query, $from) => $query->where('posted_at', '>=', Carbon::parse($from)->startOfDay()))
             ->when($context['to'], fn ($query, $to) => $query->where('posted_at', '<=', Carbon::parse($to)->endOfDay()))
-            ->orderByDesc('posted_at')->paginate(20)->withQueryString();
+            ->orderByDesc('posted_at'), $request, ['id'=>'number','food_variant_id'=>'number','warehouse_id'=>'number','quantity'=>'number','total_cost'=>'number','posted_at'=>'date','notes'=>'text'], 'Production History');
         $context['foodVariants'] = Variant::where('business_id', $tenant->id)->where('is_active', true)
             ->whereHas('product', fn ($query) => $query->where('business_id', $tenant->id)->where('is_active', true)
                 ->where('is_ingredient', false)->where('track_stock', true))

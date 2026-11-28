@@ -1,0 +1,36 @@
+{
+    "patch": "saas-searchable-v2",
+    "created_at": "2026-11-28T09:35:37+00:00",
+    "files": [
+        {
+            "path": "resources/views/portals/partials/theme-styles.blade.php",
+            "operation": "modified",
+            "sha256_before": "2224eb6d76aac5946145568d691b80f9ca48ca6b37189e906fe66dd98b9670eb",
+            "sha256_after": "28d183544d3585f589c7adc743c2347799ae638240fcb6dc0600ac087d3bb178"
+        },
+        {
+            "path": "resources/views/portals/partials/ui-controls.blade.php",
+            "operation": "modified",
+            "sha256_before": "cea95401f4a2f064c08db2f34bb7236e016d6c0becce67c4831f3d4ce2b64f7b",
+            "sha256_after": "452f6b71ee5c3668e9bc4ff8b422808a47071f45576d32e055f4771a49c6266d"
+        },
+        {
+            "path": "resources/views/public/business/public/ecommerce/layout.blade.php",
+            "operation": "modified",
+            "sha256_before": "2c5692f03859a593102ebcdf79978fb138d5591ad864d34cb8822437f9719edc",
+            "sha256_after": "a3db2651af8cf029bda5f9ff57e93a89c5f8425941e81fed2b027af04e9bb23e"
+        },
+        {
+            "path": "public/assets/saas-searchable-select-v2.js",
+            "operation": "created",
+            "sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "sha256_after": "9fce2fe7581fd3f1bea290a70158e104e77a8db1718bdf944112a8f434bfbb35"
+        },
+        {
+            "path": "public/assets/saas-searchable-select-v2.css",
+            "operation": "created",
+            "sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "sha256_after": "beea781844b4771cf5fe3e2c0b03b210275491ee348e5981d52644b78913cb72"
+        }
+    ]
+}

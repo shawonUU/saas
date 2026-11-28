@@ -22,10 +22,15 @@ class ModifierController extends Controller
         $filters = $request->validate(['search' => 'nullable|string|max:100']);
         $context['permissions'] = $access->permissions($context, 'configurations', 'modifiers');
         $context['search'] = trim($filters['search'] ?? '');
-        $context['records'] = Modifier::where('business_id', $tenant->id)->with('product')
+        $columnFilters = $request->query('f', []);
+        $columnFilters = is_array($columnFilters) ? $columnFilters : [];
+        $label = trim(mb_substr(is_scalar($columnFilters['label'] ?? null) ? (string)$columnFilters['label'] : '', 0, 100));
+        $context['records'] = \App\Services\Public\Business\Admin\Shared\ListPage::page(Modifier::where('business_id', $tenant->id)->with('product')
             ->when($context['search'], fn ($query, $search) => $query->where(fn ($query) => $query
                 ->where('name', 'like', '%'.$search.'%')->orWhere('name_bn', 'like', '%'.$search.'%')))
-            ->orderBy('name')->paginate(20)->withQueryString();
+            ->when($label !== '', fn ($query) => $query->where(fn ($query) => $query->where('name', 'like', '%'.$label.'%')
+                ->orWhere('name_bn', 'like', '%'.$label.'%')))
+            ->orderBy('name'), $request, ['id'=>'number','name'=>'text','product_id'=>'number','price'=>'number','is_active'=>'number'], 'Food Modifiers');
         $context['products'] = Product::where('business_id', $tenant->id)->where('is_ingredient', false)->orderBy('name')->get();
 
         return view('public.business.admin.configurations.modifiers.index', $context);

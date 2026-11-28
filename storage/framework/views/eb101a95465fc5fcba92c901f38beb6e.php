@@ -45,5 +45,5 @@
 })();
 </script>
 
-<script defer src="<?php echo e(asset('assets/saas-searchable-select.js')); ?>?v=20261123"></script>
+<script defer src="<?php echo e(asset('assets/saas-inline-search-select-v4.js')); ?>?v=20261128"></script>
 <?php /**PATH C:\laragon\www\saas-backend\resources\views/portals/partials/ui-controls.blade.php ENDPATH**/ ?>

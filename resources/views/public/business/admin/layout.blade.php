@@ -401,59 +401,14 @@
     </style>
 
     @include('portals.partials.theme-styles')
+    @include('public.business.admin.settings.business.profile.partials.header-styles')
     @stack('styles')
     @include('portals.partials.ui-foundation')
 </head>
 
 <body>
 
-<header class="site-header">
-    <div class="nav-inner">
-        <a href="{{ $dashboardUrl }}" class="brand" title="{{ $storeName }}">
-            @if($storeLogo)
-                <img src="{{ $storeLogo }}" alt="{{ $storeName }}" class="brand-logo" onerror="this.style.display='none'">
-            @else
-                <span class="brand-logo brand-fallback">{{ mb_strtoupper(mb_substr($storeName,0,1)) }}</span>
-            @endif
-            <span class="brand-details">
-                <span class="brand-name">{{ $storeName }}</span>
-                <span class="brand-subtitle">{{ t('Store Administration','স্টোর অ্যাডমিন') }}</span>
-            </span>
-        </a>
-        <nav id="site-primary-nav" class="nav-links" aria-label="Store navigation">
-            <a class="{{ request()->routeIs('business.admin.dashboard') ? 'active' : '' }}" href="{{ $dashboardUrl }}">{{ t('Dashboard','ড্যাশবোর্ড') }}</a>
-            @if(Route::has('business.admin.configurations.products.index'))
-                <a href="{{ route('business.admin.configurations.products.index',['business'=>$storeCode]) }}">{{ t('Products','পণ্য') }}</a>
-            @endif
-            @if(Route::has('business.admin.sales.orders.order-list.index'))
-                <a href="{{ route('business.admin.sales.orders.order-list.index',['business'=>$storeCode]) }}">{{ t('Orders','অর্ডার') }}</a>
-            @endif
-            @if(Route::has('business.admin.settings.business.general-settings.index'))
-                <a href="{{ route('business.admin.settings.business.general-settings.index',['business'=>$storeCode]) }}">{{ t('Settings','সেটিংস') }}</a>
-            @endif
-            <a href="{{ $storefrontUrl }}" target="_blank" rel="noopener noreferrer">{{ t('View Store','স্টোর দেখুন') }} ↗</a>
-        </nav>
-        <button type="button" class="nav-menu-toggle" data-site-nav-toggle aria-controls="site-primary-nav" aria-expanded="false" aria-label="{{ t('Open navigation','মেনু খুলুন') }}">☰</button>
-        <div class="nav-actions">
-            <a href="{{ $dashboardUrl }}" class="btn btn-outline mobile-dashboard">{{ t('Dashboard','ড্যাশবোর্ড') }}</a>
-            <button type="button" id="theme-toggle" class="theme-btn" aria-label="{{ t('Toggle light and dark mode','লাইট ও ডার্ক মোড বদলান') }}" aria-pressed="false">◐ <span id="theme-label">{{ t('Dark','ডার্ক') }}</span></button>
-            <form class="language-form" action="{{ url('/language') }}" method="POST">
-                @csrf
-                <input type="hidden" name="lang" value="{{ session('portal_lang','en') === 'en' ? 'bn' : 'en' }}">
-                <button class="language-btn" type="submit">{{ session('portal_lang','en') === 'en' ? 'বাংলা' : 'EN' }}</button>
-            </form>
-            @if($adminUser)
-                <div class="admin-profile">
-                    <span class="admin-avatar">{{ mb_strtoupper(mb_substr($adminUser->name ?? 'A',0,1)) }}</span>
-                    <span><span class="admin-name" style="display:block">{{ $adminUser->name ?? 'Admin' }}</span><span class="admin-role">{{ t('Administrator','অ্যাডমিন') }}</span></span>
-                </div>
-                @if(Route::has('business.admin.logout'))
-                    <form method="POST" action="{{ route('business.admin.logout',['business'=>$storeCode]) }}">@csrf<button type="submit" class="admin-logout">{{ t('Log out','লগআউট') }}</button></form>
-                @endif
-            @endif
-        </div>
-    </div>
-</header>
+@include('public.business.admin.settings.business.profile.partials.header')
 
 @if(session('success'))
     <div class="container">
@@ -470,6 +425,7 @@
 <main class="admin-main">@yield('content')</main>
 
 @include('portals.partials.ui-controls')
+@include('public.business.admin.settings.business.profile.partials.header-script')
 @stack('scripts')
 
 </body>

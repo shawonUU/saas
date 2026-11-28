@@ -109,7 +109,12 @@ class SizeController extends Controller
         $dir = strtolower((string) $request->query('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
         $perPage = (int) $request->query('per_page', 15);
         if (!in_array($perPage, [10, 15, 25, 50, 100], true)) $perPage = 15;
-        $records = $query->orderBy($sort, $dir)->paginate($perPage)->withQueryString();
+        $query->orderBy($sort, $dir);
+        if (in_array($request->query('export'), ['excel', 'pdf'], true)) {
+            return app(\App\Services\Public\Business\Admin\Shared\ListExportService::class)
+                ->download($query, $columns, self::TITLE, (string) $request->query('export'));
+        }
+        $records = $query->paginate($perPage)->withQueryString();
 
         return view('public.business.admin.configurations.'.self::SLUG.'.index', [
             'business' => $tenant, 'user' => $user, 'modules' => $modules,

@@ -68,16 +68,15 @@ class AuthorizationController extends Controller
         return app(BusinessNavigation::class)->forBusiness($business);
     }
 
-    private function definitions(object $business, Collection $modules): Collection
+    private function definitions(Collection $modules): Collection
     {
         $moduleIds = $modules->pluck('id');
         $menuIds = $modules->flatMap(fn ($module) => $module->menus)->pluck('id');
         $childIds = $modules->flatMap(fn ($module) => $module->menus->flatMap(fn ($menu) => $menu->children))->pluck('id');
 
         return BusinessPermission::query()
-            ->where(function ($q) use ($business) {
-                $q->whereNull('business_id')->orWhere('business_id', $business->id);
-            })
+            ->where('is_active', true)
+            ->where('approval_status', 'Approved')
             ->where(function ($q) use ($moduleIds, $menuIds, $childIds) {
                 $q->whereIn('module_id', $moduleIds)
                     ->orWhereIn('menu_id', $menuIds)
@@ -180,7 +179,7 @@ class AuthorizationController extends Controller
         [$business,,$isOwner] = $this->context($request);
         $target = $this->editable($business, (int) $memberId, $isOwner);
         $modules = $this->tree($business);
-        $definitions = $this->definitions($business, $modules);
+        $definitions = $this->definitions($modules);
 
         $access = BusinessUserAccess::query()
             ->where('business_user_id', $target->id)
@@ -257,7 +256,7 @@ class AuthorizationController extends Controller
 
         $target = $this->editable($business, (int) $data['member_id'], $isOwner);
         $modules = $this->tree($business);
-        $definitions = $this->definitions($business, $modules);
+        $definitions = $this->definitions($modules);
         $allowedExtraIds = $this->allowedExtras($modules, $definitions);
         $selectedExtras = array_map('intval', $data['extra_permissions'] ?? []);
 

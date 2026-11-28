@@ -4,6 +4,7 @@
 @push('styles')
 @include('public.business.admin.configurations._workspace_styles')
 @include('public.business.admin.configurations._ui_styles')
+@include('public.business.admin.shared.list-ui.styles')
 @endpush
 
 @section('content')
@@ -57,36 +58,9 @@
             @endif
         </div>
 
+        @if(session('error'))<div class="cfg-notice" role="alert">{{ session('error') }}</div>@endif
         <section class="cfg-panel">
-            <form method="GET" action="{{ $indexUrl }}" id="cfg-filter-form" class="cfg-toolbar">
-                <input
-                    name="search"
-                    value="{{ $search }}"
-                    class="cfg-input cfg-search"
-                    placeholder="{{ t('Search Shipping Methods...','শিপিং পদ্ধতি খুঁজুন...') }}"
-                    aria-label="{{ t('Search','সার্চ') }}"
-                />
-
-                <select name="per_page" class="cfg-input cfg-small" aria-label="{{ t('Rows per page','প্রতি পৃষ্ঠায় সারি') }}">
-                    @foreach([10,15,25,50,100] as $size)
-                        <option value="{{ $size }}" @selected($perPage === $size)>
-                            {{ $size }} / {{ t('page','পৃষ্ঠা') }}
-                        </option>
-                    @endforeach
-                </select>
-
-                <button class="cfg-btn cfg-primary" type="submit">
-                    {{ t('Apply Filters','ফিল্টার প্রয়োগ করুন') }}
-                </button>
-
-                <button type="button" class="cfg-btn" id="cfg-toggle-filters" aria-expanded="true">
-                    {{ t('Hide Column Filters','কলাম ফিল্টার লুকান') }}
-                </button>
-
-                <a class="cfg-btn" href="{{ $indexUrl }}">
-                    {{ t('Reset','রিসেট') }}
-                </a>
-            </form>
+            @include('public.business.admin.configurations._list_toolbar')
 
             <div class="cfg-table-scroll">
                 <table class="cfg-table">
@@ -329,4 +303,5 @@
 
 @push('scripts')
 @include('public.business.admin.configurations._ui_scripts')
+@include('public.business.admin.shared.list-ui.scripts')
 @endpush

@@ -131,7 +131,7 @@ body.um-lock{overflow:hidden}
     <symbol id="ws-i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
     <symbol id="ws-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
 </svg>
-<div class="workspace-layout um-page">
+<div class="workspace-layout listui-page um-page">
     @include('public.business.admin.sidebar')
     <div class="ws-sidebar-overlay" data-ws-sidebar-overlay></div>
     <div class="workspace-content">
@@ -153,23 +153,14 @@ body.um-lock{overflow:hidden}
             <div class="um-kpi"><div><label>{{ t('Active users','সক্রিয় ইউজার') }}</label><strong>{{ $activeMembers }}</strong></div><span class="um-kpi-icon"><svg class="ws-svg"><use href="#ws-i-check"/></svg></span></div>
             <div class="um-kpi"><div><label>{{ t('Inactive users','নিষ্ক্রিয় ইউজার') }}</label><strong>{{ $inactiveMembers }}</strong></div><span class="um-kpi-icon"><svg class="ws-svg"><use href="#ws-i-clock"/></svg></span></div>
         </section>
-        <section class="um-panel">
-            <div class="um-panel-head"><div><h2>{{ t('All Users','সকল ইউজার') }}</h2><p>{{ t('Showing users from this business only','শুধু এই ব্যবসার ইউজার দেখানো হচ্ছে') }}</p></div><span class="ws-mini-count">{{ $members->total() }} {{ t('results','ফলাফল') }}</span></div>
-            <form class="um-filters" action="{{ $indexUrl }}" method="GET">
-                <div class="um-search"><svg class="ws-svg"><use href="#ws-i-search"/></svg><input class="um-control" name="search" value="{{ $search }}" placeholder="{{ t('Search name, email or code...','নাম, ইমেইল বা কোড খুঁজুন...') }}"/></div>
-                <select class="um-control" name="status" aria-label="{{ t('Status','স্ট্যাটাস') }}">
-                    <option value="all" @selected($status==='all')>{{ t('All status','সব স্ট্যাটাস') }}</option>
-                    <option value="active" @selected($status==='active')>{{ t('Active','সক্রিয়') }}</option>
-                    <option value="inactive" @selected($status==='inactive')>{{ t('Inactive','নিষ্ক্রিয়') }}</option>
-                </select>
-                <select class="um-control" name="role_id" aria-label="{{ t('Role','রোল') }}"><option value="">{{ t('All roles','সব রোল') }}</option>@foreach($filterRoles as $role)<option value="{{ $role->id }}" @selected((string)request('role_id')===(string)$role->id)>{{ $role->name }}</option>@endforeach</select>
-                <button type="submit" class="ws-button">{{ t('Filter','ফিল্টার') }}</button>
-                @if(request()->hasAny(['search','status','role_id']))<a class="um-clear" href="{{ $indexUrl }}">{{ t('Clear','মুছুন') }}</a>@endif
-            </form>
-            <div class="um-table-wrap">
-                <table class="um-table"><thead><tr>
+        <section class="cfg-panel um-panel listui-list-card">
+            <div class="um-panel-head listui-extra-heading"><div><h2>{{ t('All Users','সকল ইউজার') }}</h2><p>{{ t('Showing users from this business only','শুধু এই ব্যবসার ইউজার দেখানো হচ্ছে') }}</p></div><span class="ws-mini-count">{{ $members->total() }} {{ t('results','ফলাফল') }}</span></div>
+            
+            @include('public.business.admin.shared.list-ui.standalone-toolbar', ['hasFilters'=>true, 'excludeParams'=>['search','status','role_id']])
+            <div class="um-table-wrap cfg-table-scroll listui-table-scroll">
+                <table class="cfg-table um-table"><thead><tr>
                     <th>{{ t('User','ইউজার') }}</th><th>{{ t('User code','ইউজার কোড') }}</th><th>{{ t('Role','রোল') }}</th><th>{{ t('Status','স্ট্যাটাস') }}</th><th>{{ t('Joined','যোগদানের তারিখ') }}</th><th>{{ t('Actions','অ্যাকশন') }}</th>
-                </tr></thead><tbody>
+                </tr><tr id="listui-colfilters" class="cfg-filter-row listui-filter-row"><th><input class="cfg-input um-control" form="listui-standard-form" name="f[identity]" value="{{ is_scalar(request('f.identity')) ? request('f.identity') : '' }}" placeholder="{{ t('Name / email','নাম / ইমেইল') }}" aria-label="{{ t('Filter user name or email','নাম বা ইমেইল ফিল্টার') }}"></th><th><input class="cfg-input um-control" form="listui-standard-form" name="f[code]" value="{{ is_scalar(request('f.code')) ? request('f.code') : '' }}" placeholder="{{ t('Filter','ফিল্টার') }}"></th><th><select class="cfg-input um-control" form="listui-standard-form" name="f[role_id]" aria-label="{{ t('Filter by role','রোল অনুযায়ী ফিল্টার') }}"><option value="">{{ t('All roles','সব রোল') }}</option>@foreach($filterRoles as $filterRole)<option value="{{ $filterRole->id }}" @selected((string)request('f.role_id')===(string)$filterRole->id)>{{ $filterRole->name }}</option>@endforeach</select></th><th><select class="cfg-input um-control" form="listui-standard-form" name="f[account_status]" aria-label="{{ t('Filter by account status','অ্যাকাউন্টের অবস্থা অনুযায়ী ফিল্টার') }}"><option value="">{{ t('All statuses','সব স্ট্যাটাস') }}</option><option value="active" @selected(request('f.account_status')==='active')>{{ t('Active','সক্রিয়') }}</option><option value="inactive" @selected(request('f.account_status')==='inactive')>{{ t('Inactive','নিষ্ক্রিয়') }}</option></select></th><th><input type="date" class="cfg-input um-control" form="listui-standard-form" name="f[created_at]" value="{{ is_scalar(request('f.created_at')) ? request('f.created_at') : '' }}" aria-label="{{ t('Joined date','যোগদানের তারিখ') }}"></th><th><button type="submit" class="ws-button" form="listui-standard-form">{{ t('Go','যান') }}</button></th></tr></thead><tbody>
                 @forelse($members as $member)
                     @php
                         $memberRole=strtolower(trim((string)$member->role?->name));
@@ -195,7 +186,7 @@ body.um-lock{overflow:hidden}
                 @endforelse
                 </tbody></table>
             </div>
-            <div class="um-bottom"><span>{{ t('Showing','দেখানো হচ্ছে') }} {{ $members->firstItem() ?? 0 }}–{{ $members->lastItem() ?? 0 }} {{ t('of','মোট') }} {{ $members->total() }}</span><div class="um-paging">@if($members->previousPageUrl())<a href="{{ $members->previousPageUrl() }}">{{ t('Previous','আগে') }}</a>@else<span>{{ t('Previous','আগে') }}</span>@endif @if($members->nextPageUrl())<a href="{{ $members->nextPageUrl() }}">{{ t('Next','পরে') }}</a>@else<span>{{ t('Next','পরে') }}</span>@endif</div></div>
+            @include('public.business.admin.shared.list-ui.pagination',['paginator'=>$members])
         </section>
     </div>
 </div>
@@ -222,6 +213,8 @@ body.um-lock{overflow:hidden}
         </form>
     </div>
 </div>
+@include('public.business.admin.shared.list-ui.styles')
+@include('public.business.admin.shared.list-ui.scripts')
 @endsection
 
 @push('scripts')

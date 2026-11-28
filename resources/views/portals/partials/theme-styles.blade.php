@@ -20,4 +20,4 @@ html[data-theme="dark"] .feature-card,html[data-theme="dark"] .process-card,html
 @media(max-width:680px){.workspace-layout{display:block}.workspace-sidebar{position:static;min-height:auto;margin-bottom:18px}.workspace-content .ws-intro,.authority-head{align-items:flex-start;flex-direction:column}.ws-intro h1,.authority-head h1{font-size:25px}.ws-card{padding:18px}.ws-stats{gap:7px}.ws-stats div{padding:10px}.ws-stats strong{font-size:24px}.authority-form,.authority-edit{grid-template-columns:1fr}.authority-form button,.authority-edit button{grid-column:auto}.access-child{padding-left:7px}}
 </style>
 
-<link rel="stylesheet" href="{{ asset('assets/saas-searchable-select.css') }}?v=20261123">
+<link rel="stylesheet" href="{{ asset('assets/saas-inline-search-select-v4.css') }}?v=20261128">

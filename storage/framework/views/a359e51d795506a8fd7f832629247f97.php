@@ -401,59 +401,14 @@
     </style>
 
     <?php echo $__env->make('portals.partials.theme-styles', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <?php echo $__env->make('public.business.admin.settings.business.profile.partials.header-styles', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     <?php echo $__env->yieldPushContent('styles'); ?>
     <?php echo $__env->make('portals.partials.ui-foundation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 </head>
 
 <body>
 
-<header class="site-header">
-    <div class="nav-inner">
-        <a href="<?php echo e($dashboardUrl); ?>" class="brand" title="<?php echo e($storeName); ?>">
-            <?php if($storeLogo): ?>
-                <img src="<?php echo e($storeLogo); ?>" alt="<?php echo e($storeName); ?>" class="brand-logo" onerror="this.style.display='none'">
-            <?php else: ?>
-                <span class="brand-logo brand-fallback"><?php echo e(mb_strtoupper(mb_substr($storeName,0,1))); ?></span>
-            <?php endif; ?>
-            <span class="brand-details">
-                <span class="brand-name"><?php echo e($storeName); ?></span>
-                <span class="brand-subtitle"><?php echo e(t('Store Administration','স্টোর অ্যাডমিন')); ?></span>
-            </span>
-        </a>
-        <nav id="site-primary-nav" class="nav-links" aria-label="Store navigation">
-            <a class="<?php echo e(request()->routeIs('business.admin.dashboard') ? 'active' : ''); ?>" href="<?php echo e($dashboardUrl); ?>"><?php echo e(t('Dashboard','ড্যাশবোর্ড')); ?></a>
-            <?php if(Route::has('business.admin.configurations.products.index')): ?>
-                <a href="<?php echo e(route('business.admin.configurations.products.index',['business'=>$storeCode])); ?>"><?php echo e(t('Products','পণ্য')); ?></a>
-            <?php endif; ?>
-            <?php if(Route::has('business.admin.sales.orders.order-list.index')): ?>
-                <a href="<?php echo e(route('business.admin.sales.orders.order-list.index',['business'=>$storeCode])); ?>"><?php echo e(t('Orders','অর্ডার')); ?></a>
-            <?php endif; ?>
-            <?php if(Route::has('business.admin.settings.business.general-settings.index')): ?>
-                <a href="<?php echo e(route('business.admin.settings.business.general-settings.index',['business'=>$storeCode])); ?>"><?php echo e(t('Settings','সেটিংস')); ?></a>
-            <?php endif; ?>
-            <a href="<?php echo e($storefrontUrl); ?>" target="_blank" rel="noopener noreferrer"><?php echo e(t('View Store','স্টোর দেখুন')); ?> ↗</a>
-        </nav>
-        <button type="button" class="nav-menu-toggle" data-site-nav-toggle aria-controls="site-primary-nav" aria-expanded="false" aria-label="<?php echo e(t('Open navigation','মেনু খুলুন')); ?>">☰</button>
-        <div class="nav-actions">
-            <a href="<?php echo e($dashboardUrl); ?>" class="btn btn-outline mobile-dashboard"><?php echo e(t('Dashboard','ড্যাশবোর্ড')); ?></a>
-            <button type="button" id="theme-toggle" class="theme-btn" aria-label="<?php echo e(t('Toggle light and dark mode','লাইট ও ডার্ক মোড বদলান')); ?>" aria-pressed="false">◐ <span id="theme-label"><?php echo e(t('Dark','ডার্ক')); ?></span></button>
-            <form class="language-form" action="<?php echo e(url('/language')); ?>" method="POST">
-                <?php echo csrf_field(); ?>
-                <input type="hidden" name="lang" value="<?php echo e(session('portal_lang','en') === 'en' ? 'bn' : 'en'); ?>">
-                <button class="language-btn" type="submit"><?php echo e(session('portal_lang','en') === 'en' ? 'বাংলা' : 'EN'); ?></button>
-            </form>
-            <?php if($adminUser): ?>
-                <div class="admin-profile">
-                    <span class="admin-avatar"><?php echo e(mb_strtoupper(mb_substr($adminUser->name ?? 'A',0,1))); ?></span>
-                    <span><span class="admin-name" style="display:block"><?php echo e($adminUser->name ?? 'Admin'); ?></span><span class="admin-role"><?php echo e(t('Administrator','অ্যাডমিন')); ?></span></span>
-                </div>
-                <?php if(Route::has('business.admin.logout')): ?>
-                    <form method="POST" action="<?php echo e(route('business.admin.logout',['business'=>$storeCode])); ?>"><?php echo csrf_field(); ?><button type="submit" class="admin-logout"><?php echo e(t('Log out','লগআউট')); ?></button></form>
-                <?php endif; ?>
-            <?php endif; ?>
-        </div>
-    </div>
-</header>
+<?php echo $__env->make('public.business.admin.settings.business.profile.partials.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 <?php if(session('success')): ?>
     <div class="container">
@@ -470,6 +425,7 @@
 <main class="admin-main"><?php echo $__env->yieldContent('content'); ?></main>
 
 <?php echo $__env->make('portals.partials.ui-controls', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php echo $__env->make('public.business.admin.settings.business.profile.partials.header-script', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <?php echo $__env->yieldPushContent('scripts'); ?>
 
 </body>

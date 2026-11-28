@@ -3,6 +3,7 @@
 namespace App\Services\Public\Business\Admin\Shared;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Lists
 {
@@ -38,6 +39,13 @@ class Lists
         $sort = array_key_exists($sort, $columns) ? $sort : 'id';
         $dir = $request->query('dir') === 'asc' ? 'asc' : 'desc';
 
-        return $query->orderBy($expressions[$sort] ?? $sort, $dir)->paginate(20)->withQueryString();
+        $query->orderBy($expressions[$sort] ?? $sort, $dir);
+        if (in_array($request->query('export'), ['excel', 'pdf'], true)) {
+            $response = app(ListExportService::class)->download($query, $columns, (string) ($request->route()?->getName() ?? 'records'), (string) $request->query('export'));
+            throw new HttpResponseException($response);
+        }
+        $perPage = (int) $request->query('per_page', 15);
+        if (!in_array($perPage, [10, 15, 25, 50, 100], true)) $perPage = 15;
+        return $query->paginate($perPage)->withQueryString();
     }
 }

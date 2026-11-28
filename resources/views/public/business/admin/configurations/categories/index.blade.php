@@ -4,6 +4,7 @@
 @push('styles')
 @include('public.business.admin.configurations._workspace_styles')
 @include('public.business.admin.configurations._ui_styles')
+@include('public.business.admin.shared.list-ui.styles')
 @endpush
 
 @section('content')
@@ -80,48 +81,10 @@
 
         </div>
 
+        @if(session('error'))<div class="cfg-notice" role="alert">{{ session('error') }}</div>@endif
         <section class="cfg-panel">
 
-            <form method="GET" action="{{ $indexUrl }}" id="cfg-filter-form" class="cfg-toolbar">
-
-                <input
-                    name="search"
-                    value="{{ $search }}"
-                    class="cfg-input cfg-search"
-                    placeholder="{{ t('Search Categories...', 'ক্যাটাগরি খুঁজুন...') }}"
-                    aria-label="{{ t('Search', 'অনুসন্ধান') }}"
-                />
-
-                <select
-                    name="per_page"
-                    class="cfg-input cfg-small"
-                    aria-label="{{ t('Rows per page', 'প্রতি পৃষ্ঠায় সারির সংখ্যা') }}"
-                >
-                    @foreach([10, 15, 25, 50, 100] as $size)
-                        <option value="{{ $size }}" @selected($perPage === $size)>
-                            {{ $size }} / {{ t('page', 'পৃষ্ঠা') }}
-                        </option>
-                    @endforeach
-                </select>
-
-                <button class="cfg-btn cfg-primary" type="submit">
-                    {{ t('Apply Filters', 'ফিল্টার প্রয়োগ করুন') }}
-                </button>
-
-                <button
-                    type="button"
-                    class="cfg-btn"
-                    id="cfg-toggle-filters"
-                    aria-expanded="true"
-                >
-                    {{ t('Hide Column Filters', 'কলাম ফিল্টার লুকান') }}
-                </button>
-
-                <a class="cfg-btn" href="{{ $indexUrl }}">
-                    {{ t('Reset', 'রিসেট করুন') }}
-                </a>
-
-            </form>
+            @include('public.business.admin.configurations._list_toolbar')
 
             <div class="cfg-table-scroll">
 
@@ -559,4 +522,5 @@
 
 @push('scripts')
 @include('public.business.admin.configurations._ui_scripts')
+@include('public.business.admin.shared.list-ui.scripts')
 @endpush

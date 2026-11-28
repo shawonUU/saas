@@ -1,0 +1,36 @@
+{
+    "patch": "saas-inline-select-v4",
+    "timestamp": "2026-11-28T10:05:30+00:00",
+    "files": [
+        {
+            "path": "resources/views/portals/partials/theme-styles.blade.php",
+            "action": "modified",
+            "before": "5848cb1fd7dd1cf9b5784f1799e9629b856ffc06eecbc071ea576ad23f45c514",
+            "after": "d19f5d7ce16246ef16187b9e88aee23f0708529eb3e311f0d41359aa8c5fa79f"
+        },
+        {
+            "path": "resources/views/portals/partials/ui-controls.blade.php",
+            "action": "modified",
+            "before": "bb1eb662920da30e44662abbae89be48a4c62ecd23a2c55d299e8acc9fa536a5",
+            "after": "f9b9c99fc042be10a34b3cd77def179190c35c7029dba68a4b743159fa400e43"
+        },
+        {
+            "path": "resources/views/public/business/public/ecommerce/layout.blade.php",
+            "action": "modified",
+            "before": "49f4b635b7a88a630efbd86624716db48c0495b76af17d34e7f3a763843f84ec",
+            "after": "90c4c3aec55295e9c3cf04a83499bd75eb56b38a1614bd9620aeca834ff56263"
+        },
+        {
+            "path": "public/assets/saas-inline-search-select-v4.css",
+            "action": "created",
+            "before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "after": "d30a4d47171b7ba28cabfceadcbd0c723cb682bad1d1d2340ec09847410af194"
+        },
+        {
+            "path": "public/assets/saas-inline-search-select-v4.js",
+            "action": "created",
+            "before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "after": "f694dfc8ddd914f057d9cd81ae4f35523f5319089d2f22b0855d26617493e18a"
+        }
+    ]
+}

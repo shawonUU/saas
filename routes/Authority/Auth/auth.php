@@ -21,7 +21,7 @@ Route::domain('admin.'.$domain)->name('authority.')->group(function () {
         Route::get('/dashboard', fn () => view('portals.dashboard', [
             'title' => 'SaaS Authority', 'user' => Auth::guard('authority')->user(),
             'subtitle' => t('Platform authority dashboard', 'প্ল্যাটফর্ম অথরিটি ড্যাশবোর্ড'),
-            'logoutUrl' => route('authority.logout'), 'links' => [[t('Manage modules & menus', 'মডিউল ও মেনু পরিচালনা'), route('authority.features.index')], [t('Category and shop access', 'ক্যাটাগরি ও শপ অ্যাক্সেস'), route('authority.access.index')]],
+            'logoutUrl' => route('authority.logout'), 'links' => [[t('Manage modules & menus', 'মডিউল ও মেনু পরিচালনা'), route('authority.features.index')], [t('Category and shop access', 'ক্যাটাগরি ও শপ অ্যাক্সেস'), route('authority.access.index')], [t('Global permissions', 'গ্লোবাল পারমিশন'), route('authority.authorization.permissions.index')]],
         ]))->name('dashboard');
         Route::get('/features', [FeatureController::class, 'index'])->name('features.index');
         Route::post('/features/{type}', [FeatureController::class, 'store'])->name('features.store');

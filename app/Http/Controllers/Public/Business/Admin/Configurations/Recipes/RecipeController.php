@@ -27,8 +27,9 @@ class RecipeController extends Controller
         $v['foods'] = $this->variants($b, false)->with('product')->orderBy('sku')->get();
         $v['ingredients'] = $this->variants($b, true)->with('product')->orderBy('sku')->get();
         $v['selected'] = (int) $r->query('food', 0);
-        $v['records'] = RecipeItem::where('business_id', $b->id)->where('food_variant_id', $v['selected'])->with(['ingredient.product', 'food.product'])->orderBy('id')->get();
-        $v['cost'] = $v['records']->sum(fn ($row) => (float) $row->quantity * (float) ($row->ingredient?->cost ?? 0));
+        $allRecipeRows = RecipeItem::where('business_id', $b->id)->where('food_variant_id', $v['selected'])->with(['ingredient.product', 'food.product'])->orderBy('id');
+        $v['cost'] = (clone $allRecipeRows)->get()->sum(fn ($row) => (float) $row->quantity * (float) ($row->ingredient?->cost ?? 0));
+        $v['records'] = \App\Services\Public\Business\Admin\Shared\ListPage::page($allRecipeRows, $r, ['id'=>'number','ingredient_variant_id'=>'number','quantity'=>'number','food_variant_id'=>'number'], 'Recipe Ingredients');
         $v['units'] = DB::table('config_units')->where('business_id', $b->id)->pluck('name', 'id');
 
         return view('public.business.admin.configurations.recipes.index', $v);

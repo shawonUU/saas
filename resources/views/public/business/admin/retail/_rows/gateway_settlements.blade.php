@@ -1,5 +1,5 @@
 @if(!$record->settled_at)
-<form method="POST" action="{{ route('business.admin.finance.banking.bank-reconciliation.settle',['record'=>$record->id]) }}">@csrf
+<button type="button" class="ret-btn alt" data-listui-open="listui-gateway_settlements-{{ $record->id }}">{{ t('Settle Payment','পেমেন্ট মিল করুন') }}</button><div class="listui-overlay" id="listui-gateway_settlements-{{ $record->id }}" data-listui-modal hidden><div class="listui-dialog" role="dialog" aria-modal="true" aria-labelledby="listui-gateway_settlements-title-{{ $record->id }}"><div class="listui-dialog-head"><h2 id="listui-gateway_settlements-title-{{ $record->id }}">{{ t('Settle Payment','পেমেন্ট মিল করুন') }}</h2><button type="button" class="listui-dialog-close" data-listui-close>×</button></div><div class="listui-dialog-body"><form method="POST" action="{{ route('business.admin.finance.banking.bank-reconciliation.settle',['record'=>$record->id]) }}">@csrf
 <input class="ret-input" style="width:100px" name="fee" type="number" step=".01" min="0" max="{{ $record->amount }}" value="0" aria-label="Gateway Fee" required>
-<input class="ret-input" style="width:130px" name="reference" placeholder="Bank reference" required><button class="ret-btn" type="submit">{{ t('Settle','মিল করুন') }}</button></form>
+<input class="ret-input" style="width:130px" name="reference" placeholder="Bank reference" required><button class="ret-btn" type="submit">{{ t('Settle','মিল করুন') }}</button></form></div></div></div>
 @endif

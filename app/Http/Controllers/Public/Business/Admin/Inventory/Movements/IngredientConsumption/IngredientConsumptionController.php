@@ -34,7 +34,7 @@ class IngredientConsumptionController extends Controller
                 });
             });
         $totals = (clone $query)->selectRaw('COALESCE(SUM(-quantity), 0) as quantity, COALESCE(SUM(-quantity * unit_cost), 0) as cost')->first();
-        $context['records'] = $query->with(['variant.product', 'variant.size', 'warehouse'])->orderByDesc('id')->paginate(30)->withQueryString();
+        $context['records'] = \App\Services\Public\Business\Admin\Shared\ListPage::page($query->with(['variant.product', 'variant.size', 'warehouse'])->orderByDesc('id'), $request, ['id'=>'number','variant_id'=>'number','warehouse_id'=>'number','quantity'=>'number','unit_cost'=>'number','created_at'=>'date','source_type'=>'text'], 'Ingredient Consumption');
         $context['totals'] = ['quantity' => round((float) $totals->quantity, 3), 'cost' => round((float) $totals->cost, 2)];
         $context['from'] = $from;
         $context['to'] = $to;

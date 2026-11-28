@@ -1,0 +1,39 @@
+@extends('layouts.portal')
+@section('content')
+<main class="authority-wrap gp-page">
+<div class="authority-head"><div><small>{{t('GLOBAL AUTHORIZATION','গ্লোবাল অথরাইজেশন')}}</small><h1>{{t('Permission definitions','পারমিশন তালিকা')}}</h1><p>{{t('One master catalogue shared across every business. Employee grants remain business-specific.','সব ব্যবসার জন্য একটি পারমিশন মাস্টার তালিকা। ইউজার অ্যাক্সেস আলাদা ব্যবসা অনুযায়ী থাকবে।')}}</p></div><a class="btn btn-outline" href="{{route('authority.features.index')}}">{{t('Modules & menus','মডিউল ও মেনু')}}</a></div>
+<div class="ws-card"><h2>{{t('Create global permission','গ্লোবাল পারমিশন তৈরি করুন')}}</h2>
+<form method="post" action="{{route('authority.authorization.permissions.store')}}" class="gp-form gp-linked">@csrf
+<label>{{t('Name','নাম')}}<input name="name" required maxlength="255" value="{{old('name')}}" placeholder="Assign tasks"></label>
+<label>{{t('Unique key','ইউনিক কি')}}<input name="key" required maxlength="255" value="{{old('key')}}" placeholder="task.assign"></label>
+<label>{{t('Module','মডিউল')}}<select class="gp-module" name="module_id" required><option value="">{{t('Select module','মডিউল নির্বাচন')}}</option>@foreach($modules as $module)<option value="{{$module->id}}" @selected(old('module_id')==$module->id)>{{t($module->name,$module->name_bn)}}</option>@endforeach</select></label>
+<label>{{t('Menu','মেনু')}}<select class="gp-menu" name="menu_id" data-selected="{{old('menu_id')}}"></select></label>
+<label>{{t('Child menu','চাইল্ড মেনু')}}<select class="gp-child" name="child_menu_id" data-selected="{{old('child_menu_id')}}"></select></label>
+<label>{{t('Status','স্ট্যাটাস')}}<select name="is_active"><option value="1">{{t('Active','সক্রিয়')}}</option><option value="0" @selected(old('is_active')==='0')>{{t('Inactive','নিষ্ক্রিয়')}}</option></select></label>
+<label class="gp-span">{{t('Description (optional)','বিবরণ (ঐচ্ছিক)')}}<input name="description" maxlength="2000" value="{{old('description')}}"></label><button class="btn gp-span" type="submit">+ {{t('Create permission','পারমিশন তৈরি')}}</button>
+</form></div>
+<div class="ws-card"><h2>{{t('Existing permissions','বিদ্যমান পারমিশন')}}</h2>
+<form method="get" class="gp-filter"><input type="search" name="search" value="{{$search}}" placeholder="{{t('Search name or key','নাম বা কি খুঁজুন')}}"><select name="status"><option value="">{{t('All status','সব স্ট্যাটাস')}}</option><option value="1" @selected($status==='1')>{{t('Active','সক্রিয়')}}</option><option value="0" @selected($status==='0')>{{t('Inactive','নিষ্ক্রিয়')}}</option></select><button class="btn btn-outline" type="submit">{{t('Filter','ফিল্টার')}}</button></form>
+<div class="gp-scroll"><table class="gp-table"><thead><tr><th>#</th><th>{{t('Permission','পারমিশন')}}</th><th>{{t('Module / Menu / Child','মডিউল / মেনু / চাইল্ড')}}</th><th>{{t('Status','অবস্থা')}}</th><th>{{t('Action','অ্যাকশন')}}</th></tr></thead><tbody>
+@forelse($records as $item)<tr><td>{{$item->id}}</td><td><strong>{{$item->name}}</strong><small>{{$item->key}}</small><small>{{$item->description}}</small></td><td>{{ $item->module?->name ?? '—' }} / {{ $item->menu?->name ?? '—' }} / {{ $item->childMenu?->name ?? '—' }}</td><td>{{ $item->is_active?t('Active','সক্রিয়'):t('Inactive','নিষ্ক্রিয়') }}</td><td>
+<details class="gp-edit"><summary class="btn btn-outline">{{t('Edit','সম্পাদনা')}}</summary>
+<form method="post" action="{{route('authority.authorization.permissions.update',['record'=>$item->id])}}" class="gp-form gp-linked">@csrf @method('PUT')
+<label>{{t('Name','নাম')}}<input name="name" value="{{$item->name}}" required></label><label>{{t('Key','কি')}}<input name="key" value="{{$item->key}}" required></label>
+<label>{{t('Module','মডিউল')}}<select name="module_id" class="gp-module" required><option value="">—</option>@foreach($modules as $module)<option value="{{$module->id}}" @selected((int)$item->module_id===(int)$module->id)>{{t($module->name,$module->name_bn)}}</option>@endforeach</select></label>
+<label>{{t('Menu','মেনু')}}<select name="menu_id" class="gp-menu" data-selected="{{$item->menu_id}}"></select></label><label>{{t('Child menu','চাইল্ড মেনু')}}<select name="child_menu_id" class="gp-child" data-selected="{{$item->child_menu_id}}"></select></label>
+<label>{{t('Status','স্ট্যাটাস')}}<select name="is_active"><option value="1" @selected($item->is_active)>{{t('Active','সক্রিয়')}}</option><option value="0" @selected(!$item->is_active)>{{t('Inactive','নিষ্ক্রিয়')}}</option></select></label>
+<label class="gp-span">{{t('Description','বিবরণ')}}<input name="description" value="{{$item->description}}"></label><button class="btn gp-span" type="submit">{{t('Save changes','পরিবর্তন সংরক্ষণ')}}</button></form></details>
+<form method="post" action="{{route('authority.authorization.permissions.destroy',['record'=>$item->id])}}" onsubmit="return confirm(@js(t('Delete this global permission?','এই গ্লোবাল পারমিশন মুছবেন?')))">@csrf @method('DELETE')<button class="btn btn-outline gp-danger" type="submit">{{t('Delete','মুছুন')}}</button></form>
+</td></tr>@empty<tr><td colspan="5">{{t('No permissions found.','কোনো পারমিশন পাওয়া যায়নি।')}}</td></tr>@endforelse
+</tbody></table></div><div class="gp-pagination">{{$records->links()}}</div></div>
+</main>
+@php $permissionTree=$modules->map(fn($module)=>['id'=>$module->id,'menus'=>$module->menus->map(fn($menu)=>['id'=>$menu->id,'name'=>t($menu->name,$menu->name_bn),'children'=>$menu->children->map(fn($child)=>['id'=>$child->id,'name'=>t($child->name,$child->name_bn)])->values()])->values()])->values(); @endphp
+@push('styles')<style>
+.gp-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}.gp-form label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:var(--text)}.gp-form .gp-span{grid-column:1/-1}.gp-form button{justify-self:start}.gp-filter{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}.gp-filter input{flex:1;min-width:150px}.gp-filter select{width:160px}.gp-scroll{overflow-x:auto}.gp-table{border-collapse:collapse;width:100%;min-width:760px;font-size:13px}.gp-table th,.gp-table td{padding:13px 10px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}.gp-table th{background:var(--surface-alt);font-weight:800;color:var(--dark)}.gp-table td small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.gp-table td:last-child{min-width:115px}.gp-table td:last-child form{margin-top:7px}.gp-table .btn{padding:7px 11px;font-size:12px}.gp-edit summary{cursor:pointer;list-style:none}.gp-edit[open] .gp-form{min-width:600px;max-width:730px;background:var(--surface-alt);border:1px solid var(--border);padding:14px;border-radius:10px}.gp-danger{color:#c64f4f!important}.gp-pagination{padding-top:15px}.gp-form input,.gp-form select{width:100%;min-width:0}.gp-table strong{color:var(--dark)}
+@media(max-width:720px){.gp-form{grid-template-columns:1fr}.gp-edit[open] .gp-form{min-width:0}.gp-table{min-width:670px}}
+</style>@endpush
+<script>
+(()=>{const tree=@json($permissionTree); const fill=(sel,items,caption,selected)=>{sel.replaceChildren(new Option(caption,''));items.forEach(item=>sel.add(new Option(item.name,item.id)));if(selected)sel.value=String(selected);};
+document.querySelectorAll('.gp-linked').forEach(form=>{const mod=form.querySelector('.gp-module'),menu=form.querySelector('.gp-menu'),child=form.querySelector('.gp-child');const children=keep=>{const m=tree.find(x=>String(x.id)===mod.value),n=m?.menus.find(x=>String(x.id)===menu.value);fill(child,n?.children||[],'—',keep?child.dataset.selected:'');};const menus=keep=>{const m=tree.find(x=>String(x.id)===mod.value);fill(menu,m?.menus||[],'—',keep?menu.dataset.selected:'');children(keep);};mod.addEventListener('change',()=>menus(false));menu.addEventListener('change',()=>children(false));menus(true);});})();
+</script>
+@endsection

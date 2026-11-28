@@ -4,6 +4,32 @@
 @push('styles')
 @include('public.business.admin.configurations._workspace_styles')
 @include('public.business.admin.configurations._ui_styles')
+<style>
+.cfg-customers-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:13px 17px;flex-wrap:wrap}
+.cfg-customers-toolbar .cfg-toolbar-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-left:auto;flex-wrap:wrap}
+.cfg-customers-toolbar .cfg-small{height:38px;width:auto;min-width:132px;flex:none;font-size:12px}
+.cfg-customers-toolbar .cfg-action-icon{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:38px;padding:0 12px;flex:none}
+.cfg-customers-toolbar .cfg-action-icon svg{width:16px;height:16px;flex:none;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cfg-customers-toolbar .cfg-filter-toggle{position:relative;padding-left:35px}
+.cfg-customers-toolbar .cfg-filter-toggle::before{content:'';position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;background:currentColor;-webkit-mask:center/contain no-repeat url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"%3E%3Cpath d="M4 7h16M7 12h10M10 17h4"/%3E%3C/svg%3E');mask:center/contain no-repeat url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"%3E%3Cpath d="M4 7h16M7 12h10M10 17h4"/%3E%3C/svg%3E')}
+.cfg-customers-toolbar .cfg-export-excel{color:#16764c!important;border-color:rgba(22,118,76,.3)!important;background:rgba(22,118,76,.07)!important}
+.cfg-customers-toolbar .cfg-export-pdf{color:#bc4355!important;border-color:rgba(188,67,85,.3)!important;background:rgba(188,67,85,.07)!important}
+.cfg-customers-toolbar .cfg-export-excel:hover{background:rgba(22,118,76,.14)!important}
+.cfg-customers-toolbar .cfg-export-pdf:hover{background:rgba(188,67,85,.14)!important}
+.cfg-customers-toolbar .cfg-toolbar-separator{height:23px;border-left:1px solid var(--ui-border);margin:0 2px}
+@media(max-width:630px){.cfg-customers-toolbar .cfg-toolbar-actions{width:100%;justify-content:flex-end}.cfg-customers-toolbar .cfg-action-icon{padding:0 9px;gap:5px}.cfg-customers-toolbar .cfg-small{min-width:110px}.cfg-customers-toolbar .cfg-filter-toggle{padding-left:30px}.cfg-customers-toolbar .cfg-filter-toggle::before{left:9px}.cfg-customers-toolbar .cfg-toolbar-separator{display:none}}
+
+/* customers-toolbar-inline-v2: strict non-stretch desktop alignment */
+.cfg-page form.cfg-customers-toolbar{display:flex!important;align-items:center!important;justify-content:flex-end!important;flex-wrap:nowrap!important;min-height:61px;padding:10px 15px!important;box-sizing:border-box}
+.cfg-page .cfg-customers-toolbar>.cfg-toolbar-actions{display:flex!important;align-items:center!important;justify-content:flex-end!important;flex:0 1 auto!important;flex-wrap:nowrap!important;width:max-content!important;max-width:100%!important;min-width:0!important;margin:0 0 0 auto!important;gap:8px!important}
+.cfg-page .cfg-customers-toolbar select.cfg-input.cfg-small{display:block!important;box-sizing:border-box!important;width:136px!important;min-width:136px!important;max-width:136px!important;flex:0 0 136px!important;height:38px!important;padding:0 29px 0 12px!important;font-size:12px!important}
+.cfg-page .cfg-customers-toolbar .cfg-btn.cfg-action-icon{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;min-width:0!important;width:auto!important;height:38px!important;min-height:38px!important;padding:0 11px!important;white-space:nowrap!important;line-height:1!important}
+.cfg-page .cfg-customers-toolbar .cfg-btn.cfg-filter-toggle{padding-left:35px!important}
+.cfg-page .cfg-customers-toolbar .cfg-filter-toggle::before{left:11px}
+.cfg-page .cfg-customers-toolbar .cfg-toolbar-separator{flex:0 0 1px!important;height:22px!important;margin:0 2px!important}
+@media(max-width:780px){.cfg-page form.cfg-customers-toolbar{flex-wrap:wrap!important}.cfg-page .cfg-customers-toolbar>.cfg-toolbar-actions{flex-wrap:wrap!important;width:100%!important;justify-content:flex-end!important}.cfg-page .cfg-customers-toolbar .cfg-toolbar-separator{display:none!important}}
+@media(max-width:480px){.cfg-page form.cfg-customers-toolbar{padding:10px!important}.cfg-page .cfg-customers-toolbar>.cfg-toolbar-actions{gap:7px!important}.cfg-page .cfg-customers-toolbar select.cfg-input.cfg-small{width:124px!important;min-width:124px!important;max-width:124px!important;flex-basis:124px!important}.cfg-page .cfg-customers-toolbar .cfg-btn.cfg-action-icon{padding:0 9px!important}.cfg-page .cfg-customers-toolbar .cfg-btn.cfg-filter-toggle{padding-left:30px!important}.cfg-page .cfg-customers-toolbar .cfg-filter-toggle::before{left:8px}}
+</style>
 @endpush
 
 @section('content')
@@ -12,6 +38,8 @@
     $businessKey = is_object($businessKey) ? ($businessKey->domain ?? $businessKey->slug ?? '') : $businessKey;
     $indexUrl = route($routePrefix.'.index', ['business'=>$businessKey]);
     $storeUrl = route($routePrefix.'.store', ['business'=>$businessKey]);
+    $excelUrl = route($routePrefix.'.export', ['business'=>$businessKey, 'format'=>'excel']);
+    $pdfUrl = route($routePrefix.'.export', ['business'=>$businessKey, 'format'=>'pdf']);
     $updateTemplate = route($routePrefix.'.update', ['business'=>$businessKey,'record'=>'__ID__']);
     $recordPayload = $records->getCollection()->mapWithKeys(fn($r) => [
         $r->id => $r->only(array_merge(['id','is_active'],array_keys($fields)))
@@ -45,7 +73,6 @@
             <div>
                 <div class="cfg-eyebrow">{{ t('Configurations','কনফিগারেশন') }} / {{ t('Customers','কাস্টমার') }}</div>
                 <h1>{{ session('portal_lang') === 'bn' ? $titleBn : $title }}</h1>
-                <p>{{ t('Manage master records. Search, filters and pagination run in the database.','মাস্টার তথ্য পরিচালনা করুন। সার্চ, ফিল্টার ও পেজিনেশন ডাটাবেজের মাধ্যমে পরিচালিত হয়।') }}</p>
             </div>
 
             @if($permissions['create'])
@@ -55,35 +82,32 @@
             @endif
         </div>
 
+        @if(session('error'))
+            <div class="cfg-notice" role="alert" style="margin:0 0 14px">{{ session('error') }}</div>
+        @endif
+
         <section class="cfg-panel">
-            <form method="GET" action="{{ $indexUrl }}" id="cfg-filter-form" class="cfg-toolbar">
-                <input
-                    name="search"
-                    value="{{ $search }}"
-                    class="cfg-input cfg-search"
-                    placeholder="{{ t('Search Customers...','কাস্টমার খুঁজুন...') }}"
-                    aria-label="{{ t('Search','খুঁজুন') }}"
-                />
-
-                <select name="per_page" class="cfg-input cfg-small" aria-label="{{ t('Rows per page','প্রতি পৃষ্ঠায় সারি') }}">
-                    @foreach([10,15,25,50,100] as $size)
-                        <option value="{{ $size }}" @selected($perPage === $size)>
-                            {{ $size }} {{ t('per page','প্রতি পৃষ্ঠায়') }}
-                        </option>
-                    @endforeach
-                </select>
-
-                <button class="cfg-btn cfg-primary" type="submit">
-                    {{ t('Apply Filters','ফিল্টার প্রয়োগ করুন') }}
-                </button>
-
-                <button type="button" class="cfg-btn" id="cfg-toggle-filters" aria-expanded="true">
-                    {{ t('Hide Column Filters','কলাম ফিল্টার লুকান') }}
-                </button>
-
-                <a class="cfg-btn" href="{{ $indexUrl }}">
-                    {{ t('Reset','রিসেট') }}
-                </a>
+            <form method="GET" action="{{ $indexUrl }}" id="cfg-filter-form" class="cfg-toolbar cfg-customers-toolbar">
+                <div class="cfg-toolbar-actions">
+                    <select name="per_page" class="cfg-input cfg-small" aria-label="{{ t('Rows per page','প্রতি পৃষ্ঠায় সারি') }}" onchange="this.form.requestSubmit()">
+                        @foreach([10,15,25,50,100] as $size)
+                            <option value="{{ $size }}" @selected($perPage === $size)>{{ $size }} {{ t('per page','প্রতি পৃষ্ঠায়') }}</option>
+                        @endforeach
+                    </select>
+                    <button type="button" class="cfg-btn cfg-action-icon cfg-filter-toggle" id="cfg-toggle-filters" aria-expanded="true" title="{{ t('Show or hide column filters','কলাম ফিল্টার দেখান বা লুকান') }}">
+                        {{ t('Hide Column Filters','কলাম ফিল্টার লুকান') }}
+                    </button>
+                    <a class="cfg-btn cfg-action-icon" href="{{ $indexUrl }}" title="{{ t('Reset all filters','সব ফিল্টার রিসেট করুন') }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 3.2 6.9"/><path d="M3 4v7h7"/></svg>{{ t('Reset','রিসেট') }}
+                    </a>
+                    <span class="cfg-toolbar-separator" aria-hidden="true"></span>
+                    <a class="cfg-btn cfg-action-icon cfg-export-excel" data-cfg-export href="{{ $excelUrl }}?{{ http_build_query(request()->except('page')) }}" title="{{ t('Download filtered Excel','ফিল্টার করা এক্সেল ডাউনলোড') }}" aria-label="{{ t('Download Excel','এক্সেল ডাউনলোড') }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m8 13 5 6m0-6-5 6"/></svg>Excel
+                    </a>
+                    <a class="cfg-btn cfg-action-icon cfg-export-pdf" data-cfg-export href="{{ $pdfUrl }}?{{ http_build_query(request()->except('page')) }}" title="{{ t('Download filtered PDF','ফিল্টার করা পিডিএফ ডাউনলোড') }}" aria-label="{{ t('Download PDF','পিডিএফ ডাউনলোড') }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>PDF
+                    </a>
+                </div>
             </form>
 
             <div class="cfg-table-scroll">
@@ -334,4 +358,16 @@
 
 @push('scripts')
 @include('public.business.admin.configurations._ui_scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('cfg-filter-form');
+    if (!form) return;
+    document.querySelectorAll('.cfg-customers-toolbar [data-cfg-export]').forEach(link => {
+        link.addEventListener('click', () => {
+            const params = new URLSearchParams(new FormData(form));
+            link.href = link.href.split('?')[0] + (params.toString() ? '?' + params.toString() : '');
+        });
+    });
+});
+</script>
 @endpush

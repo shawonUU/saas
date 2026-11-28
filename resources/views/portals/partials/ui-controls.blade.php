@@ -45,4 +45,4 @@
 })();
 </script>
 
-<script defer src="{{ asset('assets/saas-searchable-select.js') }}?v=20261123"></script>
+<script defer src="{{ asset('assets/saas-inline-search-select-v4.js') }}?v=20261128"></script>

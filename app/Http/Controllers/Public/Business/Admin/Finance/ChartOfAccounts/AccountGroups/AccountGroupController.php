@@ -17,7 +17,7 @@ class AccountGroupController extends Controller
         $b = $v['business'];
         app(Accounting::class)->ensure($b);
 
-        $v['groups'] = Account::where('accounts.business_id', $b->id)
+        $groupQuery = Account::where('accounts.business_id', $b->id)
             ->leftJoin('journal_lines as l', function ($j) {
                 $j->on('l.account_id', '=', 'accounts.id')
                     ->on('l.business_id', '=', 'accounts.business_id');
@@ -28,8 +28,15 @@ class AccountGroupController extends Controller
                 DB::raw('COALESCE(SUM(l.debit),0) as debit'),
                 DB::raw('COALESCE(SUM(l.credit),0) as credit')
             )
-            ->groupBy('accounts.type')
-            ->get();
+            ->groupBy('accounts.type');
+        if (in_array($r->query('export'), ['excel','pdf'], true)) {
+            return app(\App\Services\Public\Business\Admin\Shared\ListExportService::class)->download(clone $groupQuery, ['type'=>'text','accounts'=>'number','debit'=>'number','credit'=>'number'], 'Account Groups', $r->query('export'));
+        }
+        $groups = (clone $groupQuery)->get();
+        if ($r->filled('f.type')) $groups = $groups->filter(fn($item) => str_contains(strtolower((string)$item->type), strtolower((string)$r->query('f.type'))))->values();
+        $perPage=(int)$r->query('per_page',15);if(!in_array($perPage,[10,15,25,50,100],true))$perPage=15;
+        $page=max(1,(int)$r->query('page',1));
+        $v['groups']=new \Illuminate\Pagination\LengthAwarePaginator($groups->forPage($page,$perPage)->values(),$groups->count(),$perPage,$page,['path'=>$r->url(),'query'=>$r->query()]);
 
         return view('public.business.admin.retail.account_groups.index', $v);
     }

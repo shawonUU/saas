@@ -28,7 +28,7 @@
 @endif
 
 <link rel="stylesheet" href="{{ asset('assets/nexabiz-storefront.css') }}?v=20261126">
-<link rel="stylesheet" href="{{ asset('assets/saas-searchable-select.css') }}?v=20261124">
+<link rel="stylesheet" href="{{ asset('assets/saas-inline-search-select-v4.css') }}?v=20261128">
 
 @stack('styles')
 </head>
@@ -61,7 +61,7 @@
 @include('public.business.public.ecommerce.partials.mobile-bar')
 
 <script src="{{ asset('assets/nexabiz-storefront.js') }}?v=20261126" defer></script>
-<script src="{{ asset('assets/saas-searchable-select.js') }}?v=20261124" defer></script>
+<script src="{{ asset('assets/saas-inline-search-select-v4.js') }}?v=20261128" defer></script>
 
 @stack('scripts')
 </body>

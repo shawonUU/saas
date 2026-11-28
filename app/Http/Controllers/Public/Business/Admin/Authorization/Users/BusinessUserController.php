@@ -80,11 +80,20 @@ class BusinessUserController extends Controller
         if ($status === 'active') $query->where('is_active', true)->where('approval_status', 'Approved');
         elseif ($status === 'inactive') $query->where(fn($q) => $q->where('is_active', false)->orWhere('approval_status', '!=', 'Approved'));
         if (ctype_digit((string)$roleId)) $query->where('role_id', (int)$roleId);
+        // The one Customers-style filter row is the sole visible list filter UI.
+        $columns = $request->query('f', []);
+        $columns = is_array($columns) ? $columns : [];
+        $identity = trim(mb_substr(is_scalar($columns['identity'] ?? null) ? (string)$columns['identity'] : '', 0, 100));
+        if ($identity !== '') $query->where(fn($q) => $q->where('name', 'like', '%'.$identity.'%')
+            ->orWhere('email', 'like', '%'.$identity.'%')->orWhere('code', 'like', '%'.$identity.'%'));
+        $accountStatus = is_scalar($columns['account_status'] ?? null) ? (string)$columns['account_status'] : '';
+        if ($accountStatus === 'active') $query->where('is_active', true)->where('approval_status', 'Approved');
+        elseif ($accountStatus === 'inactive') $query->where(fn($q) => $q->where('is_active', false)->orWhere('approval_status', '!=', 'Approved'));
         $base = BusinessUser::where('business_id', $business->id);
         return view('public.business.admin.users.index', [
             'title' => t('Team users', 'টিম ইউজার'),
             'business' => $business, 'user' => $actor, 'modules' => $navigation->forBusiness($business, $actor),
-            'members' => $query->latest('id')->paginate(15)->withQueryString(),
+            'members' => \App\Services\Public\Business\Admin\Shared\ListPage::page($query->latest('id'), $request, ['id'=>'number','name'=>'text','code'=>'text','role_id'=>'number','is_active'=>'number','created_at'=>'date'], 'Team Users'),
             'roles' => $this->roles($business, $isOwner)->get(),
             'filterRoles' => BusinessRole::where('business_id', $business->id)->orderBy('name')->get(),
             'totalMembers' => (clone $base)->count(),

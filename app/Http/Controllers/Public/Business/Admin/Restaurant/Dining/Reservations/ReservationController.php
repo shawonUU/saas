@@ -23,12 +23,12 @@ class ReservationController extends Controller
             'status' => ['nullable', Rule::in(['confirmed', 'seated', 'completed', 'cancelled', 'no_show'])]]);
         $context['permissions'] = $access->permissions($context, 'restaurant', 'dining', 'reservations');
         $context['filters'] = $filters;
-        $context['records'] = Reservation::where('business_id', $tenant->id)->with(['table.diningArea', 'order'])
+        $context['records'] = \App\Services\Public\Business\Admin\Shared\ListPage::page(Reservation::where('business_id', $tenant->id)->with(['table.diningArea', 'order'])
             ->when($filters['search'] ?? null, fn ($query, $search) => $query->where(fn ($query) => $query
                 ->where('customer_name', 'like', '%'.trim($search).'%')->orWhere('customer_phone', 'like', '%'.trim($search).'%')))
             ->when($filters['date'] ?? null, fn ($query, $date) => $query->whereDate('starts_at', $date))
             ->when($filters['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
-            ->orderByDesc('starts_at')->paginate(20)->withQueryString();
+            ->orderByDesc('starts_at'), $request, ['id'=>'number','customer_name'=>'text','customer_phone'=>'text','dining_table_id'=>'number','guest_count'=>'number','status'=>'text','starts_at'=>'date'], 'Reservations');
         $context['tables'] = DiningTable::where('business_id', $tenant->id)->where('is_active', true)
             ->where('approval_status', 'Approved')->whereHas('diningArea', fn ($query) => $query
             ->where('business_id', $tenant->id)->where('is_active', true)->where('approval_status', 'Approved'))
